@@ -1,0 +1,14 @@
+name = "ai-life-coach"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ai-life-coach"
+database_id = "bb780866-c2de-42c1-94a7-f7326a8f9d33"
+
+# Add this for Next.js build output
+[build]
+command = "npm run build"
+
+[site]
+bucket = ".next/static"

@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS goals (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  category TEXT NOT NULL,
+  timeFrame TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'not-started',
+  progress INTEGER NOT NULL DEFAULT 0,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS milestones (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  date TEXT NOT NULL,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
