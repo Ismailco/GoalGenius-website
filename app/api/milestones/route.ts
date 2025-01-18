@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getMilestones, createMilestone } from '@/app/lib/db';
 import { getAuthenticatedUserId } from '@/app/lib/auth';
 
+export const runtime = 'edge';
+
 export async function GET() {
   try {
     const userId = await getAuthenticatedUserId();

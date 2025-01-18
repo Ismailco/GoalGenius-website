@@ -4,6 +4,8 @@ import MilestoneTimeline from '@/app/components/MilestoneTimeline';
 import CreateGoalModal from '@/app/components/CreateGoalModal';
 import GoalSuggestions from '@/app/components/GoalSuggestions';
 
+export const runtime = 'edge';
+
 export default async function DashboardPage() {
   return (
     <div className="container mx-auto px-4 py-8">
