@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAuthenticatedUserId } from '@/app/lib/auth';
 
+export const runtime = 'edge';
 const WORKER_URL = process.env.WORKER_URL || 'http://127.0.0.1:8787';
 
 export async function GET() {
