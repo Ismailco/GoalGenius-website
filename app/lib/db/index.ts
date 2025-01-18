@@ -25,22 +25,31 @@ if (process.env.NODE_ENV === 'production') {
 
 // Goals
 export async function getGoals(userId: string): Promise<Goal[]> {
-  const stmt = DB.prepare(
-    'SELECT * FROM goals WHERE userId = ? ORDER BY createdAt DESC'
-  );
-  const { results } = await stmt.bind(userId).all();
-  return results.map((result) => ({
-    id: String(result.id),
-    userId: String(result.userId),
-    title: String(result.title),
-    description: String(result.description || ''),
-    category: String(result.category) as Goal['category'],
-    timeFrame: String(result.timeFrame) as Goal['timeFrame'],
-    status: String(result.status) as Goal['status'],
-    progress: Number(result.progress),
-    createdAt: String(result.createdAt),
-    updatedAt: String(result.updatedAt),
-  }));
+  try {
+    console.log('Executing getGoals query for userId:', userId);
+    const stmt = DB.prepare(
+      'SELECT * FROM goals WHERE userId = ? ORDER BY createdAt DESC'
+    );
+    console.log('Statement prepared');
+    const { results } = await stmt.bind(userId).all();
+    console.log('Query results:', results);
+
+    return results.map((result) => ({
+      id: String(result.id),
+      userId: String(result.userId),
+      title: String(result.title),
+      description: String(result.description || ''),
+      category: String(result.category) as Goal['category'],
+      timeFrame: String(result.timeFrame) as Goal['timeFrame'],
+      status: String(result.status) as Goal['status'],
+      progress: Number(result.progress),
+      createdAt: String(result.createdAt),
+      updatedAt: String(result.updatedAt),
+    }));
+  } catch (error) {
+    console.error('Error in getGoals:', error);
+    throw error;
+  }
 }
 
 export async function getGoal(id: string): Promise<Goal | null> {
