@@ -1,173 +1,245 @@
 'use client';
 
 import { useState } from 'react';
-import { Goal, GoalCategory, TimeFrame } from '@/app/types';
+import { createPortal } from 'react-dom';
+import { GoalCategory, TimeFrame } from '@/app/types';
+import { createGoal } from '@/app/lib/storage';
 
 interface SuggestedGoal {
   title: string;
   description: string;
   category: GoalCategory;
-  timeFrame: TimeFrame;
+  timeFrame: string;
 }
 
 export default function GoalSuggestions() {
   const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<SuggestedGoal[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<GoalCategory>('health');
 
-  const fetchSuggestions = async () => {
-    setLoading(true);
-    setError(null);
+  const suggestions: Record<GoalCategory, SuggestedGoal[]> = {
+    health: [
+      {
+        title: 'Daily Exercise Routine',
+        description: 'Exercise 30 minutes daily to improve fitness and energy levels',
+        category: 'health',
+        timeFrame: '3 months'
+      },
+      {
+        title: 'Balanced Diet Plan',
+        description: 'Maintain a balanced diet with proper nutrition and meal planning',
+        category: 'health',
+        timeFrame: '6 months'
+      },
+      {
+        title: 'Sleep Schedule',
+        description: 'Get 8 hours of sleep daily by maintaining a consistent sleep schedule',
+        category: 'health',
+        timeFrame: '1 month'
+      },
+      {
+        title: 'Meditation Practice',
+        description: 'Practice daily meditation for mental wellness and stress reduction',
+        category: 'health',
+        timeFrame: '2 months'
+      }
+    ],
+    career: [
+      {
+        title: 'Professional Skill Development',
+        description: 'Learn a new professional skill through online courses and practice',
+        category: 'career',
+        timeFrame: '6 months'
+      },
+      {
+        title: 'Networking Growth',
+        description: 'Network with industry peers and attend professional events',
+        category: 'career',
+        timeFrame: '3 months'
+      },
+      {
+        title: 'Certification Achievement',
+        description: 'Complete an industry-recognized certification course',
+        category: 'career',
+        timeFrame: '4 months'
+      },
+      {
+        title: 'Leadership Development',
+        description: 'Improve leadership skills through workshops and practical experience',
+        category: 'career',
+        timeFrame: '6 months'
+      }
+    ],
+    learning: [
+      {
+        title: 'Reading Challenge',
+        description: 'Read 20 books this year across various genres',
+        category: 'learning',
+        timeFrame: '12 months'
+      },
+      {
+        title: 'Language Learning',
+        description: 'Learn a new language to conversational level',
+        category: 'learning',
+        timeFrame: '6 months'
+      },
+      {
+        title: 'Technology Mastery',
+        description: 'Master a new technology or programming language',
+        category: 'learning',
+        timeFrame: '4 months'
+      },
+      {
+        title: 'Online Course Completion',
+        description: 'Complete selected online courses in your field of interest',
+        category: 'learning',
+        timeFrame: '3 months'
+      }
+    ],
+    relationships: [
+      {
+        title: 'Family Time',
+        description: 'Plan and execute weekly family activities',
+        category: 'relationships',
+        timeFrame: 'ongoing'
+      },
+      {
+        title: 'Friend Reconnection',
+        description: 'Reconnect with old friends through regular catch-ups',
+        category: 'relationships',
+        timeFrame: '2 months'
+      },
+      {
+        title: 'Communication Enhancement',
+        description: 'Improve communication skills in personal relationships',
+        category: 'relationships',
+        timeFrame: '3 months'
+      },
+      {
+        title: 'Community Engagement',
+        description: 'Join and actively participate in community groups',
+        category: 'relationships',
+        timeFrame: '6 months'
+      }
+    ]
+  };
+
+  const handleAddGoal = (goal: SuggestedGoal) => {
     try {
-      // Fetch current goals and milestones for context
-      const [goalsRes, milestonesRes] = await Promise.all([
-        fetch('/api/goals'),
-        fetch('/api/milestones')
-      ]);
-
-      if (!goalsRes.ok || !milestonesRes.ok) {
-        throw new Error('Failed to fetch current goals or milestones');
-      }
-
-      const goals: Goal[] = await goalsRes.json();
-      const milestones = await milestonesRes.json();
-
-      // Get suggestions from OpenAI
-      const response = await fetch('/api/goals/suggest', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          currentGoals: goals,
-          milestones,
-          preferences: {
-            categories: ['health', 'career', 'learning', 'relationships'],
-            focusAreas: ['personal growth', 'professional development'],
-          },
-        }),
+      createGoal({
+        ...goal,
+        progress: 0,
+        status: 'not-started',
+        timeFrame: goal.timeFrame as TimeFrame,
+        category: goal.category as GoalCategory,
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to get suggestions');
-      }
-
-      const data = await response.json();
-      setSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
-      setIsOpen(true);
+      // Show success message
+      alert('Goal added successfully!');
     } catch (error) {
-      console.error('Error fetching suggestions:', error);
-      setError('Failed to get goal suggestions. Please try again.');
-    } finally {
-      setLoading(false);
+      console.error('Error adding goal:', error);
+      alert('Failed to add goal. Please try again.');
     }
   };
 
-  const handleCreateGoal = async (suggestion: SuggestedGoal) => {
-    try {
-      const response = await fetch('/api/goals', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...suggestion,
-          status: 'not-started',
-          progress: 0,
-        }),
-      });
+  const modal = isOpen ? (
+    <div className="fixed inset-0 z-[9999]">
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div className="w-full max-w-lg bg-slate-900/95 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-xl">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-white">Goal Suggestions</h2>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
-      if (!response.ok) {
-        throw new Error('Failed to create goal');
-      }
+          {/* Category Tabs */}
+          <div className="flex space-x-2 mb-6 overflow-x-auto pb-2">
+            {Object.keys(suggestions).map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category as GoalCategory)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  selectedCategory === category
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                    : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                }`}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </button>
+            ))}
+          </div>
 
-      setIsOpen(false);
-      setSuggestions([]); // Clear suggestions after creating a goal
-    } catch (error) {
-      console.error('Error creating goal:', error);
-      alert('Failed to create goal. Please try again.');
-    }
-  };
+          {/* Suggestions Grid */}
+          <div className="grid grid-cols-1 gap-4">
+            {suggestions[selectedCategory].map((suggestion, index) => (
+              <div
+                key={index}
+                className="bg-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/10 hover:scale-[1.02] transition-all duration-200"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3 flex-1">
+                    <div className="p-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl">
+                      <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-medium">{suggestion.title}</h3>
+                      <p className="text-gray-400 text-sm mt-1">{suggestion.description}</p>
+                      <span className="text-sm text-gray-500 mt-2 block">Timeline: {suggestion.timeFrame}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleAddGoal(suggestion)}
+                    className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:from-blue-600 hover:to-purple-600 transition-colors"
+                  >
+                    Add Goal
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : null;
 
   return (
     <>
       <button
-        onClick={fetchSuggestions}
-        disabled={loading}
-        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50"
+        onClick={() => setIsOpen(true)}
+        className="inline-flex items-center px-4 py-2 border border-white/10 text-sm font-medium rounded-full text-white bg-white/5 hover:bg-white/10 backdrop-blur-lg transform hover:scale-105 transition-all duration-200"
       >
-        {loading ? (
-          <>
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-            Generating Suggestions...
-          </>
-        ) : (
-          'Get AI Goal Suggestions'
-        )}
+        <svg
+          className="w-5 h-5 mr-2 text-blue-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+          />
+        </svg>
+        Get Ideas
       </button>
-
-      {isOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Suggested Goals</h2>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-gray-500"
-              >
-                <span className="sr-only">Close</span>
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {error ? (
-              <div className="text-red-500 mb-4">{error}</div>
-            ) : suggestions.length === 0 ? (
-              <div className="text-gray-500">No suggestions available. Try again?</div>
-            ) : (
-              <div className="space-y-4">
-                {suggestions.map((suggestion, index) => (
-                  <div
-                    key={index}
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold">{suggestion.title}</h3>
-                        <p className="text-gray-600 mt-1">{suggestion.description}</p>
-                        <div className="flex gap-2 mt-2">
-                          <span className="text-sm px-2 py-1 rounded-full bg-indigo-100 text-indigo-800">
-                            {suggestion.category}
-                          </span>
-                          <span className="text-sm px-2 py-1 rounded-full bg-purple-100 text-purple-800">
-                            {suggestion.timeFrame}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => handleCreateGoal(suggestion)}
-                        className="ml-4 inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >
-                        Add Goal
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {typeof document !== 'undefined' && createPortal(modal, document.body)}
     </>
   );
 }

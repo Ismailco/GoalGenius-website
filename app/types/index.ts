@@ -4,7 +4,6 @@ export type GoalStatus = 'not-started' | 'in-progress' | 'completed';
 
 export interface Milestone {
   id: string;
-  userId: string;
   title: string;
   description: string;
   date: string;
@@ -12,7 +11,6 @@ export interface Milestone {
 
 export interface Goal {
   id: string;
-  userId: string;
   title: string;
   description: string;
   category: GoalCategory;

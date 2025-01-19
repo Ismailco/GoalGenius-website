@@ -23,18 +23,12 @@ export default function GoalInputForm({ onSubmit }: GoalInputFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await onSubmit(formData);
-    setFormData({
-      title: '',
-      description: '',
-      category: 'health',
-      timeFrame: 'short-term',
-    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6 text-white">
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="title" className="block text-sm font-medium text-gray-200">
           Title
         </label>
         <input
@@ -42,33 +36,35 @@ export default function GoalInputForm({ onSubmit }: GoalInputFormProps) {
           id="title"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="mt-1 block w-full px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          placeholder="Enter goal title"
           required
         />
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="description" className="block text-sm font-medium text-gray-200">
           Description
         </label>
         <textarea
           id="description"
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="mt-1 block w-full px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          placeholder="Describe your goal"
           rows={3}
         />
       </div>
 
       <div>
-        <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="category" className="block text-sm font-medium text-gray-200">
           Category
         </label>
         <select
           id="category"
           value={formData.category}
           onChange={(e) => setFormData({ ...formData, category: e.target.value as GoalCategory })}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="mt-1 block w-full px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
         >
           <option value="health">Health</option>
           <option value="career">Career</option>
@@ -78,27 +74,29 @@ export default function GoalInputForm({ onSubmit }: GoalInputFormProps) {
       </div>
 
       <div>
-        <label htmlFor="timeFrame" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="timeFrame" className="block text-sm font-medium text-gray-200">
           Time Frame
         </label>
         <select
           id="timeFrame"
           value={formData.timeFrame}
           onChange={(e) => setFormData({ ...formData, timeFrame: e.target.value as TimeFrame })}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="mt-1 block w-full px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
         >
-          <option value="short-term">Short Term</option>
-          <option value="medium-term">Medium Term</option>
-          <option value="long-term">Long Term</option>
+          <option value="short-term">Short Term (1-3 months)</option>
+          <option value="medium-term">Medium Term (3-6 months)</option>
+          <option value="long-term">Long Term (6+ months)</option>
         </select>
       </div>
 
-      <button
-        type="submit"
-        className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-      >
-        Create Goal
-      </button>
+      <div className="flex justify-end pt-4">
+        <button
+          type="submit"
+          className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-colors"
+        >
+          Create Goal
+        </button>
+      </div>
     </form>
   );
 }
