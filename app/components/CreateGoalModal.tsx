@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { GoalCategory, TimeFrame } from '@/app/types';
 import { createGoal } from '@/app/lib/storage';
 import { useModal } from '@/app/providers/ModalProvider';

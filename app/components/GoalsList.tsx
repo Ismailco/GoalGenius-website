@@ -14,13 +14,11 @@ export default function GoalsList() {
     setLoading(false);
   }, []);
 
-  const handleUpdateProgress = (id: string, progress: number) => {
+  const handleUpdateProgress = async (goalId: string, progress: number) => {
     try {
-      const updatedGoal = updateGoal(id, { progress });
-      setGoals(getGoals());
+      await updateGoal(goalId, { progress });
     } catch (error) {
-      console.error('Error updating goal:', error);
-      alert('Failed to update goal progress');
+      console.error('Error updating goal progress:', error);
     }
   };
 

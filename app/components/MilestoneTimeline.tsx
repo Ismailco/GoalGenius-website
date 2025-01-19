@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import { Milestone } from '@/app/types';
-import { getMilestones, createMilestone, updateMilestone, deleteMilestone } from '@/app/lib/storage';
+import { getMilestones } from '@/app/lib/storage';
 import { getGoals } from '@/app/lib/storage';
 import { Goal } from '@/app/types';
 
 export default function MilestoneTimeline() {
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAddingMilestone, setIsAddingMilestone] = useState(false);
-  const [editingMilestone, setEditingMilestone] = useState<Milestone | null>(null);
-  const [newMilestone, setNewMilestone] = useState({
-    title: '',
-    description: '',
-    date: new Date().toISOString().split('T')[0],
-  });
+  // const [isAddingMilestone, setIsAddingMilestone] = useState(false);
+  // const [editingMilestone, setEditingMilestone] = useState<Milestone | null>(null);
+  // const [newMilestone, setNewMilestone] = useState({
+  //   title: '',
+  //   description: '',
+  //   date: new Date().toISOString().split('T')[0],
+  // });
   const [goals, setGoals] = useState<Goal[]>([]);
 
   useEffect(() => {
@@ -25,44 +25,47 @@ export default function MilestoneTimeline() {
     setGoals(fetchedGoals);
   }, []);
 
-  const handleCreateMilestone = () => {
-    try {
-      createMilestone(newMilestone);
-      setMilestones(getMilestones());
-      setIsAddingMilestone(false);
-      setNewMilestone({
-        title: '',
-        description: '',
-        date: new Date().toISOString().split('T')[0],
-      });
-    } catch (error) {
-      console.error('Error creating milestone:', error);
-      alert('Failed to create milestone');
-    }
-  };
+  console.log(milestones);
 
-  const handleUpdateMilestone = (id: string, updates: Partial<Milestone>) => {
-    try {
-      updateMilestone(id, updates);
-      setMilestones(getMilestones());
-      setEditingMilestone(null);
-    } catch (error) {
-      console.error('Error updating milestone:', error);
-      alert('Failed to update milestone');
-    }
-  };
+  // const handleCreateMilestone = () => {
+  //   try {
+  //     createMilestone(newMilestone);
+  //     setMilestones(getMilestones());
+  //     setIsAddingMilestone(false);
+  //     setNewMilestone({
+  //       title: '',
+  //       description: '',
+  //       date: new Date().toISOString().split('T')[0],
+  //     });
+  //   } catch (error) {
+  //     console.error('Error creating milestone:', error);
+  //     alert('Failed to create milestone');
+  //   }
+  // };
 
-  const handleDeleteMilestone = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this milestone?')) {
-      try {
-        deleteMilestone(id);
-        setMilestones(getMilestones());
-      } catch (error) {
-        console.error('Error deleting milestone:', error);
-        alert('Failed to delete milestone');
-      }
-    }
-  };
+  // const handleUpdateMilestone = (id: string, updates: Partial<Milestone>) => {
+  //   try {
+  //     updateMilestone(id, updates);
+  //     setMilestones(getMilestones());
+  //     setEditingMilestone(null);
+  //   } catch (error) {
+  //     console.error('Error updating milestone:', error);
+  //     alert('Failed to update milestone');
+  //   }
+  // };
+
+  // const handleDeleteMilestone = (id: string) => {
+  //   if (window.confirm('Are you sure you want to delete this milestone?')) {
+  //     try {
+  //       deleteMilestone(id);
+  //       setMilestones(getMilestones());
+  //     } catch (error) {
+  //       console.error('Error deleting milestone:', error);
+  //       alert('Failed to delete milestone');
+  //     }
+  //   }
+  // };
+
 
   const getStatusColor = (progress: number) => {
     if (progress === 100) return 'bg-gradient-to-r from-green-500 to-emerald-500';
@@ -80,7 +83,7 @@ export default function MilestoneTimeline() {
       <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500/20 via-purple-500/20 to-indigo-500/20"></div>
 
       <div className="space-y-8">
-        {goals.map((goal, index) => (
+        {goals.map((goal) => (
           <div
             key={goal.id}
             className="relative flex items-start group"

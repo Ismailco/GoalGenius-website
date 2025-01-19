@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useCallback, useState } from 'react';
-import { Goal, GoalCategory } from '@/app/types';
+import { GoalCategory } from '@/app/types';
 import { getGoals } from '@/app/lib/storage';
 
 export default function ProgressChart() {
