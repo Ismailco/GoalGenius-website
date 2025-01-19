@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GoalGenius 🎯✨
 
-## Getting Started
+GoalGenius is an elegant, AI-powered goal tracking application that helps you transform your aspirations into achievements. Built with modern web technologies and a beautiful glass-morphism design.
 
-First, run the development server:
+![GoalGenius Screenshot](public/Screenshot.png)
 
+## ✨ Features
+
+- **Smart Goal Suggestions** - Get AI-powered goal suggestions tailored to different life areas
+- **Visual Progress Tracking** - Track your progress with beautiful, interactive visualizations
+- **Glass Morphism UI** - Modern, elegant interface with a stunning glass-like design
+- **Responsive Design** - Perfect experience across all devices
+- **Real-time Updates** - See your progress update in real-time
+- **Category Management** - Organize goals across Health, Career, Learning, and Relationships
+
+## 🚀 Getting Started
+
+1. Clone the repository:
+```bash
+git clone https://github.com/ismailco/goalgenius.git
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to start achieving your goals!
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠 Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [Next.js 14](https://nextjs.org/) - React Framework
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+- [TypeScript](https://www.typescriptlang.org/) - Type Safety
+- Local Storage - Data Persistence
+- AI Integration - Smart Suggestions
 
-## Learn More
+## 📱 Screenshots
 
-To learn more about Next.js, take a look at the following resources:
+### Dashboard
+![Dashboard](public/dashboard.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Goal Suggestions
+![Suggestions](public/suggestions.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contributing
 
-## Deploy on Vercel
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📄 License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## 🙏 Acknowledgments
+
+- Design inspiration from modern glass morphism trends
+- AI suggestions powered by advanced language models
+- Icons from [Heroicons](https://heroicons.com/)
+
+---
+
+Built with ❤️ by [Ismail Courr](https://github.com/ismailco)
