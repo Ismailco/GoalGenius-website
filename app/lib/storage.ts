@@ -71,7 +71,8 @@ export function createMilestone(milestone: Omit<Milestone, 'id'>): Milestone {
     ...milestone,
   };
 
-  localStorage.setItem(STORAGE_KEYS.MILESTONES, JSON.stringify([...milestones, newMilestone]));
+  milestones.push(newMilestone);
+  localStorage.setItem(STORAGE_KEYS.MILESTONES, JSON.stringify(milestones));
   return newMilestone;
 }
 

@@ -7,8 +7,11 @@ import ProgressChart from '@/app/components/ProgressChart';
 import MilestoneTimeline from '@/app/components/MilestoneTimeline';
 import CreateGoalModal from '@/app/components/CreateGoalModal';
 import GoalSuggestions from '@/app/components/GoalSuggestions';
+import CreateMilestoneModal from '@/app/components/CreateMilestoneModal';
+import { useModal } from '@/app/providers/ModalProvider';
 
 export default function DashboardPage() {
+  const { showModal } = useModal();
   const [stats, setStats] = useState({
     totalGoals: 0,
     averageProgress: 0,
@@ -135,13 +138,27 @@ export default function DashboardPage() {
 
 				{/* Timeline Section */}
 				<section className="mt-8 bg-white/5 backdrop-blur-lg rounded-3xl p-6 transform hover:scale-[1.01] transition-transform border border-white/10">
-					<div className="flex items-center gap-3 mb-6">
-						<div className="p-2 bg-indigo-500/10 rounded-xl">
-							<svg className="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-							</svg>
+					<div className="flex items-center justify-between mb-6">
+						<div className="flex items-center gap-3">
+							<div className="p-2 bg-indigo-500/10 rounded-xl">
+								<svg className="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+								</svg>
+							</div>
+							<h2 className="text-2xl font-bold text-white">Milestones Timeline</h2>
 						</div>
-						<h2 className="text-2xl font-bold text-white">Milestones Timeline</h2>
+						<button
+							onClick={() => showModal({
+								title: 'Add Milestone',
+								content: <CreateMilestoneModal />,
+							})}
+							className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200"
+						>
+							<svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+							</svg>
+							Add Milestone
+						</button>
 					</div>
 					<MilestoneTimeline />
 				</section>

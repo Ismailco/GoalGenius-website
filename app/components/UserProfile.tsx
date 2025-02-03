@@ -1,11 +1,12 @@
 'use client';
 
-export default function UserProfile() {
+export default function UserProfile({ isMobile }: { isMobile?: boolean }) {
   return (
-    <div className="flex items-center gap-4">
-      <p className="text-sm text-gray-300">Welcome, Guest</p>
+    <div className={`flex items-center gap-4 ${isMobile ? 'flex-row' : 'flex-row-reverse'}`}>
       <button
-        className="rounded-full bg-white/5 border border-white/10 p-2 hover:bg-white/10 backdrop-blur-lg transform hover:scale-105 transition-all duration-200"
+        className={`rounded-full bg-white/5 border border-white/10 p-2 hover:bg-white/10 backdrop-blur-lg transform hover:scale-105 transition-all duration-200 ${
+          isMobile ? 'mr-3' : ''
+        }`}
         onClick={() => {
           // You can add any profile-related functionality here
           console.log('Profile clicked');
@@ -25,6 +26,7 @@ export default function UserProfile() {
           />
         </svg>
       </button>
+      <p className="text-sm text-gray-300">Welcome, Guest</p>
     </div>
   );
 }

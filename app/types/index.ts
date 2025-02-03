@@ -4,6 +4,7 @@ export type GoalStatus = 'not-started' | 'in-progress' | 'completed';
 
 export interface Milestone {
   id: string;
+  goalId: string;
   title: string;
   description: string;
   date: string;
