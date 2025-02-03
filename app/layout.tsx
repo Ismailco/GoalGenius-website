@@ -1,4 +1,4 @@
-'use client';
+"use client"
 
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -6,7 +6,6 @@ import { ModalProvider } from './providers/ModalProvider';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import { useEffect } from 'react';
-import { Workbox } from 'workbox-window';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,18 +16,35 @@ export default function RootLayout({
 }) {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      const wb = new Workbox('/sw.js');
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
 
-      wb.addEventListener('waiting', () => {
-        if (confirm('A new version is available. Reload to update?')) {
-          wb.addEventListener('controlling', () => {
-            window.location.reload();
+          // Handle updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New content is available, show update prompt
+                  if (confirm('New version available! Update now?')) {
+                    newWorker.postMessage('SKIP_WAITING');
+                    window.location.reload();
+                  }
+                }
+              });
+            }
           });
-          wb.messageSkipWaiting();
-        }
-      });
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
 
-      wb.register();
+      // Handle controller change
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('New Service Worker activated');
+      });
     }
   }, []);
 
