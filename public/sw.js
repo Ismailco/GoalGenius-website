@@ -3,6 +3,7 @@ const CACHE_NAME = 'goalgenius-v1';
 // Assets to cache immediately on SW install
 const PRECACHE_ASSETS = [
   '/',
+  '/offline',
   '/manifest.json',
   '/favicon.svg',
   '/favicon.ico',
@@ -24,7 +25,7 @@ self.addEventListener('install', (event) => {
           PRECACHE_ASSETS.map(url =>
             cache.add(url).catch(error => {
               console.warn(`Failed to cache ${url}:`, error);
-              return null; // Continue with other assets even if one fails
+              return null;
             })
           )
         );
@@ -58,10 +59,16 @@ const isApiRequest = (url) => {
 // Helper function to determine if a request is for a static asset
 const isStaticAsset = (url) => {
   return (
-    url.pathname.startsWith('/_next/') ||
+    url.pathname.startsWith('/_next/static') ||
+    url.pathname.startsWith('/_next/image') ||
     url.pathname.startsWith('/images/') ||
     url.pathname.match(/\.(js|css|png|jpg|jpeg|svg|ico)$/)
   );
+};
+
+// Helper function to determine if request is for CSS
+const isCSSRequest = (url) => {
+  return url.pathname.includes('.css') || url.pathname.includes('/_next/static/css/');
 };
 
 // Helper function to determine if we should cache this request
@@ -78,8 +85,80 @@ const isCacheableRequest = (url) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+
   // Skip cross-origin requests
   if (!isCacheableRequest(url)) {
+    return;
+  }
+
+  // Handle CSS files with Cache First strategy
+  if (isCSSRequest(url)) {
+    event.respondWith(
+      caches.match(event.request)
+        .then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return fetch(event.request)
+            .then((response) => {
+              if (!response.ok) throw new Error('Network response was not ok');
+              const clonedResponse = response.clone();
+              caches.open(CACHE_NAME)
+                .then((cache) => cache.put(event.request, clonedResponse));
+              return response;
+            })
+            .catch(() => {
+              console.error('Failed to fetch CSS:', url.pathname);
+              return new Response(
+                'body { background: #fff; }', // Basic fallback CSS
+                {
+                  headers: { 'Content-Type': 'text/css' },
+                }
+              );
+            });
+        })
+    );
+    return;
+  }
+
+  // Handle other static assets
+  if (isStaticAsset(url)) {
+    event.respondWith(
+      caches.match(event.request)
+        .then((cachedResponse) => {
+          if (cachedResponse) {
+            // Update cache in background
+            event.waitUntil(
+              fetch(event.request)
+                .then((response) => {
+                  if (!response.ok) return;
+                  return caches.open(CACHE_NAME)
+                    .then((cache) => cache.put(event.request, response));
+                })
+                .catch(() => {/* Ignore errors */})
+            );
+            return cachedResponse;
+          }
+
+          return fetch(event.request)
+            .then((response) => {
+              if (!response.ok) return response;
+              const clonedResponse = response.clone();
+              caches.open(CACHE_NAME)
+                .then((cache) => cache.put(event.request, clonedResponse));
+              return response;
+            })
+            .catch(() => {
+              // Return a fallback image or asset if available
+              return caches.match('/favicon.svg');
+            });
+        })
+    );
     return;
   }
 
@@ -88,7 +167,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          // Clone the response before caching
           const clonedResponse = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, clonedResponse);
@@ -96,12 +174,10 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(async () => {
-          // If offline, try to return cached response
           const cachedResponse = await caches.match(event.request);
           if (cachedResponse) {
             return cachedResponse;
           }
-          // If no cached response, return a custom offline response
           return new Response(
             JSON.stringify({ error: 'You are offline' }),
             {
@@ -114,60 +190,46 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Handle static assets with Cache First strategy
-  if (isStaticAsset(url)) {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        if (cachedResponse) {
-          // Return cached response immediately
-          // Fetch and cache update in background
-          event.waitUntil(
-            fetch(event.request).then((response) => {
-              return caches.open(CACHE_NAME).then((cache) => {
-                return cache.put(event.request, response.clone()).then(() => {
-                  return response;
-                });
-              });
-            })
-          );
-          return cachedResponse;
-        }
-
-        return fetch(event.request).then((response) => {
-          // Cache the fetched response
-          const clonedResponse = response.clone();
-          event.waitUntil(
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, clonedResponse);
-            })
-          );
-          return response;
-        });
-      })
-    );
-    return;
-  }
-
-  // Handle navigation requests with Network First strategy
+  // Handle navigation requests (HTML pages)
   event.respondWith(
     fetch(event.request)
-      .then((response) => {
-        // Cache the fetched response
-        const clonedResponse = response.clone();
-        event.waitUntil(
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, clonedResponse);
-          })
-        );
+      .then(async (response) => {
+        // Handle 404 responses
+        if (response.status === 404) {
+          const notFoundResponse = await caches.match('/not-found');
+          if (notFoundResponse) return notFoundResponse;
+          return response;
+        }
+
+        // Cache successful responses
+        if (response.ok) {
+          const clonedResponse = response.clone();
+          caches.open(CACHE_NAME)
+            .then((cache) => cache.put(event.request, clonedResponse));
+        }
         return response;
       })
       .catch(async () => {
+        // Try to get from cache first
         const cachedResponse = await caches.match(event.request);
         if (cachedResponse) {
           return cachedResponse;
         }
-        // If no cached response, return offline page
-        return caches.match('/offline');
+
+        // Try to get the offline page
+        const offlineResponse = await caches.match('/offline');
+        if (offlineResponse) {
+          return offlineResponse;
+        }
+
+        // Fallback to a basic offline response
+        return new Response(
+          off,
+          {
+            status: 503,
+            headers: { 'Content-Type': 'text/html' },
+          }
+        );
       })
   );
 });
