@@ -7,7 +7,12 @@ import Header from './components/Header';
 import Navbar from './components/Navbar';
 import { useEffect } from 'react';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  adjustFontFallback: false
+});
 
 export default function RootLayout({
   children,
@@ -49,8 +54,10 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon-128x128.png" />
@@ -59,7 +66,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#60A5FA" />
       </head>
-      <body className={inter.className}>
+      <body>
         <ModalProvider>
           <Header />
           {children}

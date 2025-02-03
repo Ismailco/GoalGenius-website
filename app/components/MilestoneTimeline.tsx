@@ -17,12 +17,12 @@ export default function MilestoneTimeline() {
     relationships: [],
   });
   // const { showModal } = useModal();
-  console.log(goals);
 
   useEffect(() => {
     setMilestones(getMilestones());
     const fetchedGoals = getGoals();
     setGoals(fetchedGoals);
+    console.log(goals);
 
     // Group goals by category
     const grouped = fetchedGoals.reduce((acc, goal) => {
