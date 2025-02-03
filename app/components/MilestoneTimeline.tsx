@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Milestone, Goal, GoalCategory } from '@/app/types';
 import { getMilestones, getGoals } from '@/app/lib/storage';
-import CreateMilestoneModal from '@/app/components/CreateMilestoneModal';
-import { useModal } from '@/app/providers/ModalProvider';
+// import CreateMilestoneModal from '@/app/components/CreateMilestoneModal';
+// import { useModal } from '@/app/providers/ModalProvider';
 
 export default function MilestoneTimeline() {
   const [milestones, setMilestones] = useState<Milestone[]>([]);
@@ -16,7 +16,8 @@ export default function MilestoneTimeline() {
     learning: [],
     relationships: [],
   });
-  const { showModal } = useModal();
+  // const { showModal } = useModal();
+  console.log(goals);
 
   useEffect(() => {
     setMilestones(getMilestones());

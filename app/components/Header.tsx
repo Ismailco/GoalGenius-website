@@ -6,47 +6,23 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 export default function Header() {
-  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  // Don't show header on home page
-  if (pathname === '/') return null;
+  const pathname = usePathname();
 
   useEffect(() => {
-    let touchStart = 0;
-    let touchEnd = 0;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStart = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      touchEnd = e.touches[0].clientX;
-    };
-
-    const handleTouchEnd = () => {
-      const distance = touchStart - touchEnd;
-      const isLeftSwipe = distance > 50;
-      const isRightSwipe = distance < -50;
-
-      if (isLeftSwipe) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMobileMenuOpen(false);
-      } else if (isRightSwipe && touchStart < 50) {
-        setIsMobileMenuOpen(true);
       }
     };
 
-    document.addEventListener('touchstart', handleTouchStart);
-    document.addEventListener('touchmove', handleTouchMove);
-    document.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
-    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Don't show header on home page
+  if (pathname === '/') return null;
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
