@@ -1,71 +1,129 @@
-# GoalGenius 🎯✨
+# GoalGenius 🎯
 
-GoalGenius is an elegant, AI-powered goal tracking application that helps you transform your aspirations into achievements. Built with modern web technologies and a beautiful glass-morphism design.
+<div align="center">
 
-![GoalGenius Screenshot](public/Screenshot.png)
+[![Next.js](https://img.shields.io/badge/Next.js-13.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+
+Transform your aspirations into achievements with GoalGenius - your intelligent goal tracking companion.
+
+[View Demo](https://goalgenius.app) · [Report Bug](https://github.com/ismailco/goalgenius/issues) · [Request Feature](https://github.com/ismailco/goalgenius/issues)
+
+![GoalGenius Dashboard](public/Screenshot.png)
+
+</div>
 
 ## ✨ Features
 
-- **Smart Goal Suggestions** - Get AI-powered goal suggestions tailored to different life areas
-- **Visual Progress Tracking** - Track your progress with beautiful, interactive visualizations
-- **Glass Morphism UI** - Modern, elegant interface with a stunning glass-like design
-- **Responsive Design** - Perfect experience across all devices
-- **Real-time Updates** - See your progress update in real-time
-- **Category Management** - Organize goals across Health, Career, Learning, and Relationships
+- 📊 **Interactive Dashboard** - Visual progress tracking and goal organization
+- 📝 **Smart Notes** - Capture and organize your thoughts with rich formatting
+- ✅ **Todo Management** - Prioritize and track your daily tasks
+- 📈 **Daily Check-ins** - Monitor your progress with mood and energy tracking
+- 🎯 **Milestone Timeline** - Break down goals into achievable milestones
+- 🌙 **Dark Mode** - Beautiful dark theme with glass-morphism effects
+- 📱 **Responsive Design** - Seamless experience across all devices
+- ⚡ **PWA Support** - Install as a native app on any device
 
 ## 🚀 Getting Started
 
-1. Clone the repository:
+### Prerequisites
+
+- Node.js 18+ and npm
+- Git
+
+### Installation
+
+1. Clone the repository
 ```bash
 git clone https://github.com/ismailco/goalgenius.git
+cd goalgenius
 ```
 
-2. Install dependencies:
+2. Install dependencies
 ```bash
 npm install
-# or
-yarn install
 ```
 
-3. Run the development server:
+3. Start the development server
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to start achieving your goals!
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## 🛠 Tech Stack
+## 🛠️ Built With
 
-- [Next.js 14](https://nextjs.org/) - React Framework
-- [Tailwind CSS](https://tailwindcss.com) - Styling
-- [TypeScript](https://www.typescriptlang.org/) - Type Safety
-- Local Storage - Data Persistence
-- AI Integration - Smart Suggestions
+- **Framework**: [Next.js 13](https://nextjs.org/) - React framework for production
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- **Animations**: [Framer Motion](https://www.framer.com/motion/) - Production-ready animations
+- **State Management**: Local Storage with TypeScript
+- **Icons**: Custom SVG icons and Heroicons
+- **Deployment**: Vercel
 
-## 📱 Screenshots
+## 📖 Project Structure
 
-### Dashboard
-![Dashboard](public/dashboard.png)
+```
+goalgenius/
+├── app/                    # Next.js 13 app directory
+│   ├── components/         # Reusable UI components
+│   ├── lib/               # Utility functions and storage
+│   ├── providers/         # React context providers
+│   ├── types/             # TypeScript type definitions
+│   └── ...                # Route groups and pages
+├── public/                # Static assets
+└── ...
+```
 
-### Goal Suggestions
-![Suggestions](public/suggestions.png)
+## 🎨 Key Features in Detail
+
+### Goal Dashboard
+- Visual progress tracking with interactive charts
+- Category-based organization
+- Priority management
+- Timeline view
+- Progress statistics
+
+### Daily Check-ins
+- Mood and energy tracking
+- Progress updates
+- Daily reflections
+- Achievement logging
+- Challenge documentation
+
+### Smart Notes
+- Rich text formatting
+- Category tagging
+- Search functionality
+- Pin important notes
+- Share capabilities
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-## 📄 License
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- Design inspiration from modern glass morphism trends
-- AI suggestions powered by advanced language models
-- Icons from [Heroicons](https://heroicons.com/)
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Heroicons](https://heroicons.com/)
 
 ---
 
-Built with ❤️ by [Ismail Courr](https://github.com/ismailco)
+<div align="center">
+
+Made with ❤️ by [Ismail Courr](https://github.com/ismailco)
+
+</div>
