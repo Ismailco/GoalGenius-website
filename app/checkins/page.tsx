@@ -38,7 +38,7 @@ export default function CheckInsPage() {
     );
   }
 
-  const handleSaveCheckIn = (checkIn: CheckIn) => {
+  const handleSaveCheckIn = () => {
     setCheckIns(getCheckIns());
   };
 
@@ -141,7 +141,7 @@ export default function CheckInsPage() {
           </div>
 
           <div className="grid grid-cols-7 gap-2">
-            {daysInMonth.map((date, index) => {
+            {daysInMonth.map((date) => {
               const checkIn = getCheckInForDate(date);
               const isCurrentDay = isToday(date);
 

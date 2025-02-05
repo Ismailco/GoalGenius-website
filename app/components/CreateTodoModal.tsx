@@ -19,7 +19,7 @@ export default function CreateTodoModal({
 }: CreateTodoModalProps) {
   const [title, setTitle] = useState(existingTodo?.title || '');
   const [description, setDescription] = useState(existingTodo?.description || '');
-  const [priority, setPriority] = useState(existingTodo?.priority || 'medium');
+  const [priority, setPriority] = useState<'low' | 'medium' | 'high'>(existingTodo?.priority || 'medium');
   const [dueDate, setDueDate] = useState(existingTodo?.dueDate || '');
   const [category, setCategory] = useState(existingTodo?.category || '');
 
@@ -88,7 +88,7 @@ export default function CreateTodoModal({
                   <select
                     id="priority"
                     value={priority}
-                    onChange={(e) => setPriority(e.target.value)}
+                    onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
                     className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                   >
                     <option value="low">Low</option>

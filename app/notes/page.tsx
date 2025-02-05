@@ -38,7 +38,7 @@ export default function NotesPage() {
     );
   }
 
-  const handleSaveNote = (note: Note) => {
+  const handleSaveNote = () => {
     setNotes(getNotes());
   };
 

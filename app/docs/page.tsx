@@ -1,7 +1,37 @@
 import Link from 'next/link';
 import AnimatedSection from '../components/AnimatedSection';
 
-const sections = [
+interface StepContent {
+  subtitle: string;
+  text: string;
+  steps: string[];
+}
+
+interface FeatureContent {
+  subtitle: string;
+  text: string;
+  features: string[];
+}
+
+interface TipContent {
+  subtitle: string;
+  text: string;
+  tips: string[];
+}
+
+type ContentItem = StepContent | FeatureContent | TipContent;
+
+interface Section {
+  id: string;
+  title: string;
+  content: ContentItem[];
+}
+
+const hasSteps = (item: ContentItem): item is StepContent => 'steps' in item;
+const hasFeatures = (item: ContentItem): item is FeatureContent => 'features' in item;
+const hasTips = (item: ContentItem): item is TipContent => 'tips' in item;
+
+const sections: Section[] = [
   {
     id: 'getting-started',
     title: 'Getting Started',
@@ -142,7 +172,7 @@ export default function DocsPage() {
       {/* Content Sections */}
       <div className="relative py-16">
         <div className="container mx-auto px-4">
-          {sections.map((section, sectionIndex) => (
+          {sections.map((section) => (
             <section
               key={section.id}
               id={section.id}
@@ -168,7 +198,7 @@ export default function DocsPage() {
                     >
                       <h3 className="text-xl font-bold text-white mb-4">{item.subtitle}</h3>
                       <p className="text-gray-300 mb-6">{item.text}</p>
-                      {item.steps && (
+                      {hasSteps(item) && (
                         <div className="space-y-2">
                           {item.steps.map((step, stepIndex) => (
                             <div key={stepIndex} className="flex items-start gap-3">
@@ -180,7 +210,7 @@ export default function DocsPage() {
                           ))}
                         </div>
                       )}
-                      {item.features && (
+                      {hasFeatures(item) && (
                         <ul className="space-y-2">
                           {item.features.map((feature, featureIndex) => (
                             <li key={featureIndex} className="flex items-center gap-3 text-gray-300">
@@ -192,7 +222,7 @@ export default function DocsPage() {
                           ))}
                         </ul>
                       )}
-                      {item.tips && (
+                      {hasTips(item) && (
                         <ul className="space-y-2">
                           {item.tips.map((tip, tipIndex) => (
                             <li key={tipIndex} className="flex items-center gap-3 text-gray-300">
@@ -225,7 +255,7 @@ export default function DocsPage() {
           >
             <h2 className="text-3xl font-bold text-white mb-4">Need More Help?</h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Can't find what you're looking for? Our support team is here to help you succeed.
+              Can&apos;t find what you&apos;re looking for? Our support team is here to help you succeed.
             </p>
             <Link
               href="/contact"

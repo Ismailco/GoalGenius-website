@@ -7,6 +7,7 @@ import { getMilestones, getGoals } from '@/app/lib/storage';
 // import { useModal } from '@/app/providers/ModalProvider';
 
 export default function MilestoneTimeline() {
+  const [mounted, setMounted] = useState(false);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [loading, setLoading] = useState(true);
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -19,13 +20,15 @@ export default function MilestoneTimeline() {
   // const { showModal } = useModal();
 
   useEffect(() => {
+    setMounted(true);
     setMilestones(getMilestones());
-    const fetchedGoals = getGoals();
-    setGoals(fetchedGoals);
-    console.log(goals);
+    setGoals(getGoals());
+  }, []);
 
-    // Group goals by category
-    const grouped = fetchedGoals.reduce((acc, goal) => {
+  useEffect(() => {
+    if (!mounted || !goals) return;
+
+    const grouped = goals.reduce((acc, goal) => {
       if (!acc[goal.category]) {
         acc[goal.category] = [];
       }
@@ -35,7 +38,7 @@ export default function MilestoneTimeline() {
 
     setGroupedGoals(grouped);
     setLoading(false);
-  }, []);
+  }, [goals, mounted]);
 
   const getStatusColor = (progress: number) => {
     if (progress === 100) return 'bg-gradient-to-r from-green-500 to-emerald-500';

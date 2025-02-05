@@ -253,7 +253,7 @@ export default function HomePage() {
                   className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10"
                 >
                   <div className="text-4xl mb-4">{testimonial.avatar}</div>
-                  <p className="text-gray-300 mb-6">"{testimonial.content}"</p>
+                  <p className="text-gray-300 mb-6">&ldquo;{testimonial.content}&rdquo;</p>
                   <div>
                     <p className="font-semibold text-white">{testimonial.name}</p>
                     <p className="text-gray-400">{testimonial.role}</p>
@@ -275,6 +275,9 @@ export default function HomePage() {
               className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl p-12 border border-white/10 text-center"
             >
               <h2 className="text-4xl font-bold text-white mb-6">Ready to Start Your Journey?</h2>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Can&apos;t find what you&apos;re looking for? Our support team is here to help you succeed.
+              </p>
               <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                 Join thousands of users who are already achieving their goals with GoalGenius.
               </p>
