@@ -1,11 +1,9 @@
-"use client"
-
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { ModalProvider } from './providers/ModalProvider';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
-import { useEffect } from 'react';
+import { Metadata } from 'next';
+import Providers from './components/Providers';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -14,45 +12,67 @@ const inter = Inter({
   adjustFontFallback: false
 });
 
+export const metadata: Metadata = {
+  metadataBase: new URL('https://goalgenius.app'),
+  title: {
+    default: 'GoalGenius - Transform Your Goals into Reality',
+    template: '%s | GoalGenius'
+  },
+  description: 'GoalGenius helps you set, track, and achieve your goals with smart tracking, daily check-ins, and intuitive progress monitoring. Transform your aspirations into achievements.',
+  keywords: ['goal tracking', 'personal development', 'productivity', 'habit tracking', 'goal setting', 'achievement', 'personal growth', 'milestone tracking'],
+  authors: [{ name: 'GoalGenius Team' }],
+  creator: 'GoalGenius',
+  publisher: 'GoalGenius',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'GoalGenius - Transform Your Goals into Reality',
+    description: 'Track your progress, celebrate milestones, and achieve your dreams with GoalGenius - your personal growth companion.',
+    url: 'https://goalgenius.app',
+    siteName: 'GoalGenius',
+    locale: 'en_US',
+    type: 'website',
+    images: [{
+      url: '/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'GoalGenius - Your Personal Growth Companion'
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GoalGenius - Transform Your Goals into Reality',
+    description: 'Track your progress, celebrate milestones, and achieve your dreams with GoalGenius - your personal growth companion.',
+    images: ['/twitter-image.jpg'],
+    creator: '@goalgenius',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
+  alternates: {
+    canonical: 'https://goalgenius.app',
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          console.log('Service Worker registered with scope:', registration.scope);
-
-          // Handle updates
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // New content is available, show update prompt
-                  if (confirm('New version available! Update now?')) {
-                    newWorker.postMessage('SKIP_WAITING');
-                    window.location.reload();
-                  }
-                }
-              });
-            }
-          });
-        })
-        .catch((error) => {
-          console.error('Service Worker registration failed:', error);
-        });
-
-      // Handle controller change
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('New Service Worker activated');
-      });
-    }
-  }, []);
-
   return (
     <html lang="en" className={inter.className}>
       <head>
@@ -67,11 +87,11 @@ export default function RootLayout({
         <meta name="theme-color" content="#60A5FA" />
       </head>
       <body>
-        <ModalProvider>
+        <Providers>
           <Header />
           {children}
           <Navbar />
-        </ModalProvider>
+        </Providers>
       </body>
     </html>
   );

@@ -32,3 +32,38 @@ export interface User {
   };
 }
 
+export interface Note {
+  id: string;
+  title: string;
+  content: string;
+  category?: string;
+  createdAt: string;
+  updatedAt: string;
+  isPinned?: boolean;
+}
+
+export interface Todo {
+  id: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  priority: 'low' | 'medium' | 'high';
+  dueDate?: string;
+  category?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CheckIn {
+  id: string;
+  date: string;
+  mood: 'great' | 'good' | 'okay' | 'bad' | 'terrible';
+  energy: 'high' | 'medium' | 'low';
+  accomplishments: string[];
+  challenges: string[];
+  goals: string[];
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
