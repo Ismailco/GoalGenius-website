@@ -1,133 +1,300 @@
 import Link from 'next/link';
+import AnimatedSection from './components/AnimatedSection';
+import Script from 'next/script';
 
-export default function Home() {
+const features = [
+  {
+    title: 'Goal Tracking',
+    description: 'Set, track, and achieve your goals with our intuitive dashboard.',
+    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+  },
+  {
+    title: 'Daily Check-ins',
+    description: 'Reflect on your progress and maintain accountability with daily check-ins.',
+    icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
+  },
+  {
+    title: 'Smart Notes',
+    description: 'Capture your thoughts and ideas with our beautiful notes system.',
+    icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'
+  }
+];
+
+const testimonials = [
+  {
+    name: 'Sarah Johnson',
+    role: 'Entrepreneur',
+    content: 'GoalGenius has transformed how I approach my business goals. The daily check-ins keep me accountable and focused.',
+    avatar: '👩🏽‍💼'
+  },
+  {
+    name: 'Michael Chen',
+    role: 'Fitness Enthusiast',
+    content: 'The milestone tracking feature is incredible. It helps me break down my fitness goals into achievable steps.',
+    avatar: '👨🏻‍💪'
+  },
+  {
+    name: 'Emily Rodriguez',
+    role: 'Student',
+    content: 'As a student, I love how GoalGenius helps me balance my academic goals with personal development.',
+    avatar: '👩🏻‍🎓'
+  }
+];
+
+const stats = [
+  { label: 'Active Users', value: '10K+' },
+  { label: 'Goals Achieved', value: '50K+' },
+  { label: 'Daily Check-ins', value: '100K+' },
+  { label: 'Success Rate', value: '89%' }
+];
+
+export default function HomePage() {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'GoalGenius',
+    description: 'Track your progress, celebrate milestones, and achieve your dreams with GoalGenius - your personal growth companion.',
+    applicationCategory: 'ProductivityApplication',
+    operatingSystem: 'All',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD'
+    },
+    featureList: [
+      'Goal Tracking',
+      'Daily Check-ins',
+      'Smart Notes',
+      'Progress Monitoring',
+      'Milestone Tracking'
+    ]
+  };
+
   return (
-    <div className="min-h-screen bg-slate-900">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
+    <>
+      <Script id="structured-data" type="application/ld+json">
+        {JSON.stringify(structuredData)}
+      </Script>
+
+      <main className="min-h-screen bg-slate-900">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl"></div>
-        <div className="max-w-7xl mx-auto relative">
-          <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-            <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-              <div className="sm:text-center lg:text-left">
-                <h1 className="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl">
-                  <span className="block">Welcome to</span>{' '}
-                  <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                    GoalGenius
-                  </span>
-                </h1>
-                <p className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  Your intelligent companion for goal setting and achievement. Transform your dreams into reality with AI-powered guidance.
-                </p>
-                <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                  <div className="rounded-full shadow">
-                    <Link
-                      href="/dashboard"
-                      className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200 md:py-4 md:text-lg md:px-10"
-                    >
-                      Get Started
-                    </Link>
-                  </div>
-                  <div className="mt-3 sm:mt-0 sm:ml-3">
-                    <a
-                      href="#features"
-                      className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-white/5 backdrop-blur-lg hover:bg-white/10 transform hover:scale-105 transition-all duration-200 md:py-4 md:text-lg md:px-10"
-                    >
-                      Learn More
-                    </a>
-                  </div>
-                </div>
+
+        {/* Hero Section */}
+        <section className="relative" aria-label="hero">
+          <div className="container mx-auto px-4 pt-20 pb-32 text-center">
+            <AnimatedSection
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-3xl mx-auto"
+            >
+              <h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-6">
+                Transform Your Goals into Reality
+              </h1>
+              <p className="text-xl text-gray-300 mb-8">
+                Track your progress, celebrate milestones, and achieve your dreams with GoalGenius - your personal growth companion.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200"
+                  aria-label="Get Started with GoalGenius"
+                >
+                  Get Started
+                  <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+                <Link
+                  href="/docs"
+                  className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-white/10 hover:bg-white/20 transform hover:scale-105 transition-all duration-200"
+                >
+                  Learn More
+                  <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </Link>
               </div>
-            </main>
+            </AnimatedSection>
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Features Section */}
-      <div id="features" className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:text-center mb-16">
-            <h2 className="text-base text-blue-400 font-semibold tracking-wide uppercase">Features</h2>
-            <p className="mt-2 text-3xl leading-8 font-extrabold text-white sm:text-4xl">
-              Achieve More with GoalGenius
-            </p>
-            <p className="mt-4 max-w-2xl text-xl text-gray-300 lg:mx-auto">
-              Our intelligent platform helps you set, track, and achieve your goals with ease.
-            </p>
-          </div>
-
-          <div className="mt-10">
-            <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-              {[
-                {
-                  title: 'Smart Goal Tracking',
-                  description: 'Set and track your goals with intuitive visualizations and progress metrics.',
-                  icon: (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  )
-                },
-                {
-                  title: 'AI-Powered Insights',
-                  description: 'Get personalized suggestions and insights to help you achieve your goals faster.',
-                  icon: (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  )
-                },
-                {
-                  title: 'Milestone Tracking',
-                  description: 'Break down your goals into manageable milestones and celebrate your progress.',
-                  icon: (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  )
-                },
-                {
-                  title: 'Smart Categories',
-                  description: 'Keep your goals organized with intelligent categorization and priority management.',
-                  icon: (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                  )
-                }
-              ].map((feature, index) => (
-                <div key={index} className="relative bg-white/5 backdrop-blur-lg rounded-3xl p-8 transform hover:scale-105 transition-all duration-200 border border-white/10">
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      {feature.icon}
-                    </svg>
-                  </div>
-                  <div className="ml-16">
-                    <h3 className="text-lg leading-6 font-medium text-white">{feature.title}</h3>
-                    <p className="mt-2 text-base text-gray-300">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
+        {/* Stats Section */}
+        <section className="relative py-16" aria-label="statistics">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {stats.map((stat, index) => (
+                <AnimatedSection
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-white/5 backdrop-blur-lg rounded-3xl p-6 text-center border border-white/10"
+                >
+                  <p className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    {stat.value}
+                  </p>
+                  <p className="text-gray-400 mt-2">{stat.label}</p>
+                </AnimatedSection>
               ))}
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* CTA Section */}
-      <div className="relative">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
-          <div className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 w-full transform hover:scale-105 transition-all duration-200 border border-white/10">
-            <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              <span className="block">Ready to achieve your goals?</span>
-              <span className="block text-blue-400">Start your journey with GoalGenius today.</span>
-            </h2>
-            <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-              <div className="inline-flex rounded-full shadow">
-                <Link
-                  href="/dashboard"
-                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200"
+        {/* Features Section */}
+        <section id="features" className="relative py-20 bg-slate-900/50" aria-label="features">
+          <div className="container mx-auto px-4">
+            <AnimatedSection
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-white mb-4">Everything You Need to Succeed</h2>
+              <p className="text-xl text-gray-300">Powerful features to help you stay on track and motivated</p>
+            </AnimatedSection>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature, index) => (
+                <AnimatedSection
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 transform hover:scale-[1.02] transition-all duration-200"
                 >
-                  Get Started Now
-                </Link>
-              </div>
+                  <div className="p-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl inline-block mb-4">
+                    <svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feature.icon} />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
+                  <p className="text-gray-300">{feature.description}</p>
+                </AnimatedSection>
+              ))}
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section className="relative py-20" aria-label="how it works">
+          <div className="container mx-auto px-4">
+            <AnimatedSection
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-white mb-4">How It Works</h2>
+              <p className="text-xl text-gray-300">Simple steps to achieve your goals</p>
+            </AnimatedSection>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  step: '01',
+                  title: 'Set Your Goals',
+                  description: 'Define clear, actionable goals and break them down into manageable milestones.'
+                },
+                {
+                  step: '02',
+                  title: 'Track Progress',
+                  description: 'Monitor your progress with our intuitive dashboard and daily check-ins.'
+                },
+                {
+                  step: '03',
+                  title: 'Achieve Success',
+                  description: 'Stay motivated, adjust your strategy, and celebrate your achievements.'
+                }
+              ].map((item, index) => (
+                <AnimatedSection
+                  key={item.step}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  className="relative bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10"
+                >
+                  <span className="text-6xl font-bold text-white/10 absolute top-4 right-4">{item.step}</span>
+                  <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
+                  <p className="text-gray-300">{item.description}</p>
+                </AnimatedSection>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="relative py-20 bg-slate-900/50" aria-label="testimonials">
+          <div className="container mx-auto px-4">
+            <AnimatedSection
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-white mb-4">What Our Users Say</h2>
+              <p className="text-xl text-gray-300">Join thousands of satisfied users achieving their goals</p>
+            </AnimatedSection>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {testimonials.map((testimonial, index) => (
+                <AnimatedSection
+                  key={testimonial.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10"
+                >
+                  <div className="text-4xl mb-4">{testimonial.avatar}</div>
+                  <p className="text-gray-300 mb-6">&ldquo;{testimonial.content}&rdquo;</p>
+                  <div>
+                    <p className="font-semibold text-white">{testimonial.name}</p>
+                    <p className="text-gray-400">{testimonial.role}</p>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="relative py-20" aria-label="call to action">
+          <div className="container mx-auto px-4">
+            <AnimatedSection
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl p-12 border border-white/10 text-center"
+            >
+              <h2 className="text-4xl font-bold text-white mb-6">Ready to Start Your Journey?</h2>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Can&apos;t find what you&apos;re looking for? Our support team is here to help you succeed.
+              </p>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Join thousands of users who are already achieving their goals with GoalGenius.
+              </p>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200"
+                aria-label="Get Started Now with GoalGenius"
+              >
+                Get Started Now
+                <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            </AnimatedSection>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
