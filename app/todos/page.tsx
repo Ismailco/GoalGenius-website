@@ -58,6 +58,11 @@ export default function TodosPage() {
     setTodos(getTodos());
   };
 
+  const handleEditTodo = (todo: Todo) => {
+    setSelectedTodo(todo);
+    setIsModalOpen(true);
+  };
+
   const handleDeleteTodo = (id: string) => {
     setAlert({
       show: true,
@@ -263,10 +268,7 @@ export default function TodosPage() {
                 </span>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => {
-                      setSelectedTodo(todo);
-                      setIsModalOpen(true);
-                    }}
+                    onClick={() => handleEditTodo(todo)}
                     className="text-blue-400 hover:text-blue-300 transition-colors"
                   >
                     Edit

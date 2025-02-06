@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { GoalCategory, TimeFrame } from '@/app/types';
+import { validateAndSanitizeInput, ValidationResult } from '@/app/lib/validation';
 
 interface GoalInputFormProps {
   onSubmit: (data: {
@@ -13,6 +14,11 @@ interface GoalInputFormProps {
   onCancel?: () => void;
 }
 
+interface FormErrors {
+  title?: string;
+  description?: string;
+}
+
 export default function GoalInputForm({ onSubmit, onCancel }: GoalInputFormProps) {
   const [formData, setFormData] = useState({
     title: '',
@@ -20,10 +26,67 @@ export default function GoalInputForm({ onSubmit, onCancel }: GoalInputFormProps
     category: 'health' as GoalCategory,
     timeFrame: 'short-term' as TimeFrame,
   });
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const validateField = (name: string, value: string): ValidationResult => {
+    switch (name) {
+      case 'title':
+        return validateAndSanitizeInput(value, 'title', true);
+      case 'description':
+        return validateAndSanitizeInput(value, 'description', false);
+      default:
+        return { isValid: true, sanitizedValue: value };
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    // Validate and sanitize the input
+    const validationResult = validateField(name, value);
+
+    // Update the form data with sanitized value
+    setFormData(prev => ({
+      ...prev,
+      [name]: validationResult.sanitizedValue
+    }));
+
+    // Update errors
+    setErrors(prev => ({
+      ...prev,
+      [name]: validationResult.error
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(formData);
+
+    // Validate all fields before submission
+    const titleValidation = validateField('title', formData.title);
+    const descriptionValidation = validateField('description', formData.description);
+
+    const newErrors: FormErrors = {};
+    if (!titleValidation.isValid) {
+      newErrors.title = titleValidation.error;
+    }
+    if (!descriptionValidation.isValid) {
+      newErrors.description = descriptionValidation.error;
+    }
+
+    // If there are any errors, don't submit
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Submit sanitized data
+    await onSubmit({
+      ...formData,
+      title: titleValidation.sanitizedValue,
+      description: descriptionValidation.sanitizedValue,
+    });
   };
 
   return (
@@ -35,12 +98,18 @@ export default function GoalInputForm({ onSubmit, onCancel }: GoalInputFormProps
         <input
           type="text"
           id="title"
+          name="title"
           value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="mt-1 block w-full px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          onChange={handleChange}
+          className={`mt-1 block w-full px-4 py-2 bg-white/5 border ${
+            errors.title ? 'border-red-500' : 'border-white/10'
+          } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
           placeholder="Enter goal title"
           required
         />
+        {errors.title && (
+          <p className="mt-1 text-sm text-red-500">{errors.title}</p>
+        )}
       </div>
 
       <div>
@@ -49,12 +118,18 @@ export default function GoalInputForm({ onSubmit, onCancel }: GoalInputFormProps
         </label>
         <textarea
           id="description"
+          name="description"
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="mt-1 block w-full px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          onChange={handleChange}
+          className={`mt-1 block w-full px-4 py-2 bg-white/5 border ${
+            errors.description ? 'border-red-500' : 'border-white/10'
+          } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
           placeholder="Describe your goal"
           rows={3}
         />
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-500">{errors.description}</p>
+        )}
       </div>
 
       <div>
@@ -63,8 +138,9 @@ export default function GoalInputForm({ onSubmit, onCancel }: GoalInputFormProps
         </label>
         <select
           id="category"
+          name="category"
           value={formData.category}
-          onChange={(e) => setFormData({ ...formData, category: e.target.value as GoalCategory })}
+          onChange={handleChange}
           className="mt-1 block w-full px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
         >
           <option value="health">Health</option>
@@ -80,8 +156,9 @@ export default function GoalInputForm({ onSubmit, onCancel }: GoalInputFormProps
         </label>
         <select
           id="timeFrame"
+          name="timeFrame"
           value={formData.timeFrame}
-          onChange={(e) => setFormData({ ...formData, timeFrame: e.target.value as TimeFrame })}
+          onChange={handleChange}
           className="mt-1 block w-full px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
         >
           <option value="short-term">Short Term (1-3 months)</option>

@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Todo } from '@/app/types';
 import { createTodo, updateTodo } from '@/app/lib/storage';
+import { validateAndSanitizeInput, ValidationResult, unescapeForDisplay } from '@/app/lib/validation';
+import validator from 'validator';
 
 interface CreateTodoModalProps {
   isOpen: boolean;
@@ -11,29 +13,120 @@ interface CreateTodoModalProps {
   onSave?: (todo: Todo) => void;
 }
 
+interface FormErrors {
+  title?: string;
+  description?: string;
+  category?: string;
+  dueDate?: string;
+}
+
 export default function CreateTodoModal({
   isOpen,
   onClose,
   existingTodo,
   onSave,
 }: CreateTodoModalProps) {
-  const [title, setTitle] = useState(existingTodo?.title || '');
-  const [description, setDescription] = useState(existingTodo?.description || '');
-  const [priority, setPriority] = useState<'low' | 'medium' | 'high'>(existingTodo?.priority || 'medium');
-  const [dueDate, setDueDate] = useState(existingTodo?.dueDate || '');
-  const [category, setCategory] = useState(existingTodo?.category || '');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
+  const [dueDate, setDueDate] = useState('');
+  const [category, setCategory] = useState('');
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  useEffect(() => {
+    if (existingTodo) {
+      setTitle(unescapeForDisplay(existingTodo.title));
+      setDescription(existingTodo.description ? unescapeForDisplay(existingTodo.description) : '');
+      setPriority(existingTodo.priority);
+      setDueDate(existingTodo.dueDate || '');
+      setCategory(existingTodo.category ? unescapeForDisplay(existingTodo.category) : '');
+    }
+  }, [existingTodo]);
 
   if (!isOpen) return null;
+
+  const validateField = (name: string, value: string): ValidationResult => {
+    switch (name) {
+      case 'title':
+        return validateAndSanitizeInput(value, 'title', true);
+      case 'description':
+        return validateAndSanitizeInput(value, 'description', false);
+      case 'category':
+        return validateAndSanitizeInput(value, 'category', false);
+      case 'dueDate':
+        return validateAndSanitizeInput(value, 'date', false);
+      default:
+        return { isValid: true, sanitizedValue: value };
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    const validationResult = validateField(name, value);
+
+    // Update the form data with sanitized value
+    switch (name) {
+      case 'title':
+        setTitle(validationResult.sanitizedValue);
+        break;
+      case 'description':
+        setDescription(validationResult.sanitizedValue);
+        break;
+      case 'category':
+        setCategory(validationResult.sanitizedValue);
+        break;
+      case 'dueDate':
+        setDueDate(validationResult.sanitizedValue);
+        break;
+      case 'priority':
+        setPriority(value as 'low' | 'medium' | 'high');
+        break;
+    }
+
+    // Update errors
+    setErrors(prev => ({
+      ...prev,
+      [name]: validationResult.error
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate all fields before submission
+    const titleValidation = validateField('title', title);
+    const descriptionValidation = validateField('description', description);
+    const categoryValidation = validateField('category', category);
+    const dueDateValidation = validateField('dueDate', dueDate);
+
+    const newErrors: FormErrors = {};
+    if (!titleValidation.isValid) {
+      newErrors.title = titleValidation.error;
+    }
+    if (!descriptionValidation.isValid) {
+      newErrors.description = descriptionValidation.error;
+    }
+    if (!categoryValidation.isValid) {
+      newErrors.category = categoryValidation.error;
+    }
+    if (!dueDateValidation.isValid) {
+      newErrors.dueDate = dueDateValidation.error;
+    }
+
+    // If there are any errors, don't submit
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     const todoData = {
-      title,
-      description: description || undefined,
+      title: titleValidation.sanitizedValue,
+      description: descriptionValidation.sanitizedValue || undefined,
       priority: priority as 'low' | 'medium' | 'high',
-      dueDate: dueDate || undefined,
-      category: category || undefined,
+      dueDate: dueDateValidation.sanitizedValue || undefined,
+      category: categoryValidation.sanitizedValue || undefined,
     };
 
     const savedTodo = existingTodo
@@ -62,11 +155,17 @@ export default function CreateTodoModal({
                 <input
                   type="text"
                   id="title"
+                  name="title"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  onChange={handleChange}
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.title ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                   required
                 />
+                {errors.title && (
+                  <p className="mt-1 text-sm text-red-500">{errors.title}</p>
+                )}
               </div>
 
               <div>
@@ -75,11 +174,17 @@ export default function CreateTodoModal({
                 </label>
                 <textarea
                   id="description"
+                  name="description"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={handleChange}
                   rows={3}
-                  className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.description ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                 />
+                {errors.description && (
+                  <p className="mt-1 text-sm text-red-500">{errors.description}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -89,8 +194,9 @@ export default function CreateTodoModal({
                   </label>
                   <select
                     id="priority"
+                    name="priority"
                     value={priority}
-                    onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
+                    onChange={handleChange}
                     className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                   >
                     <option value="low">Low</option>
@@ -106,10 +212,16 @@ export default function CreateTodoModal({
                   <input
                     type="date"
                     id="dueDate"
+                    name="dueDate"
                     value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 bg-white/10 border ${
+                      errors.dueDate ? 'border-red-500' : 'border-white/20'
+                    } rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                   />
+                  {errors.dueDate && (
+                    <p className="mt-1 text-sm text-red-500">{errors.dueDate}</p>
+                  )}
                 </div>
               </div>
 
@@ -120,11 +232,17 @@ export default function CreateTodoModal({
                 <input
                   type="text"
                   id="category"
+                  name="category"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  onChange={handleChange}
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.category ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                   placeholder="Enter a category"
                 />
+                {errors.category && (
+                  <p className="mt-1 text-sm text-red-500">{errors.category}</p>
+                )}
               </div>
             </div>
 

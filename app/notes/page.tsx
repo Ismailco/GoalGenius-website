@@ -56,6 +56,11 @@ export default function NotesPage() {
     setNotes(getNotes());
   };
 
+  const handleEditNote = (note: Note) => {
+    setSelectedNote(note);
+    setIsModalOpen(true);
+  };
+
   const handleDeleteNote = (id: string) => {
     setAlert({
       show: true,
@@ -193,10 +198,7 @@ export default function NotesPage() {
                 </span>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => {
-                      setSelectedNote(note);
-                      setIsModalOpen(true);
-                    }}
+                    onClick={() => handleEditNote(note)}
                     className="text-blue-400 hover:text-blue-300 transition-colors"
                   >
                     Edit

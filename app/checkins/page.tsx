@@ -56,6 +56,11 @@ export default function CheckInsPage() {
     setCheckIns(getCheckIns());
   };
 
+  const handleEditCheckIn = (checkIn: CheckIn) => {
+    setSelectedCheckIn(checkIn);
+    setIsModalOpen(true);
+  };
+
   const handleDeleteCheckIn = (id: string) => {
     setAlert({
       show: true,
@@ -234,10 +239,7 @@ export default function CheckInsPage() {
                   </div>
                   <div className="flex gap-3">
                     <button
-                      onClick={() => {
-                        setSelectedCheckIn(checkIn);
-                        setIsModalOpen(true);
-                      }}
+                      onClick={() => handleEditCheckIn(checkIn)}
                       className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                       Edit

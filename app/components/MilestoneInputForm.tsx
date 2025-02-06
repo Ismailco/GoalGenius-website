@@ -1,10 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { validateAndSanitizeInput, ValidationResult } from '@/app/lib/validation';
 
 interface MilestoneInputFormProps {
   onSubmit: (data: { title: string; description: string; date: string }) => void;
   onCancel: () => void;
+}
+
+interface FormErrors {
+  title?: string;
+  description?: string;
+  date?: string;
 }
 
 export default function MilestoneInputForm({ onSubmit, onCancel }: MilestoneInputFormProps) {
@@ -13,10 +20,70 @@ export default function MilestoneInputForm({ onSubmit, onCancel }: MilestoneInpu
     description: '',
     date: new Date().toISOString().split('T')[0],
   });
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const validateField = (name: string, value: string): ValidationResult => {
+    switch (name) {
+      case 'title':
+        return validateAndSanitizeInput(value, 'title', true);
+      case 'description':
+        return validateAndSanitizeInput(value, 'description', true);
+      case 'date':
+        return validateAndSanitizeInput(value, 'date', true);
+      default:
+        return { isValid: true, sanitizedValue: value };
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const validationResult = validateField(name, value);
+
+    // Update the form data with sanitized value
+    setFormData(prev => ({
+      ...prev,
+      [name]: validationResult.sanitizedValue
+    }));
+
+    // Update errors
+    setErrors(prev => ({
+      ...prev,
+      [name]: validationResult.error
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    // Validate all fields before submission
+    const titleValidation = validateField('title', formData.title);
+    const descriptionValidation = validateField('description', formData.description);
+    const dateValidation = validateField('date', formData.date);
+
+    const newErrors: FormErrors = {};
+    if (!titleValidation.isValid) {
+      newErrors.title = titleValidation.error;
+    }
+    if (!descriptionValidation.isValid) {
+      newErrors.description = descriptionValidation.error;
+    }
+    if (!dateValidation.isValid) {
+      newErrors.date = dateValidation.error;
+    }
+
+    // If there are any errors, don't submit
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    onSubmit({
+      title: titleValidation.sanitizedValue,
+      description: descriptionValidation.sanitizedValue,
+      date: dateValidation.sanitizedValue,
+    });
   };
 
   return (
@@ -28,11 +95,17 @@ export default function MilestoneInputForm({ onSubmit, onCancel }: MilestoneInpu
         <input
           type="text"
           id="title"
+          name="title"
           value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          onChange={handleChange}
+          className={`w-full px-4 py-2 bg-white/10 border ${
+            errors.title ? 'border-red-500' : 'border-white/20'
+          } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
           required
         />
+        {errors.title && (
+          <p className="mt-1 text-sm text-red-500">{errors.title}</p>
+        )}
       </div>
 
       <div>
@@ -41,12 +114,18 @@ export default function MilestoneInputForm({ onSubmit, onCancel }: MilestoneInpu
         </label>
         <textarea
           id="description"
+          name="description"
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          onChange={handleChange}
+          className={`w-full px-4 py-2 bg-white/10 border ${
+            errors.description ? 'border-red-500' : 'border-white/20'
+          } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
           rows={3}
           required
         />
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-500">{errors.description}</p>
+        )}
       </div>
 
       <div>
@@ -56,11 +135,17 @@ export default function MilestoneInputForm({ onSubmit, onCancel }: MilestoneInpu
         <input
           type="date"
           id="date"
+          name="date"
           value={formData.date}
-          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          onChange={handleChange}
+          className={`w-full px-4 py-2 bg-white/10 border ${
+            errors.date ? 'border-red-500' : 'border-white/20'
+          } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
           required
         />
+        {errors.date && (
+          <p className="mt-1 text-sm text-red-500">{errors.date}</p>
+        )}
       </div>
 
       <div className="flex justify-end gap-2 mt-6">

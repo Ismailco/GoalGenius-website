@@ -1,4 +1,37 @@
 import { Goal, Milestone, Note, Todo, CheckIn } from '@/app/types';
+import { v4 as uuidv4 } from 'uuid';
+import { sanitizeForStorage } from '@/app/lib/validation';
+import validator from 'validator';
+
+// Helper function to sanitize data before storage
+const sanitizeData = (data: Record<string, any>): Record<string, any> => {
+  const sanitized: Record<string, any> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (Array.isArray(value)) {
+      sanitized[key] = value.map(item => typeof item === 'string' ? sanitizeForStorage(item) : item);
+    } else if (typeof value === 'string') {
+      sanitized[key] = sanitizeForStorage(value);
+    } else {
+      sanitized[key] = value;
+    }
+  }
+  return sanitized;
+};
+
+// Helper function to unescape data when retrieving
+const unescapeData = (data: Record<string, any>): Record<string, any> => {
+  const unescaped: Record<string, any> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (Array.isArray(value)) {
+      unescaped[key] = value.map(item => typeof item === 'string' ? validator.unescape(item) : item);
+    } else if (typeof value === 'string') {
+      unescaped[key] = validator.unescape(value);
+    } else {
+      unescaped[key] = value;
+    }
+  }
+  return unescaped;
+};
 
 const STORAGE_KEYS = {
   GOALS: 'goals',
@@ -10,8 +43,8 @@ const STORAGE_KEYS = {
 
 export function getGoals(): Goal[] {
   if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(STORAGE_KEYS.GOALS);
-  return stored ? JSON.parse(stored) : [];
+  const goals = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '[]');
+  return goals.map((goal: Goal) => unescapeData(goal) as Goal);
 }
 
 export function getGoal(id: string): Goal | null {
@@ -21,32 +54,33 @@ export function getGoal(id: string): Goal | null {
 
 export function createGoal(goal: Omit<Goal, 'id' | 'createdAt' | 'updatedAt'>): Goal {
   const goals = getGoals();
+  const sanitizedGoal = sanitizeData(goal);
   const newGoal: Goal = {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    ...goal,
+    title: sanitizedGoal.title,
+    description: sanitizedGoal.description,
+    category: sanitizedGoal.category,
+    timeFrame: sanitizedGoal.timeFrame,
+    status: sanitizedGoal.status,
+    progress: sanitizedGoal.progress,
   };
-
   localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify([...goals, newGoal]));
-  return newGoal;
+  return unescapeData(newGoal) as Goal;
 }
 
 export function updateGoal(id: string, updates: Partial<Goal>): Goal {
   const goals = getGoals();
-  const index = goals.findIndex(goal => goal.id === id);
-
-  if (index === -1) throw new Error('Goal not found');
-
-  const updatedGoal = {
-    ...goals[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-
-  goals[index] = updatedGoal;
-  localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goals));
-  return updatedGoal;
+  const sanitizedUpdates = sanitizeData(updates);
+  const updatedGoals = goals.map(goal => {
+    if (goal.id === id) {
+      return { ...goal, ...sanitizedUpdates, updatedAt: new Date().toISOString() };
+    }
+    return goal;
+  });
+  localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(updatedGoals));
+  return unescapeData(updatedGoals.find(g => g.id === id)!) as Goal;
 }
 
 export function deleteGoal(id: string): boolean {
@@ -59,7 +93,8 @@ export function deleteGoal(id: string): boolean {
 export function getMilestones(): Milestone[] {
   if (typeof window === 'undefined') return [];
   const stored = localStorage.getItem(STORAGE_KEYS.MILESTONES);
-  return stored ? JSON.parse(stored) : [];
+  const milestones = stored ? JSON.parse(stored) : [];
+  return milestones.map((milestone: Milestone) => unescapeData(milestone) as Milestone);
 }
 
 export function getMilestone(id: string): Milestone | null {
@@ -69,14 +104,18 @@ export function getMilestone(id: string): Milestone | null {
 
 export function createMilestone(milestone: Omit<Milestone, 'id'>): Milestone {
   const milestones = getMilestones();
+  const sanitizedMilestone = sanitizeData(milestone);
   const newMilestone: Milestone = {
     id: crypto.randomUUID(),
-    ...milestone,
+    goalId: sanitizedMilestone.goalId,
+    title: sanitizedMilestone.title,
+    description: sanitizedMilestone.description,
+    date: sanitizedMilestone.date
   };
 
   milestones.push(newMilestone);
   localStorage.setItem(STORAGE_KEYS.MILESTONES, JSON.stringify(milestones));
-  return newMilestone;
+  return unescapeData(newMilestone) as Milestone;
 }
 
 export function updateMilestone(id: string, updates: Partial<Milestone>): Milestone {
@@ -85,14 +124,15 @@ export function updateMilestone(id: string, updates: Partial<Milestone>): Milest
 
   if (index === -1) throw new Error('Milestone not found');
 
+  const sanitizedUpdates = sanitizeData(updates);
   const updatedMilestone = {
     ...milestones[index],
-    ...updates,
+    ...sanitizedUpdates,
   };
 
   milestones[index] = updatedMilestone;
   localStorage.setItem(STORAGE_KEYS.MILESTONES, JSON.stringify(milestones));
-  return updatedMilestone;
+  return unescapeData(updatedMilestone) as Milestone;
 }
 
 export function deleteMilestone(id: string): boolean {
@@ -103,9 +143,8 @@ export function deleteMilestone(id: string): boolean {
 }
 
 export function getNotes(): Note[] {
-  if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(STORAGE_KEYS.NOTES);
-  return stored ? JSON.parse(stored) : [];
+  const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '[]');
+  return notes.map((note: Note) => unescapeData(note) as Note);
 }
 
 export function getNote(id: string): Note | null {
@@ -115,33 +154,31 @@ export function getNote(id: string): Note | null {
 
 export function createNote(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Note {
   const notes = getNotes();
+  const sanitizedNote = sanitizeData(note);
   const newNote: Note = {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    isPinned: false,
-    ...note,
+    title: sanitizedNote.title,
+    content: sanitizedNote.content,
+    category: sanitizedNote.category,
+    isPinned: sanitizedNote.isPinned || false,
   };
-
   localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify([...notes, newNote]));
-  return newNote;
+  return unescapeData(newNote) as Note;
 }
 
 export function updateNote(id: string, updates: Partial<Note>): Note {
   const notes = getNotes();
-  const index = notes.findIndex(note => note.id === id);
-
-  if (index === -1) throw new Error('Note not found');
-
-  const updatedNote = {
-    ...notes[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-
-  notes[index] = updatedNote;
-  localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
-  return updatedNote;
+  const sanitizedUpdates = sanitizeData(updates);
+  const updatedNotes = notes.map(note => {
+    if (note.id === id) {
+      return { ...note, ...sanitizedUpdates, updatedAt: new Date().toISOString() };
+    }
+    return note;
+  });
+  localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(updatedNotes));
+  return unescapeData(updatedNotes.find(n => n.id === id)!) as Note;
 }
 
 export function deleteNote(id: string): boolean {
@@ -153,8 +190,8 @@ export function deleteNote(id: string): boolean {
 
 export function getTodos(): Todo[] {
   if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(STORAGE_KEYS.TODOS);
-  return stored ? JSON.parse(stored) : [];
+  const todos = JSON.parse(localStorage.getItem(STORAGE_KEYS.TODOS) || '[]');
+  return todos.map((todo: Todo) => unescapeData(todo) as Todo);
 }
 
 export function getTodo(id: string): Todo | null {
@@ -164,33 +201,34 @@ export function getTodo(id: string): Todo | null {
 
 export function createTodo(todo: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'completed'>): Todo {
   const todos = getTodos();
+  const sanitizedTodo = sanitizeData(todo);
   const newTodo: Todo = {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     completed: false,
-    ...todo,
+    title: sanitizedTodo.title,
+    description: sanitizedTodo.description,
+    priority: sanitizedTodo.priority,
+    dueDate: sanitizedTodo.dueDate,
+    category: sanitizedTodo.category,
   };
 
   localStorage.setItem(STORAGE_KEYS.TODOS, JSON.stringify([...todos, newTodo]));
-  return newTodo;
+  return unescapeData(newTodo) as Todo;
 }
 
 export function updateTodo(id: string, updates: Partial<Todo>): Todo {
   const todos = getTodos();
-  const index = todos.findIndex(todo => todo.id === id);
-
-  if (index === -1) throw new Error('Todo not found');
-
-  const updatedTodo = {
-    ...todos[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-
-  todos[index] = updatedTodo;
-  localStorage.setItem(STORAGE_KEYS.TODOS, JSON.stringify(todos));
-  return updatedTodo;
+  const sanitizedUpdates = sanitizeData(updates);
+  const updatedTodos = todos.map(todo => {
+    if (todo.id === id) {
+      return { ...todo, ...sanitizedUpdates, updatedAt: new Date().toISOString() };
+    }
+    return todo;
+  });
+  localStorage.setItem(STORAGE_KEYS.TODOS, JSON.stringify(updatedTodos));
+  return unescapeData(updatedTodos.find(t => t.id === id)!) as Todo;
 }
 
 export function deleteTodo(id: string): boolean {
@@ -208,8 +246,8 @@ export function toggleTodoComplete(id: string): Todo {
 
 export function getCheckIns(): CheckIn[] {
   if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(STORAGE_KEYS.CHECKINS);
-  return stored ? JSON.parse(stored) : [];
+  const checkIns = JSON.parse(localStorage.getItem(STORAGE_KEYS.CHECKINS) || '[]');
+  return checkIns.map((checkIn: CheckIn) => unescapeData(checkIn) as CheckIn);
 }
 
 export function getCheckIn(id: string): CheckIn | null {
@@ -224,32 +262,35 @@ export function getCheckInByDate(date: string): CheckIn | null {
 
 export function createCheckIn(checkIn: Omit<CheckIn, 'id' | 'createdAt' | 'updatedAt'>): CheckIn {
   const checkIns = getCheckIns();
+  const sanitizedCheckIn = sanitizeData(checkIn);
   const newCheckIn: CheckIn = {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    ...checkIn,
+    date: sanitizedCheckIn.date,
+    mood: sanitizedCheckIn.mood,
+    energy: sanitizedCheckIn.energy,
+    accomplishments: sanitizedCheckIn.accomplishments,
+    challenges: sanitizedCheckIn.challenges,
+    goals: sanitizedCheckIn.goals,
+    notes: sanitizedCheckIn.notes,
   };
 
   localStorage.setItem(STORAGE_KEYS.CHECKINS, JSON.stringify([...checkIns, newCheckIn]));
-  return newCheckIn;
+  return unescapeData(newCheckIn) as CheckIn;
 }
 
 export function updateCheckIn(id: string, updates: Partial<CheckIn>): CheckIn {
   const checkIns = getCheckIns();
-  const index = checkIns.findIndex(checkIn => checkIn.id === id);
-
-  if (index === -1) throw new Error('Check-in not found');
-
-  const updatedCheckIn = {
-    ...checkIns[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-
-  checkIns[index] = updatedCheckIn;
-  localStorage.setItem(STORAGE_KEYS.CHECKINS, JSON.stringify(checkIns));
-  return updatedCheckIn;
+  const sanitizedUpdates = sanitizeData(updates);
+  const updatedCheckIns = checkIns.map(checkIn => {
+    if (checkIn.id === id) {
+      return { ...checkIn, ...sanitizedUpdates, updatedAt: new Date().toISOString() };
+    }
+    return checkIn;
+  });
+  localStorage.setItem(STORAGE_KEYS.CHECKINS, JSON.stringify(updatedCheckIns));
+  return unescapeData(updatedCheckIns.find(c => c.id === id)!) as CheckIn;
 }
 
 export function deleteCheckIn(id: string): boolean {

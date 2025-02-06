@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckIn } from '@/app/types';
 import { createCheckIn, updateCheckIn } from '@/app/lib/storage';
+import { validateAndSanitizeInput, ValidationResult, unescapeForDisplay } from '@/app/lib/validation';
+import validator from 'validator';
 
 interface CreateCheckInModalProps {
   isOpen: boolean;
@@ -12,6 +14,14 @@ interface CreateCheckInModalProps {
   defaultDate?: string;
 }
 
+interface FormErrors {
+  date?: string;
+  accomplishments?: (string | undefined)[];
+  challenges?: (string | undefined)[];
+  goals?: (string | undefined)[];
+  notes?: string;
+}
+
 export default function CreateCheckInModal({
   isOpen,
   onClose,
@@ -19,27 +29,155 @@ export default function CreateCheckInModal({
   onSave,
   defaultDate,
 }: CreateCheckInModalProps) {
-  const [date, setDate] = useState(existingCheckIn?.date || defaultDate || new Date().toISOString().split('T')[0]);
-  const [mood, setMood] = useState(existingCheckIn?.mood || 'good');
-  const [energy, setEnergy] = useState(existingCheckIn?.energy || 'medium');
-  const [accomplishments, setAccomplishments] = useState<string[]>(existingCheckIn?.accomplishments || ['']);
-  const [challenges, setChallenges] = useState<string[]>(existingCheckIn?.challenges || ['']);
-  const [goals, setGoals] = useState<string[]>(existingCheckIn?.goals || ['']);
-  const [notes, setNotes] = useState(existingCheckIn?.notes || '');
+  const [date, setDate] = useState(defaultDate || new Date().toISOString().split('T')[0]);
+  const [mood, setMood] = useState<'great' | 'good' | 'okay' | 'bad' | 'terrible'>('good');
+  const [energy, setEnergy] = useState<'high' | 'medium' | 'low'>('medium');
+  const [accomplishments, setAccomplishments] = useState<string[]>(['']);
+  const [challenges, setChallenges] = useState<string[]>(['']);
+  const [goals, setGoals] = useState<string[]>(['']);
+  const [notes, setNotes] = useState('');
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  useEffect(() => {
+    if (existingCheckIn) {
+      setDate(existingCheckIn.date);
+      setMood(existingCheckIn.mood);
+      setEnergy(existingCheckIn.energy);
+      setAccomplishments(existingCheckIn.accomplishments.map(a => unescapeForDisplay(a)));
+      setChallenges(existingCheckIn.challenges.map(c => unescapeForDisplay(c)));
+      setGoals(existingCheckIn.goals.map(g => unescapeForDisplay(g)));
+      setNotes(existingCheckIn.notes ? unescapeForDisplay(existingCheckIn.notes) : '');
+    }
+  }, [existingCheckIn]);
 
   if (!isOpen) return null;
+
+  const validateField = (name: string, value: string): ValidationResult => {
+    switch (name) {
+      case 'date':
+        return validateAndSanitizeInput(value, 'date', true);
+      case 'accomplishment':
+      case 'challenge':
+      case 'goal':
+        return validateAndSanitizeInput(value, 'title', false);
+      case 'notes':
+        return validateAndSanitizeInput(value, 'description', false);
+      default:
+        return { isValid: true, sanitizedValue: value };
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const validationResult = validateField(name, value);
+
+    // Update the form data with sanitized value
+    switch (name) {
+      case 'date':
+        setDate(validationResult.sanitizedValue);
+        break;
+      case 'notes':
+        setNotes(validationResult.sanitizedValue);
+        break;
+    }
+
+    // Update errors
+    setErrors(prev => ({
+      ...prev,
+      [name]: validationResult.error
+    }));
+  };
+
+  const handleArrayInput = (
+    index: number,
+    value: string,
+    array: string[],
+    setArray: (value: string[]) => void,
+    type: 'accomplishment' | 'challenge' | 'goal'
+  ) => {
+    const validationResult = validateField(type, value);
+    const newArray = [...array];
+    newArray[index] = validationResult.sanitizedValue;
+
+    // Add new empty field if typing in the last field
+    if (index === array.length - 1 && validationResult.sanitizedValue !== '') {
+      newArray.push('');
+    }
+
+    // Remove empty fields except the last one
+    if (validationResult.sanitizedValue === '' && index !== array.length - 1) {
+      newArray.splice(index, 1);
+    }
+
+    setArray(newArray);
+
+    // Update errors for array fields
+    setErrors(prev => {
+      const currentErrors = prev[type + 's' as keyof FormErrors] as (string | undefined)[] | undefined;
+      const newErrors = currentErrors ? [...currentErrors] : [];
+      newErrors[index] = validationResult.error;
+      return {
+        ...prev,
+        [type + 's']: newErrors
+      };
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate all fields before submission
+    const dateValidation = validateField('date', date);
+    const notesValidation = validateField('notes', notes);
+
+    const newErrors: FormErrors = {};
+    if (!dateValidation.isValid) {
+      newErrors.date = dateValidation.error;
+    }
+    if (!notesValidation.isValid) {
+      newErrors.notes = notesValidation.error;
+    }
+
+    // Validate array fields
+    const accomplishmentErrors: (string | undefined)[] = [];
+    const challengeErrors: (string | undefined)[] = [];
+    const goalErrors: (string | undefined)[] = [];
+
+    accomplishments.forEach((acc, index) => {
+      const validation = validateField('accomplishment', acc);
+      accomplishmentErrors[index] = !validation.isValid ? validation.error : undefined;
+    });
+
+    challenges.forEach((challenge, index) => {
+      const validation = validateField('challenge', challenge);
+      challengeErrors[index] = !validation.isValid ? validation.error : undefined;
+    });
+
+    goals.forEach((goal, index) => {
+      const validation = validateField('goal', goal);
+      goalErrors[index] = !validation.isValid ? validation.error : undefined;
+    });
+
+    if (accomplishmentErrors.some(error => error !== undefined)) newErrors.accomplishments = accomplishmentErrors;
+    if (challengeErrors.some(error => error !== undefined)) newErrors.challenges = challengeErrors;
+    if (goalErrors.some(error => error !== undefined)) newErrors.goals = goalErrors;
+
+    // If there are any errors, don't submit
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     const checkInData = {
-      date,
+      date: dateValidation.sanitizedValue,
       mood: mood as CheckIn['mood'],
       energy: energy as CheckIn['energy'],
-      accomplishments: accomplishments.filter(Boolean),
-      challenges: challenges.filter(Boolean),
-      goals: goals.filter(Boolean),
-      notes: notes || undefined,
+      accomplishments: accomplishments.filter(Boolean).map(acc => validateField('accomplishment', acc).sanitizedValue),
+      challenges: challenges.filter(Boolean).map(challenge => validateField('challenge', challenge).sanitizedValue),
+      goals: goals.filter(Boolean).map(goal => validateField('goal', goal).sanitizedValue),
+      notes: notesValidation.sanitizedValue || undefined,
     };
 
     const savedCheckIn = existingCheckIn
@@ -48,28 +186,6 @@ export default function CreateCheckInModal({
 
     onSave?.(savedCheckIn);
     onClose();
-  };
-
-  const handleArrayInput = (
-    index: number,
-    value: string,
-    array: string[],
-    setArray: (value: string[]) => void
-  ) => {
-    const newArray = [...array];
-    newArray[index] = value;
-
-    // Add new empty field if typing in the last field
-    if (index === array.length - 1 && value !== '') {
-      newArray.push('');
-    }
-
-    // Remove empty fields except the last one
-    if (value === '' && index !== array.length - 1) {
-      newArray.splice(index, 1);
-    }
-
-    setArray(newArray);
   };
 
   const getMoodEmoji = (moodValue: string) => {
@@ -110,11 +226,17 @@ export default function CreateCheckInModal({
                 <input
                   type="date"
                   id="date"
+                  name="date"
                   value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  onChange={handleChange}
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.date ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                   required
                 />
+                {errors.date && (
+                  <p className="mt-1 text-sm text-red-500">{errors.date}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -127,7 +249,7 @@ export default function CreateCheckInModal({
                       <button
                         key={moodOption}
                         type="button"
-                        onClick={() => setMood(moodOption)}
+                        onClick={() => setMood(moodOption as 'great' | 'good' | 'okay' | 'bad' | 'terrible')}
                         className={`p-2 rounded-xl border transition-all ${
                           mood === moodOption
                             ? 'bg-purple-500/20 border-purple-500/50 text-purple-400'
@@ -150,7 +272,7 @@ export default function CreateCheckInModal({
                       <button
                         key={energyOption}
                         type="button"
-                        onClick={() => setEnergy(energyOption)}
+                        onClick={() => setEnergy(energyOption as 'high' | 'medium' | 'low')}
                         className={`p-2 rounded-xl border transition-all ${
                           energy === energyOption
                             ? 'bg-purple-500/20 border-purple-500/50 text-purple-400'
@@ -171,14 +293,20 @@ export default function CreateCheckInModal({
                 </label>
                 <div className="space-y-2">
                   {accomplishments.map((accomplishment, index) => (
-                    <input
-                      key={index}
-                      type="text"
-                      value={accomplishment}
-                      onChange={(e) => handleArrayInput(index, e.target.value, accomplishments, setAccomplishments)}
-                      placeholder={index === 0 ? "Enter an accomplishment" : "Add another accomplishment (optional)"}
-                      className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                    />
+                    <div key={index}>
+                      <input
+                        type="text"
+                        value={accomplishment}
+                        onChange={(e) => handleArrayInput(index, e.target.value, accomplishments, setAccomplishments, 'accomplishment')}
+                        placeholder={index === 0 ? "Enter an accomplishment" : "Add another accomplishment (optional)"}
+                        className={`w-full px-4 py-2 bg-white/10 border ${
+                          errors.accomplishments?.[index] ? 'border-red-500' : 'border-white/20'
+                        } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
+                      />
+                      {errors.accomplishments?.[index] && (
+                        <p className="mt-1 text-sm text-red-500">{errors.accomplishments[index]}</p>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -189,14 +317,20 @@ export default function CreateCheckInModal({
                 </label>
                 <div className="space-y-2">
                   {challenges.map((challenge, index) => (
-                    <input
-                      key={index}
-                      type="text"
-                      value={challenge}
-                      onChange={(e) => handleArrayInput(index, e.target.value, challenges, setChallenges)}
-                      placeholder={index === 0 ? "Enter a challenge" : "Add another challenge (optional)"}
-                      className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                    />
+                    <div key={index}>
+                      <input
+                        type="text"
+                        value={challenge}
+                        onChange={(e) => handleArrayInput(index, e.target.value, challenges, setChallenges, 'challenge')}
+                        placeholder={index === 0 ? "Enter a challenge" : "Add another challenge (optional)"}
+                        className={`w-full px-4 py-2 bg-white/10 border ${
+                          errors.challenges?.[index] ? 'border-red-500' : 'border-white/20'
+                        } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
+                      />
+                      {errors.challenges?.[index] && (
+                        <p className="mt-1 text-sm text-red-500">{errors.challenges[index]}</p>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -207,14 +341,20 @@ export default function CreateCheckInModal({
                 </label>
                 <div className="space-y-2">
                   {goals.map((goal, index) => (
-                    <input
-                      key={index}
-                      type="text"
-                      value={goal}
-                      onChange={(e) => handleArrayInput(index, e.target.value, goals, setGoals)}
-                      placeholder={index === 0 ? "Enter a goal" : "Add another goal (optional)"}
-                      className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                    />
+                    <div key={index}>
+                      <input
+                        type="text"
+                        value={goal}
+                        onChange={(e) => handleArrayInput(index, e.target.value, goals, setGoals, 'goal')}
+                        placeholder={index === 0 ? "Enter a goal" : "Add another goal (optional)"}
+                        className={`w-full px-4 py-2 bg-white/10 border ${
+                          errors.goals?.[index] ? 'border-red-500' : 'border-white/20'
+                        } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
+                      />
+                      {errors.goals?.[index] && (
+                        <p className="mt-1 text-sm text-red-500">{errors.goals[index]}</p>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -225,12 +365,18 @@ export default function CreateCheckInModal({
                 </label>
                 <textarea
                   id="notes"
+                  name="notes"
                   value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
+                  onChange={handleChange}
                   rows={3}
-                  className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.notes ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                   placeholder="Any other thoughts or reflections..."
                 />
+                {errors.notes && (
+                  <p className="mt-1 text-sm text-red-500">{errors.notes}</p>
+                )}
               </div>
             </div>
 

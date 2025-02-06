@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Note } from '@/app/types';
 import { createNote, updateNote } from '@/app/lib/storage';
+import { validateAndSanitizeInput, ValidationResult, unescapeForDisplay } from '@/app/lib/validation';
+import validator from 'validator';
 
 interface CreateNoteModalProps {
   isOpen: boolean;
@@ -11,25 +13,101 @@ interface CreateNoteModalProps {
   onSave?: (note: Note) => void;
 }
 
+interface FormErrors {
+  title?: string;
+  content?: string;
+  category?: string;
+}
+
 export default function CreateNoteModal({
   isOpen,
   onClose,
   existingNote,
   onSave,
 }: CreateNoteModalProps) {
-  const [title, setTitle] = useState(existingNote?.title || '');
-  const [content, setContent] = useState(existingNote?.content || '');
-  const [category, setCategory] = useState(existingNote?.category || '');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [category, setCategory] = useState('');
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  useEffect(() => {
+    if (existingNote) {
+      setTitle(validator.unescape(existingNote.title));
+      setContent(validator.unescape(existingNote.content));
+      setCategory(existingNote.category ? validator.unescape(existingNote.category) : '');
+    }
+  }, [existingNote]);
 
   if (!isOpen) return null;
+
+  const validateField = (name: string, value: string): ValidationResult => {
+    switch (name) {
+      case 'title':
+        return validateAndSanitizeInput(value, 'title', true);
+      case 'content':
+        return validateAndSanitizeInput(value, 'description', true);
+      case 'category':
+        return validateAndSanitizeInput(value, 'category', false);
+      default:
+        return { isValid: true, sanitizedValue: value };
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const validationResult = validateField(name, value);
+
+    // Update the form data with sanitized value
+    switch (name) {
+      case 'title':
+        setTitle(validationResult.sanitizedValue);
+        break;
+      case 'content':
+        setContent(validationResult.sanitizedValue);
+        break;
+      case 'category':
+        setCategory(validationResult.sanitizedValue);
+        break;
+    }
+
+    // Update errors
+    setErrors(prev => ({
+      ...prev,
+      [name]: validationResult.error
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate all fields before submission
+    const titleValidation = validateField('title', title);
+    const contentValidation = validateField('content', content);
+    const categoryValidation = validateField('category', category);
+
+    const newErrors: FormErrors = {};
+    if (!titleValidation.isValid) {
+      newErrors.title = titleValidation.error;
+    }
+    if (!contentValidation.isValid) {
+      newErrors.content = contentValidation.error;
+    }
+    if (!categoryValidation.isValid) {
+      newErrors.category = categoryValidation.error;
+    }
+
+    // If there are any errors, don't submit
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     const noteData = {
-      title,
-      content,
-      category: category || undefined,
+      title: titleValidation.sanitizedValue,
+      content: contentValidation.sanitizedValue,
+      category: categoryValidation.sanitizedValue || undefined,
     };
 
     const savedNote = existingNote
@@ -58,11 +136,17 @@ export default function CreateNoteModal({
                 <input
                   type="text"
                   id="title"
+                  name="title"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  onChange={handleChange}
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.title ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                   required
                 />
+                {errors.title && (
+                  <p className="mt-1 text-sm text-red-500">{errors.title}</p>
+                )}
               </div>
 
               <div>
@@ -72,11 +156,17 @@ export default function CreateNoteModal({
                 <input
                   type="text"
                   id="category"
+                  name="category"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  onChange={handleChange}
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.category ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                   placeholder="Enter a category"
                 />
+                {errors.category && (
+                  <p className="mt-1 text-sm text-red-500">{errors.category}</p>
+                )}
               </div>
 
               <div>
@@ -85,12 +175,18 @@ export default function CreateNoteModal({
                 </label>
                 <textarea
                   id="content"
+                  name="content"
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  onChange={handleChange}
                   rows={8}
-                  className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.content ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
                   required
                 />
+                {errors.content && (
+                  <p className="mt-1 text-sm text-red-500">{errors.content}</p>
+                )}
               </div>
             </div>
 
