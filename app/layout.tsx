@@ -88,8 +88,13 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
-          <Header />
-          {children}
+          <div className="min-h-screen bg-slate-900">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl"></div>
+            <div className="relative pb-20">
+              <Header />
+              {children}
+            </div>
+          </div>
           <Navbar />
         </Providers>
       </body>

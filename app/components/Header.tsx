@@ -57,25 +57,32 @@ export default function Header() {
 
 	return (
 		<>
-			<header className="border-b border-white/10 bg-slate-900 z-[997]">
-				<div className="max-w-7xl mx-auto px-4 py-3 sm:px-4">
+			<header className="sm:border-b sm:border-white/10 bg-slate-900 lg:bg-transparent z-[997]">
+				<div className="max-w-7xl mx-auto px-4 pt-3 pb-0 sm:py-3 sm:px-4">
 					<div className="flex justify-between items-center">
-						{/* Mobile Menu Button */}
-						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								setIsMobileMenuOpen(!isMobileMenuOpen);
-							}}
-							className="sm:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors relative z-[1000]"
-						>
-							<svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								{isMobileMenuOpen ? (
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-								) : (
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-								)}
-							</svg>
-						</button>
+						{/* Mobile Layout */}
+						<div className="flex items-center justify-between w-full sm:hidden">
+							{/* User Profile as Menu Button */}
+							<div
+								onClick={(e) => {
+									e.stopPropagation();
+									setIsMobileMenuOpen(!isMobileMenuOpen);
+								}}
+								className="relative z-[10]"
+							>
+								<UserProfile isMobile={true} isMenuButton={true} />
+							</div>
+
+							{/* Centered Logo */}
+							<div className="flex items-center">
+								<svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+								</svg>
+							</div>
+
+							{/* Empty div for spacing */}
+							<div className="w-10"></div>
+						</div>
 
 						{/* Desktop Logo and Title */}
 						<div className="hidden sm:flex items-center space-x-4">

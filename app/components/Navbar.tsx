@@ -104,7 +104,7 @@ export default function Navbar() {
       </nav>
 
       {/* Safe Area Spacing for Mobile */}
-      <div className="h-20 md:h-0" />
+      <div className="h-16 md:h-0" />
     </>
   );
 }
