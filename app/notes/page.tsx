@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Note } from '@/app/types';
 import { getNotes, deleteNote, updateNote } from '@/app/lib/storage';
 import CreateNoteModal from '@/app/components/CreateNoteModal';
+import AlertModal from '@/app/components/AlertModal';
 import { format } from 'date-fns';
 
 export default function NotesPage() {
@@ -13,6 +14,19 @@ export default function NotesPage() {
   const [selectedNote, setSelectedNote] = useState<Note | undefined>();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [alert, setAlert] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    type: 'info' | 'success' | 'warning' | 'error';
+    isConfirmation?: boolean;
+    onConfirm?: () => void;
+  }>({
+    show: false,
+    title: '',
+    message: '',
+    type: 'info'
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -43,10 +57,27 @@ export default function NotesPage() {
   };
 
   const handleDeleteNote = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this note?')) {
-      deleteNote(id);
-      setNotes(getNotes());
-    }
+    setAlert({
+      show: true,
+      title: 'Confirm Deletion',
+      message: 'Are you sure you want to delete this note?',
+      type: 'warning',
+      isConfirmation: true,
+      onConfirm: () => {
+        try {
+          deleteNote(id);
+          setNotes(getNotes());
+        } catch (error) {
+          console.error('Error deleting note:', error);
+          setAlert({
+            show: true,
+            title: 'Error',
+            message: 'Failed to delete note',
+            type: 'error'
+          });
+        }
+      }
+    });
   };
 
   const handlePinNote = (note: Note) => {
@@ -201,6 +232,17 @@ export default function NotesPage() {
           existingNote={selectedNote}
           onSave={handleSaveNote}
         />
+
+        {alert.show && (
+          <AlertModal
+            title={alert.title}
+            message={alert.message}
+            type={alert.type}
+            onClose={() => setAlert({ ...alert, show: false })}
+            isConfirmation={alert.isConfirmation}
+            onConfirm={alert.onConfirm}
+          />
+        )}
       </div>
     </div>
   );

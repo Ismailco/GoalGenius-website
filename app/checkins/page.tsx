@@ -5,6 +5,7 @@ import { CheckIn } from '@/app/types';
 import { getCheckIns, deleteCheckIn } from '@/app/lib/storage';
 import CreateCheckInModal from '@/app/components/CreateCheckInModal';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
+import AlertModal from '@/app/components/AlertModal';
 
 export default function CheckInsPage() {
   const [mounted, setMounted] = useState(false);
@@ -13,6 +14,19 @@ export default function CheckInsPage() {
   const [selectedCheckIn, setSelectedCheckIn] = useState<CheckIn | undefined>();
   const [selectedDate, setSelectedDate] = useState<string | undefined>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [alert, setAlert] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    type: 'info' | 'success' | 'warning' | 'error';
+    isConfirmation?: boolean;
+    onConfirm?: () => void;
+  }>({
+    show: false,
+    title: '',
+    message: '',
+    type: 'info'
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -43,10 +57,27 @@ export default function CheckInsPage() {
   };
 
   const handleDeleteCheckIn = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this check-in?')) {
-      deleteCheckIn(id);
-      setCheckIns(getCheckIns());
-    }
+    setAlert({
+      show: true,
+      title: 'Confirm Deletion',
+      message: 'Are you sure you want to delete this check-in?',
+      type: 'warning',
+      isConfirmation: true,
+      onConfirm: () => {
+        try {
+          deleteCheckIn(id);
+          setCheckIns(getCheckIns());
+        } catch (error) {
+          console.error('Error deleting check-in:', error);
+          setAlert({
+            show: true,
+            title: 'Error',
+            message: 'Failed to delete check-in',
+            type: 'error'
+          });
+        }
+      }
+    });
   };
 
   const getMoodEmoji = (mood: string) => {
@@ -282,6 +313,17 @@ export default function CheckInsPage() {
           defaultDate={selectedDate}
           onSave={handleSaveCheckIn}
         />
+
+        {alert.show && (
+          <AlertModal
+            title={alert.title}
+            message={alert.message}
+            type={alert.type}
+            onClose={() => setAlert({ ...alert, show: false })}
+            isConfirmation={alert.isConfirmation}
+            onConfirm={alert.onConfirm}
+          />
+        )}
       </div>
     </div>
   );

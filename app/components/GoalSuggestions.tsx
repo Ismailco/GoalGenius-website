@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { GoalCategory, TimeFrame } from '@/app/types';
 import { createGoal } from '@/app/lib/storage';
+import AlertModal from './AlertModal';
 
 interface SuggestedGoal {
   title: string;
@@ -15,6 +16,17 @@ interface SuggestedGoal {
 export default function GoalSuggestions() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<GoalCategory>('health');
+  const [alert, setAlert] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    type: 'info' | 'success' | 'warning' | 'error';
+  }>({
+    show: false,
+    title: '',
+    message: '',
+    type: 'info'
+  });
 
   const suggestions: Record<GoalCategory, SuggestedGoal[]> = {
     health: [
@@ -123,20 +135,28 @@ export default function GoalSuggestions() {
     ]
   };
 
-  const handleAddGoal = (goal: SuggestedGoal) => {
+  const handleAddGoal = async (suggestion: SuggestedGoal) => {
     try {
-      createGoal({
-        ...goal,
+      await createGoal({
+        ...suggestion,
         progress: 0,
         status: 'not-started',
-        timeFrame: goal.timeFrame as TimeFrame,
-        category: goal.category as GoalCategory,
+        timeFrame: suggestion.timeFrame as TimeFrame,
+        category: suggestion.category as GoalCategory,
       });
-      // Show success message
-      alert('Goal added successfully!');
+      setAlert({
+        show: true,
+        title: 'Success',
+        message: 'Goal added successfully!',
+        type: 'success'
+      });
     } catch (error) {
-      console.error('Error adding goal:', error);
-      alert('Failed to add goal. Please try again.');
+      setAlert({
+        show: true,
+        title: 'Error',
+        message: 'Failed to add goal. Please try again.',
+        type: 'error'
+      });
     }
   };
 
@@ -240,6 +260,15 @@ export default function GoalSuggestions() {
         Get Ideas
       </button>
       {typeof document !== 'undefined' && createPortal(modal, document.body)}
+
+      {alert.show && (
+        <AlertModal
+          title={alert.title}
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ ...alert, show: false })}
+        />
+      )}
     </>
   );
 }

@@ -1,134 +1,129 @@
 'use client';
 
-import { useState } from 'react';
-import { Goal, GoalCategory } from '@/app/types';
-import { createMilestone } from '@/app/lib/storage';
+import { Goal, Milestone } from '@/app/types';
+import { createMilestone, getGoals } from '@/app/lib/storage';
 import { useModal } from '@/app/providers/ModalProvider';
-import { getGoals } from '@/app/lib/storage';
+import MilestoneInputForm from './MilestoneInputForm';
+import AlertModal from './AlertModal';
+import { useState, useEffect } from 'react';
 
 interface CreateMilestoneModalProps {
-  selectedGoal?: Goal;
+  goal?: Goal;  // Make goal optional
 }
 
-export default function CreateMilestoneModal({ selectedGoal }: CreateMilestoneModalProps) {
-  const { hideModal } = useModal();
-  const [goals] = useState<Goal[]>(getGoals());
-  const [formData, setFormData] = useState({
+export default function CreateMilestoneModal({ goal: initialGoal }: CreateMilestoneModalProps) {
+  const { showModal, hideModal } = useModal();
+  const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>(initialGoal);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [alert, setAlert] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    type: 'info' | 'success' | 'warning' | 'error';
+  }>({
+    show: false,
     title: '',
-    description: '',
-    date: new Date().toISOString().split('T')[0],
-    goalId: selectedGoal?.id || '',
+    message: '',
+    type: 'info'
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.goalId) {
-      alert('Please select a goal');
+  useEffect(() => {
+    setGoals(getGoals());
+  }, []);
+
+  const handleSubmit = async (data: { title: string; description: string; date: string }) => {
+    if (!selectedGoal) {
+      setAlert({
+        show: true,
+        title: 'Goal Required',
+        message: 'Please select a goal first',
+        type: 'warning'
+      });
       return;
     }
+
     try {
-      createMilestone({
-        ...formData,
-      });
+      const milestone: Omit<Milestone, 'id'> = {
+        goalId: selectedGoal.id,
+        title: data.title,
+        description: data.description,
+        date: data.date
+      };
+      createMilestone(milestone);
       hideModal();
       window.location.reload();
     } catch (error) {
-      console.error('Error creating milestone:', error);
-      alert('Failed to create milestone. Please try again.');
+      setAlert({
+        show: true,
+        title: 'Error',
+        message: 'Failed to create milestone. Please try again.',
+        type: 'error'
+      });
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="goalId" className="block text-sm font-medium text-gray-300 mb-1">
-          Select Goal
-        </label>
-        <select
-          id="goalId"
-          value={formData.goalId}
-          onChange={(e) => setFormData({ ...formData, goalId: e.target.value })}
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-          required
-        >
-          <option value="">Select a goal</option>
-          {Object.entries(
-            goals.reduce((acc, goal) => {
-              if (!acc[goal.category]) {
-                acc[goal.category] = [];
-              }
-              acc[goal.category].push(goal);
-              return acc;
-            }, {} as Record<GoalCategory, Goal[]>)
-          ).map(([category, categoryGoals]) => (
-            <optgroup key={category} label={category.charAt(0).toUpperCase() + category.slice(1)}>
-              {categoryGoals.map((goal) => (
-                <option key={goal.id} value={goal.id}>
-                  {goal.title}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-1">
-          Title
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-          required
-        />
-      </div>
-
-      <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">
-          Description
-        </label>
-        <textarea
-          id="description"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-          rows={3}
-          required
-        />
-      </div>
-
-      <div>
-        <label htmlFor="date" className="block text-sm font-medium text-gray-300 mb-1">
-          Target Date
-        </label>
-        <input
-          type="date"
-          id="date"
-          value={formData.date}
-          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-          required
-        />
-      </div>
-
-      <div className="flex justify-end gap-2 mt-6">
+  if (!selectedGoal && goals.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-300 mb-4">Please create a goal first before adding milestones.</p>
         <button
-          type="button"
           onClick={hideModal}
           className="px-4 py-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors"
         >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-colors"
-        >
-          Create Milestone
+          Close
         </button>
       </div>
-    </form>
+    );
+  }
+
+  return (
+    <>
+      <div className="space-y-6">
+        {!initialGoal && (
+          <div>
+            <label htmlFor="goal" className="block text-sm font-medium text-gray-300 mb-2">
+              Select Goal
+            </label>
+            <select
+              id="goal"
+              value={selectedGoal?.id || ''}
+              onChange={(e) => setSelectedGoal(goals.find(g => g.id === e.target.value))}
+              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              required
+            >
+              <option value="">Select a goal</option>
+              {Object.entries(
+                goals.reduce((acc, goal) => {
+                  if (!acc[goal.category]) {
+                    acc[goal.category] = [];
+                  }
+                  acc[goal.category].push(goal);
+                  return acc;
+                }, {} as Record<string, Goal[]>)
+              ).map(([category, categoryGoals]) => (
+                <optgroup key={category} label={category.charAt(0).toUpperCase() + category.slice(1)}>
+                  {categoryGoals.map((goal) => (
+                    <option key={goal.id} value={goal.id}>
+                      {goal.title}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <MilestoneInputForm onSubmit={handleSubmit} onCancel={hideModal} />
+      </div>
+
+      {alert.show && (
+        <AlertModal
+          title={alert.title}
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ ...alert, show: false })}
+        />
+      )}
+    </>
   );
 }

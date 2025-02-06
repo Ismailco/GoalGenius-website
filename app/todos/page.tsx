@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Todo } from '@/app/types';
 import { getTodos, deleteTodo, toggleTodoComplete } from '@/app/lib/storage';
 import CreateTodoModal from '@/app/components/CreateTodoModal';
+import AlertModal from '@/app/components/AlertModal';
 import { format } from 'date-fns';
 
 export default function TodosPage() {
@@ -15,6 +16,19 @@ export default function TodosPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [priorityFilter, setPriorityFilter] = useState<string>('');
   const [showCompleted, setShowCompleted] = useState(false);
+  const [alert, setAlert] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    type: 'info' | 'success' | 'warning' | 'error';
+    isConfirmation?: boolean;
+    onConfirm?: () => void;
+  }>({
+    show: false,
+    title: '',
+    message: '',
+    type: 'info'
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -45,10 +59,27 @@ export default function TodosPage() {
   };
 
   const handleDeleteTodo = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this todo?')) {
-      deleteTodo(id);
-      setTodos(getTodos());
-    }
+    setAlert({
+      show: true,
+      title: 'Confirm Deletion',
+      message: 'Are you sure you want to delete this todo?',
+      type: 'warning',
+      isConfirmation: true,
+      onConfirm: () => {
+        try {
+          deleteTodo(id);
+          setTodos(getTodos());
+        } catch (error) {
+          console.error('Error deleting todo:', error);
+          setAlert({
+            show: true,
+            title: 'Error',
+            message: 'Failed to delete todo',
+            type: 'error'
+          });
+        }
+      }
+    });
   };
 
   const handleToggleComplete = (todo: Todo) => {
@@ -271,6 +302,17 @@ export default function TodosPage() {
           existingTodo={selectedTodo}
           onSave={handleSaveTodo}
         />
+
+        {alert.show && (
+          <AlertModal
+            title={alert.title}
+            message={alert.message}
+            type={alert.type}
+            onClose={() => setAlert({ ...alert, show: false })}
+            isConfirmation={alert.isConfirmation}
+            onConfirm={alert.onConfirm}
+          />
+        )}
       </div>
     </div>
   );
