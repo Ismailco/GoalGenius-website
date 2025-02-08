@@ -255,6 +255,37 @@ async function networkFirst(request, cacheName) {
 // Background sync queue
 const syncQueue = new Set();
 
+// Helper function to cache all Next.js chunks
+async function cacheNextJsChunks(cache) {
+  try {
+    const mainResponse = await fetch('/_next/static/chunks/main.js');
+    if (mainResponse.ok) {
+      await cache.put('/_next/static/chunks/main.js', mainResponse.clone());
+
+      // Extract and cache all chunk URLs from the main bundle
+      const mainText = await mainResponse.text();
+      const chunkUrls = Array.from(mainText.matchAll(/"(\/_next\/static\/chunks\/[^"]+)"/g))
+        .map(match => match[1]);
+
+      // Cache each chunk
+      await Promise.all(
+        chunkUrls.map(async (url) => {
+          try {
+            const response = await fetch(url);
+            if (response.ok) {
+              await cache.put(url, response.clone());
+            }
+          } catch (error) {
+            console.warn('Failed to cache chunk:', url, error);
+          }
+        })
+      );
+    }
+  } catch (error) {
+    console.warn('Failed to cache Next.js chunks:', error);
+  }
+}
+
 // Install event - cache app shell and handle Next.js static files
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -436,6 +467,8 @@ self.addEventListener('fetch', (event) => {
             fetch(request).then(async (networkResponse) => {
               if (networkResponse.ok) {
                 await dynamicCache.put(request, networkResponse.clone());
+                // Cache all related chunks when a page is visited
+                await cacheNextJsChunks(staticCache);
               }
             }).catch(() => {/* ignore network errors */});
           }
@@ -448,6 +481,8 @@ self.addEventListener('fetch', (event) => {
             const networkResponse = await fetch(request);
             if (networkResponse.ok) {
               await dynamicCache.put(request, networkResponse.clone());
+              // Cache all related chunks when a new page is visited
+              await cacheNextJsChunks(staticCache);
             }
             return networkResponse;
           } catch (error) {
