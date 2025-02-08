@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Notification from './Notification';
 
 interface NotificationItem {
@@ -18,6 +18,13 @@ export default function NotificationContainer() {
     const id = Math.random().toString(36).substr(2, 9);
     setNotifications(prev => [...prev, { ...notification, id }]);
   }, []);
+
+  useEffect(() => {
+    window.addNotification = addNotification;
+    return () => {
+      delete window.addNotification;
+    };
+  }, [addNotification]);
 
   const removeNotification = useCallback((id: string) => {
     setNotifications(prev => prev.filter(notification => notification.id !== id));

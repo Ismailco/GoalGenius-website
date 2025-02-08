@@ -13,7 +13,7 @@ interface NotificationOptions {
   body: string;
   icon?: string;
   tag?: string;
-  data?: any;
+  data?: Record<string, unknown>;
   requireInteraction?: boolean;
   silent?: boolean;
   onClick?: () => void;
