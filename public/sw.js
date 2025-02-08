@@ -11,55 +11,74 @@ const OFFLINE_MODAL_HTML = `
   <style>
     #offline-modal {
       position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.95);
-      border-radius: 8px;
-      padding: 8px 16px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1px 12px 1px 12px;
+      background: rgb(239, 68, 68);
       color: white;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      backdrop-filter: blur(10px);
       z-index: 9999;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      animation: slideDown 0.3s ease-out;
+      text-align: center;
+      transition: all 0.3s ease;
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    #offline-modal.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    #offline-modal.online {
+      background: rgb(34, 197, 94);
+    }
+    #offline-modal .content {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    @keyframes slideDown {
-      from {
-        transform: translate(-50%, -100%);
-        opacity: 0;
-      }
-      to {
-        transform: translate(-50%, 0);
-        opacity: 1;
-      }
+    #offline-modal .icon {
+      font-size: 16px;
+    }
+    #offline-modal .message {
+      font-size: 14px;
+      font-weight: 500;
     }
   </style>
-  <div style="font-size: 16px;">📡</div>
-  <div style="font-size: 14px; font-weight: 500;">You're offline</div>
-  <button onclick="this.closest('#offline-modal').remove()" style="
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    padding: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    margin-left: 8px;
-  ">×</button>
+  <div class="content">
+    <div class="icon">📡</div>
+    <div class="message">You're offline</div>
+  </div>
 </div>
 <script>
 (function checkConnectivity() {
+    const modal = document.getElementById('offline-modal');
+    let hideTimeout;
+
     function updateOfflineStatus() {
-        const modal = document.getElementById('offline-modal');
-        if (!navigator.onLine && modal) {
-            modal.style.display = 'block';
-        } else if (modal) {
-            modal.style.display = 'none';
+        if (!modal) return;
+
+        clearTimeout(hideTimeout);
+        modal.style.display = 'block';
+
+        if (!navigator.onLine) {
+            modal.classList.remove('online');
+            modal.querySelector('.message').textContent = "You're offline";
+            modal.classList.add('visible');
+        } else {
+            modal.classList.add('online');
+            modal.querySelector('.message').textContent = "You're back online";
+            modal.classList.add('visible');
+
+            // Hide after 2 seconds when online
+            hideTimeout = setTimeout(() => {
+                modal.classList.remove('visible');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300); // Wait for transition to complete
+            }, 2000);
         }
     }
 
@@ -286,6 +305,18 @@ async function cacheNextJsChunks(cache) {
   }
 }
 
+// Helper function to inject offline modal into HTML
+async function injectOfflineModal(response) {
+  const html = await response.text();
+  const modifiedHtml = html.replace(
+    /<\/body>/i,
+    `${OFFLINE_MODAL_HTML}</body>`
+  );
+  const headers = new Headers(response.headers);
+  headers.set('Content-Type', 'text/html; charset=utf-8');
+  return new Response(modifiedHtml, { headers });
+}
+
 // Install event - cache app shell and handle Next.js static files
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -466,13 +497,14 @@ self.addEventListener('fetch', (event) => {
           if (navigator.onLine) {
             fetch(request).then(async (networkResponse) => {
               if (networkResponse.ok) {
-                await dynamicCache.put(request, networkResponse.clone());
+                const modifiedResponse = await injectOfflineModal(networkResponse.clone());
+                await dynamicCache.put(request, modifiedResponse);
                 // Cache all related chunks when a page is visited
                 await cacheNextJsChunks(staticCache);
               }
             }).catch(() => {/* ignore network errors */});
           }
-          return cachedResponse;
+          return injectOfflineModal(cachedResponse);
         }
 
         // If not in either cache, try network if online
@@ -480,9 +512,11 @@ self.addEventListener('fetch', (event) => {
           try {
             const networkResponse = await fetch(request);
             if (networkResponse.ok) {
-              await dynamicCache.put(request, networkResponse.clone());
+              const modifiedResponse = await injectOfflineModal(networkResponse.clone());
+              await dynamicCache.put(request, modifiedResponse);
               // Cache all related chunks when a new page is visited
               await cacheNextJsChunks(staticCache);
+              return injectOfflineModal(networkResponse);
             }
             return networkResponse;
           } catch (error) {
