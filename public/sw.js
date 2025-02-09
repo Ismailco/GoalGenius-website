@@ -8,26 +8,26 @@ const CACHE_NAMES = {
 // Modified offline modal with online check
 const OFFLINE_MODAL_HTML = `
 <div id="offline-modal" style="display: none;">
-  <style>
-    #offline-modal {
-      position: fixed;
+    <style>
+        #offline-modal {
+            position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       padding: 1px 12px 1px 12px;
       background: rgb(239, 68, 68);
-      color: white;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      z-index: 9999;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            z-index: 9999;
       text-align: center;
       transition: all 0.3s ease;
       transform: translateY(-100%);
-      opacity: 0;
-    }
+                opacity: 0;
+            }
     #offline-modal.visible {
       transform: translateY(0);
-      opacity: 1;
-    }
+                opacity: 1;
+            }
     #offline-modal.online {
       background: rgb(34, 197, 94);
     }
@@ -45,12 +45,12 @@ const OFFLINE_MODAL_HTML = `
     #offline-modal .message {
       font-size: 14px;
       font-weight: 500;
-    }
-  </style>
+        }
+    </style>
   <div class="content">
     <div class="icon">📡</div>
     <div class="message">You're offline</div>
-  </div>
+    </div>
 </div>
 <script>
 (function checkConnectivity() {
@@ -79,7 +79,7 @@ const OFFLINE_MODAL_HTML = `
             hideTimeout = setTimeout(() => {
                 modal.classList.remove('visible');
                 setTimeout(() => {
-                    modal.style.display = 'none';
+            modal.style.display = 'none';
                     wasOffline = false; // Reset the offline state
                 }, 300); // Wait for transition to complete
             }, 2000);
@@ -91,7 +91,7 @@ const OFFLINE_MODAL_HTML = `
 
     // Initial check - only show if we're offline
     if (!navigator.onLine) {
-        updateOfflineStatus();
+    updateOfflineStatus();
     }
 })();
 </script>
@@ -401,13 +401,13 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return new Response(
-          JSON.stringify({ error: 'You are offline' }),
-          {
-            status: 503,
+                JSON.stringify({ error: 'You are offline' }),
+                {
+                  status: 503,
             headers: { 'Content-Type': 'application/json' }
-          }
-        );
-      })
+                }
+              );
+        })
     );
     return;
   }
@@ -419,7 +419,7 @@ self.addEventListener('fetch', (event) => {
         const cache = await caches.open(CACHE_NAMES.static);
         const cachedResponse = await cache.match(request);
 
-        if (cachedResponse) {
+          if (cachedResponse) {
           // If we have it cached, return it immediately
           if (navigator.onLine) {
             // Update cache in background if online
@@ -498,7 +498,7 @@ self.addEventListener('fetch', (event) => {
           cachedResponse = await dynamicCache.match(request);
         }
 
-        if (cachedResponse) {
+          if (cachedResponse) {
           // If we have it cached, return it and update cache in background only if online
           if (navigator.onLine) {
             fetch(request).then(async (networkResponse) => {

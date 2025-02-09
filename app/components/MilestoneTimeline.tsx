@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Milestone, Goal, GoalCategory } from '@/app/types';
 import { getMilestones, getGoals } from '@/app/lib/storage';
+import { handleAsyncOperation, getUserFriendlyErrorMessage } from '@/app/lib/error';
+import { LoadingPage } from './LoadingSpinner';
 // import CreateMilestoneModal from '@/app/components/CreateMilestoneModal';
 // import { useModal } from '@/app/providers/ModalProvider';
 
@@ -20,9 +22,27 @@ export default function MilestoneTimeline() {
   // const { showModal } = useModal();
 
   useEffect(() => {
-    setMounted(true);
-    setMilestones(getMilestones());
-    setGoals(getGoals());
+    const loadData = async () => {
+      await handleAsyncOperation(
+        async () => {
+          setMounted(true);
+          const loadedMilestones = getMilestones();
+          const loadedGoals = getGoals();
+          setMilestones(loadedMilestones);
+          setGoals(loadedGoals);
+        },
+        setLoading,
+        (error) => {
+          window.addNotification?.({
+            title: 'Error',
+            message: getUserFriendlyErrorMessage(error),
+            type: 'error'
+          });
+        }
+      );
+    };
+
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -37,7 +57,6 @@ export default function MilestoneTimeline() {
     }, {} as Record<GoalCategory, Goal[]>);
 
     setGroupedGoals(grouped);
-    setLoading(false);
   }, [goals, mounted]);
 
   const getStatusColor = (progress: number) => {
@@ -85,7 +104,7 @@ export default function MilestoneTimeline() {
   };
 
   if (loading) {
-    return <div className="animate-pulse">Loading milestones...</div>;
+    return <LoadingPage />;
   }
 
   return (

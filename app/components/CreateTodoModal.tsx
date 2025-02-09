@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Todo } from '@/app/types';
 import { createTodo, updateTodo } from '@/app/lib/storage';
 import { validateAndSanitizeInput, ValidationResult, unescapeForDisplay } from '@/app/lib/validation';
+import { handleAsyncOperation, getUserFriendlyErrorMessage } from '@/app/lib/error';
+import { LoadingOverlay } from './LoadingSpinner';
 
 interface CreateTodoModalProps {
   isOpen: boolean;
@@ -31,6 +33,7 @@ export default function CreateTodoModal({
   const [dueDate, setDueDate] = useState('');
   const [category, setCategory] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (existingTodo) {
@@ -91,7 +94,7 @@ export default function CreateTodoModal({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields before submission
@@ -128,17 +131,29 @@ export default function CreateTodoModal({
       category: categoryValidation.sanitizedValue || undefined,
     };
 
-    const savedTodo = existingTodo
-      ? updateTodo(existingTodo.id, todoData)
-      : createTodo(todoData);
-
-    onSave?.(savedTodo);
-    onClose();
+    await handleAsyncOperation(
+      async () => {
+        const savedTodo = existingTodo
+          ? updateTodo(existingTodo.id, todoData)
+          : createTodo(todoData);
+        onSave?.(savedTodo);
+        onClose();
+      },
+      setIsLoading,
+      (error) => {
+        window.addNotification?.({
+          title: 'Error',
+          message: getUserFriendlyErrorMessage(error),
+          type: 'error'
+        });
+      }
+    );
   };
 
   return (
     <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl w-full max-w-2xl border border-white/10 max-h-[80vh] flex flex-col">
+      <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl w-full max-w-2xl border border-white/10 max-h-[80vh] flex flex-col relative">
+        {isLoading && <LoadingOverlay />}
         <div className="p-6 border-b border-white/10 flex-shrink-0">
           <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
             {existingTodo ? 'Edit Todo' : 'Create New Todo'}

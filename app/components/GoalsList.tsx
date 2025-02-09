@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Goal, GoalCategory, TimeFrame } from '@/app/types';
 import { getGoals, updateGoal, deleteGoal } from '@/app/lib/storage';
 import AlertModal from './AlertModal';
+import { handleAsyncOperation, getUserFriendlyErrorMessage } from '@/app/lib/error';
+import { LoadingPage } from './LoadingSpinner';
 
 export default function GoalsList() {
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -25,16 +27,43 @@ export default function GoalsList() {
   });
 
   useEffect(() => {
-    setGoals(getGoals());
-    setLoading(false);
+    const loadGoals = async () => {
+      await handleAsyncOperation(
+        async () => {
+          const loadedGoals = getGoals();
+          setGoals(loadedGoals);
+        },
+        setLoading,
+        (error) => {
+          setAlert({
+            show: true,
+            title: 'Error',
+            message: getUserFriendlyErrorMessage(error),
+            type: 'error'
+          });
+        }
+      );
+    };
+
+    loadGoals();
   }, []);
 
   const handleUpdateProgress = async (goalId: string, progress: number) => {
-    try {
-      await updateGoal(goalId, { progress });
-    } catch (error) {
-      console.error('Error updating goal progress:', error);
-    }
+    await handleAsyncOperation(
+      async () => {
+        await updateGoal(goalId, { progress });
+        setGoals(getGoals());
+      },
+      undefined,
+      (error) => {
+        setAlert({
+          show: true,
+          title: 'Error',
+          message: getUserFriendlyErrorMessage(error),
+          type: 'error'
+        });
+      }
+    );
   };
 
   const handleDeleteGoal = (id: string) => {
@@ -44,41 +73,47 @@ export default function GoalsList() {
       message: 'Are you sure you want to delete this goal?',
       type: 'warning',
       isConfirmation: true,
-      onConfirm: () => {
-        try {
-          deleteGoal(id);
-          setGoals(getGoals());
-        } catch (error) {
-          console.error('Error deleting goal:', error);
-          setAlert({
-            show: true,
-            title: 'Error',
-            message: 'Failed to delete goal',
-            type: 'error'
-          });
-        }
+      onConfirm: async () => {
+        await handleAsyncOperation(
+          async () => {
+            deleteGoal(id);
+            setGoals(getGoals());
+          },
+          undefined,
+          (error) => {
+            setAlert({
+              show: true,
+              title: 'Error',
+              message: getUserFriendlyErrorMessage(error),
+              type: 'error'
+            });
+          }
+        );
       }
     });
   };
 
-  const handleUpdateGoal = (id: string, updates: Partial<Goal>) => {
-    try {
-      updateGoal(id, updates);
-      setGoals(getGoals());
-      setEditingGoal(null);
-    } catch (error) {
-      console.error('Error updating goal:', error);
-      setAlert({
-        show: true,
-        title: 'Error',
-        message: 'Failed to update goal',
-        type: 'error'
-      });
-    }
+  const handleUpdateGoal = async (id: string, updates: Partial<Goal>) => {
+    await handleAsyncOperation(
+      async () => {
+        updateGoal(id, updates);
+        setGoals(getGoals());
+        setEditingGoal(null);
+      },
+      undefined,
+      (error) => {
+        setAlert({
+          show: true,
+          title: 'Error',
+          message: getUserFriendlyErrorMessage(error),
+          type: 'error'
+        });
+      }
+    );
   };
 
   if (loading) {
-    return <div className="animate-pulse">Loading goals...</div>;
+    return <LoadingPage />;
   }
 
   return (

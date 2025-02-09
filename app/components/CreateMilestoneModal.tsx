@@ -6,6 +6,8 @@ import { useModal } from '@/app/providers/ModalProvider';
 import MilestoneInputForm from './MilestoneInputForm';
 import AlertModal from './AlertModal';
 import { useState, useEffect } from 'react';
+import { handleAsyncOperation, getUserFriendlyErrorMessage } from '@/app/lib/error';
+import { LoadingOverlay } from './LoadingSpinner';
 
 interface CreateMilestoneModalProps {
   goal?: Goal;  // Make goal optional
@@ -15,6 +17,7 @@ export default function CreateMilestoneModal({ goal: initialGoal }: CreateMilest
   const { hideModal } = useModal();
   const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>(initialGoal);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState<{
     show: boolean;
     title: string;
@@ -28,39 +31,26 @@ export default function CreateMilestoneModal({ goal: initialGoal }: CreateMilest
   });
 
   useEffect(() => {
-    setGoals(getGoals());
+    const loadGoals = async () => {
+      await handleAsyncOperation(
+        async () => {
+          const loadedGoals = getGoals();
+          setGoals(loadedGoals);
+        },
+        setIsLoading,
+        (error) => {
+          setAlert({
+            show: true,
+            title: 'Error',
+            message: getUserFriendlyErrorMessage(error),
+            type: 'error'
+          });
+        }
+      );
+    };
+
+    loadGoals();
   }, []);
-
-  const handleSubmit = async (data: { title: string; description: string; date: string }) => {
-    if (!selectedGoal) {
-      setAlert({
-        show: true,
-        title: 'Goal Required',
-        message: 'Please select a goal first',
-        type: 'warning'
-      });
-      return;
-    }
-
-    try {
-      const milestone: Omit<Milestone, 'id'> = {
-        goalId: selectedGoal.id,
-        title: data.title,
-        description: data.description,
-        date: data.date
-      };
-      createMilestone(milestone);
-      hideModal();
-      window.location.reload();
-    } catch (error) {
-      setAlert({
-        show: true,
-        title: 'Error',
-        message: error instanceof Error ? error.message : 'Failed to create milestone. Please try again.',
-        type: 'error'
-      });
-    }
-  };
 
   if (!selectedGoal && goals.length === 0) {
     return (
@@ -76,9 +66,45 @@ export default function CreateMilestoneModal({ goal: initialGoal }: CreateMilest
     );
   }
 
+  const handleSubmit = async (data: { title: string; description: string; date: string }) => {
+    if (!selectedGoal) {
+      setAlert({
+        show: true,
+        title: 'Goal Required',
+        message: 'Please select a goal first',
+        type: 'warning'
+      });
+      return;
+    }
+
+    await handleAsyncOperation(
+      async () => {
+        const milestone: Omit<Milestone, 'id'> = {
+          goalId: selectedGoal.id,
+          title: data.title,
+          description: data.description,
+          date: data.date
+        };
+        createMilestone(milestone);
+        hideModal();
+        window.location.reload();
+      },
+      setIsLoading,
+      (error) => {
+        setAlert({
+          show: true,
+          title: 'Error',
+          message: getUserFriendlyErrorMessage(error),
+          type: 'error'
+        });
+      }
+    );
+  };
+
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-6 relative">
+        {isLoading && <LoadingOverlay />}
         {!initialGoal && (
           <div>
             <label htmlFor="goal" className="block text-sm font-medium text-gray-300 mb-2">

@@ -3,8 +3,11 @@
 import { useEffect, useCallback, useState } from 'react';
 import { GoalCategory } from '@/app/types';
 import { getGoals } from '@/app/lib/storage';
+import { handleAsyncOperation, getUserFriendlyErrorMessage } from '@/app/lib/error';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function ProgressChart() {
+  const [loading, setLoading] = useState(true);
   const [categoryProgress, setCategoryProgress] = useState<Record<GoalCategory, number>>({
     health: 0,
     career: 0,
@@ -12,34 +15,42 @@ export default function ProgressChart() {
     relationships: 0,
   });
 
-  const fetchCategoryProgress = useCallback(() => {
-    try {
-      const goals = getGoals();
-      const progressByCategory: Record<GoalCategory, number[]> = {
-        health: [],
-        career: [],
-        learning: [],
-        relationships: [],
-      };
+  const fetchCategoryProgress = useCallback(async () => {
+    await handleAsyncOperation(
+      async () => {
+        const goals = getGoals();
+        const progressByCategory: Record<GoalCategory, number[]> = {
+          health: [],
+          career: [],
+          learning: [],
+          relationships: [],
+        };
 
-      goals.forEach((goal) => {
-        progressByCategory[goal.category].push(goal.progress);
-      });
+        goals.forEach((goal) => {
+          progressByCategory[goal.category].push(goal.progress);
+        });
 
-      const averageProgress = Object.entries(progressByCategory).reduce(
-        (acc, [category, values]) => ({
-          ...acc,
-          [category]: values.length
-            ? values.reduce((sum, val) => sum + val, 0) / values.length
-            : 0,
-        }),
-        {} as Record<GoalCategory, number>
-      );
+        const averageProgress = Object.entries(progressByCategory).reduce(
+          (acc, [category, values]) => ({
+            ...acc,
+            [category]: values.length
+              ? values.reduce((sum, val) => sum + val, 0) / values.length
+              : 0,
+          }),
+          {} as Record<GoalCategory, number>
+        );
 
-      setCategoryProgress(averageProgress);
-    } catch (error) {
-      console.error('Error calculating progress:', error);
-    }
+        setCategoryProgress(averageProgress);
+      },
+      setLoading,
+      (error) => {
+        window.addNotification?.({
+          title: 'Error',
+          message: getUserFriendlyErrorMessage(error),
+          type: 'error'
+        });
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -55,6 +66,14 @@ export default function ProgressChart() {
     };
     return colors[category as keyof typeof colors] || 'from-blue-500 to-purple-500';
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <LoadingSpinner size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

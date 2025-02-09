@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { Note } from '@/app/types';
 import { createNote, updateNote } from '@/app/lib/storage';
-import { validateAndSanitizeInput, ValidationResult } from '@/app/lib/validation';
-import validator from 'validator';
+import { validateAndSanitizeInput, ValidationResult, unescapeForDisplay } from '@/app/lib/validation';
+import { handleAsyncOperation, getUserFriendlyErrorMessage } from '@/app/lib/error';
+import { LoadingOverlay } from './LoadingSpinner';
 
 interface CreateNoteModalProps {
   isOpen: boolean;
@@ -28,13 +29,16 @@ export default function CreateNoteModal({
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
+  const [isPinned, setIsPinned] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (existingNote) {
-      setTitle(validator.unescape(existingNote.title));
-      setContent(validator.unescape(existingNote.content));
-      setCategory(existingNote.category ? validator.unescape(existingNote.category) : '');
+      setTitle(unescapeForDisplay(existingNote.title));
+      setContent(unescapeForDisplay(existingNote.content));
+      setCategory(existingNote.category ? unescapeForDisplay(existingNote.category) : '');
+      setIsPinned(existingNote.isPinned || false);
     }
   }, [existingNote]);
 
@@ -79,7 +83,7 @@ export default function CreateNoteModal({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields before submission
@@ -108,19 +112,32 @@ export default function CreateNoteModal({
       title: titleValidation.sanitizedValue,
       content: contentValidation.sanitizedValue,
       category: categoryValidation.sanitizedValue || undefined,
+      isPinned,
     };
 
-    const savedNote = existingNote
-      ? updateNote(existingNote.id, noteData)
-      : createNote(noteData);
-
-    onSave?.(savedNote);
-    onClose();
+    await handleAsyncOperation(
+      async () => {
+        const savedNote = existingNote
+          ? updateNote(existingNote.id, noteData)
+          : createNote(noteData);
+        onSave?.(savedNote);
+        onClose();
+      },
+      setIsLoading,
+      (error) => {
+        window.addNotification?.({
+          title: 'Error',
+          message: getUserFriendlyErrorMessage(error),
+          type: 'error'
+        });
+      }
+    );
   };
 
   return (
     <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl w-full max-w-2xl border border-white/10 max-h-[80vh] flex flex-col">
+      <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl w-full max-w-2xl border border-white/10 max-h-[80vh] flex flex-col relative">
+        {isLoading && <LoadingOverlay />}
         <div className="p-6 border-b border-white/10 flex-shrink-0">
           <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
             {existingNote ? 'Edit Note' : 'Create New Note'}
@@ -150,6 +167,26 @@ export default function CreateNoteModal({
               </div>
 
               <div>
+                <label htmlFor="content" className="block text-sm font-medium text-gray-300 mb-2">
+                  Content
+                </label>
+                <textarea
+                  id="content"
+                  name="content"
+                  value={content}
+                  onChange={handleChange}
+                  rows={6}
+                  className={`w-full px-4 py-2 bg-white/10 border ${
+                    errors.content ? 'border-red-500' : 'border-white/20'
+                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
+                  required
+                />
+                {errors.content && (
+                  <p className="mt-1 text-sm text-red-500">{errors.content}</p>
+                )}
+              </div>
+
+              <div>
                 <label htmlFor="category" className="block text-sm font-medium text-gray-300 mb-2">
                   Category (optional)
                 </label>
@@ -169,24 +206,17 @@ export default function CreateNoteModal({
                 )}
               </div>
 
-              <div>
-                <label htmlFor="content" className="block text-sm font-medium text-gray-300 mb-2">
-                  Content
-                </label>
-                <textarea
-                  id="content"
-                  name="content"
-                  value={content}
-                  onChange={handleChange}
-                  rows={8}
-                  className={`w-full px-4 py-2 bg-white/10 border ${
-                    errors.content ? 'border-red-500' : 'border-white/20'
-                  } rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
-                  required
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="isPinned"
+                  checked={isPinned}
+                  onChange={(e) => setIsPinned(e.target.checked)}
+                  className="w-4 h-4 text-purple-500 bg-white/10 border-white/20 rounded focus:ring-purple-500/50"
                 />
-                {errors.content && (
-                  <p className="mt-1 text-sm text-red-500">{errors.content}</p>
-                )}
+                <label htmlFor="isPinned" className="ml-2 text-sm font-medium text-gray-300">
+                  Pin this note
+                </label>
               </div>
             </div>
 

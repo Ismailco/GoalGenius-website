@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { CheckIn } from '@/app/types';
 import { createCheckIn, updateCheckIn } from '@/app/lib/storage';
 import { validateAndSanitizeInput, ValidationResult, unescapeForDisplay } from '@/app/lib/validation';
+import { handleAsyncOperation, getUserFriendlyErrorMessage } from '@/app/lib/error';
+import { LoadingOverlay } from './LoadingSpinner';
 
 interface CreateCheckInModalProps {
   isOpen: boolean;
@@ -36,6 +38,7 @@ export default function CreateCheckInModal({
   const [goals, setGoals] = useState<string[]>(['']);
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (existingCheckIn) {
@@ -124,7 +127,7 @@ export default function CreateCheckInModal({
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields before submission
@@ -169,22 +172,34 @@ export default function CreateCheckInModal({
       return;
     }
 
-    const checkInData = {
-      date: dateValidation.sanitizedValue,
-      mood: mood as CheckIn['mood'],
-      energy: energy as CheckIn['energy'],
-      accomplishments: accomplishments.filter(Boolean).map(acc => validateField('accomplishment', acc).sanitizedValue),
-      challenges: challenges.filter(Boolean).map(challenge => validateField('challenge', challenge).sanitizedValue),
-      goals: goals.filter(Boolean).map(goal => validateField('goal', goal).sanitizedValue),
-      notes: notesValidation.sanitizedValue || undefined,
-    };
+    await handleAsyncOperation(
+      async () => {
+        const checkInData = {
+          date: dateValidation.sanitizedValue,
+          mood: mood as CheckIn['mood'],
+          energy: energy as CheckIn['energy'],
+          accomplishments: accomplishments.filter(Boolean).map(acc => validateField('accomplishment', acc).sanitizedValue),
+          challenges: challenges.filter(Boolean).map(challenge => validateField('challenge', challenge).sanitizedValue),
+          goals: goals.filter(Boolean).map(goal => validateField('goal', goal).sanitizedValue),
+          notes: notesValidation.sanitizedValue || undefined,
+        };
 
-    const savedCheckIn = existingCheckIn
-      ? updateCheckIn(existingCheckIn.id, checkInData)
-      : createCheckIn(checkInData);
+        const savedCheckIn = existingCheckIn
+          ? updateCheckIn(existingCheckIn.id, checkInData)
+          : createCheckIn(checkInData);
 
-    onSave?.(savedCheckIn);
-    onClose();
+        onSave?.(savedCheckIn);
+        onClose();
+      },
+      setIsLoading,
+      (error) => {
+        window.addNotification?.({
+          title: 'Error',
+          message: getUserFriendlyErrorMessage(error),
+          type: 'error'
+        });
+      }
+    );
   };
 
   const getMoodEmoji = (moodValue: string) => {
@@ -209,7 +224,8 @@ export default function CreateCheckInModal({
 
   return (
     <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl w-full max-w-3xl border border-white/10 max-h-[80vh] flex flex-col">
+      <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl w-full max-w-3xl border border-white/10 max-h-[80vh] flex flex-col relative">
+        {isLoading && <LoadingOverlay />}
         <div className="p-6 border-b border-white/10 flex-shrink-0">
           <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
             {existingCheckIn ? 'Edit Check-in' : 'Daily Check-in'}
