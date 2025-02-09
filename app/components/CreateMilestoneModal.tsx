@@ -54,11 +54,12 @@ export default function CreateMilestoneModal({ goal: initialGoal }: CreateMilest
 
   if (!selectedGoal && goals.length === 0) {
     return (
-      <div className="text-center py-8">
+      <div className="text-center py-8" role="alert" aria-live="polite">
         <p className="text-gray-300 mb-4">Please create a goal first before adding milestones.</p>
         <button
           onClick={hideModal}
           className="px-4 py-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors"
+          aria-label="Close modal"
         >
           Close
         </button>
@@ -103,7 +104,7 @@ export default function CreateMilestoneModal({ goal: initialGoal }: CreateMilest
 
   return (
     <>
-      <div className="space-y-6 relative">
+      <div className="space-y-6 relative" role="dialog" aria-label="Create Milestone">
         {isLoading && <LoadingOverlay />}
         {!initialGoal && (
           <div>
@@ -116,6 +117,9 @@ export default function CreateMilestoneModal({ goal: initialGoal }: CreateMilest
               onChange={(e) => setSelectedGoal(goals.find(g => g.id === e.target.value))}
               className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               required
+              aria-label="Select a goal for the milestone"
+              aria-invalid={!selectedGoal}
+              aria-describedby={!selectedGoal ? "goal-error" : undefined}
             >
               <option value="">Select a goal</option>
               {Object.entries(
@@ -148,6 +152,8 @@ export default function CreateMilestoneModal({ goal: initialGoal }: CreateMilest
           message={alert.message}
           type={alert.type}
           onClose={() => setAlert({ ...alert, show: false })}
+          aria-label={`${alert.type} alert: ${alert.title}`}
+          role="alertdialog"
         />
       )}
     </>
