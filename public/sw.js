@@ -56,18 +56,21 @@ const OFFLINE_MODAL_HTML = `
 (function checkConnectivity() {
     const modal = document.getElementById('offline-modal');
     let hideTimeout;
+    let wasOffline = false; // Track previous connection state
 
     function updateOfflineStatus() {
         if (!modal) return;
 
         clearTimeout(hideTimeout);
-        modal.style.display = 'block';
 
         if (!navigator.onLine) {
+            wasOffline = true; // Mark that we were offline
+            modal.style.display = 'block';
             modal.classList.remove('online');
             modal.querySelector('.message').textContent = "You're offline";
             modal.classList.add('visible');
-        } else {
+        } else if (wasOffline) { // Only show online banner if we were previously offline
+            modal.style.display = 'block';
             modal.classList.add('online');
             modal.querySelector('.message').textContent = "You're back online";
             modal.classList.add('visible');
@@ -77,6 +80,7 @@ const OFFLINE_MODAL_HTML = `
                 modal.classList.remove('visible');
                 setTimeout(() => {
                     modal.style.display = 'none';
+                    wasOffline = false; // Reset the offline state
                 }, 300); // Wait for transition to complete
             }, 2000);
         }
@@ -85,8 +89,10 @@ const OFFLINE_MODAL_HTML = `
     window.addEventListener('online', updateOfflineStatus);
     window.addEventListener('offline', updateOfflineStatus);
 
-    // Initial check
-    updateOfflineStatus();
+    // Initial check - only show if we're offline
+    if (!navigator.onLine) {
+        updateOfflineStatus();
+    }
 })();
 </script>
 `;
