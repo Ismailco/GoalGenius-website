@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import AnimatedSection from '../components/AnimatedSection';
 
@@ -127,6 +128,17 @@ const sections: Section[] = [
     ]
   }
 ];
+
+// Add metadata for better SEO
+export const metadata: Metadata = {
+  title: 'Documentation - GoalGenius',
+  description: 'Learn how to use GoalGenius effectively and achieve your goals faster.',
+  openGraph: {
+    title: 'Documentation - GoalGenius',
+    description: 'Learn how to use GoalGenius effectively and achieve your goals faster.',
+    type: 'website',
+  },
+};
 
 export default function DocsPage() {
   return (

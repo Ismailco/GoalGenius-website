@@ -1,6 +1,17 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import AnimatedSection from './components/AnimatedSection';
 import Script from 'next/script';
+
+export const metadata: Metadata = {
+  title: 'GoalGenius - Transform Your Goals into Reality',
+  description: 'Track your progress, celebrate milestones, and achieve your dreams with GoalGenius - your personal growth companion.',
+  openGraph: {
+    title: 'GoalGenius - Transform Your Goals into Reality',
+    description: 'Track your progress, celebrate milestones, and achieve your dreams with GoalGenius - your personal growth companion.',
+    type: 'website',
+  },
+};
 
 const features = [
   {

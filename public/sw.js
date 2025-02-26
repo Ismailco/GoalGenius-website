@@ -176,13 +176,12 @@ const OFFLINE_PAGE_HTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
-// Assets that should be cached immediately (app shell)
-const APP_SHELL = [
+// Public routes that should be cached
+const PUBLIC_ROUTES = [
   '/',
-  '/dashboard',
-  '/checkins',
-  '/notes',
-  '/todos',
+  '/docs',
+  '/sign-in',
+  '/sign-up',
   '/manifest.json',
   '/favicon.svg',
   '/favicon.ico',
@@ -194,6 +193,17 @@ const APP_SHELL = [
   '/favicon-256x256.png',
   '/_next/static/**/*'
 ];
+
+// Protected routes that require auth
+const PROTECTED_ROUTES = [
+  '/dashboard',
+  '/checkins',
+  '/notes',
+  '/todos'
+];
+
+// Combined app shell for caching
+const APP_SHELL = [...PUBLIC_ROUTES];
 
 // Helper functions
 const isNavigationRequest = (request) => {
@@ -214,7 +224,17 @@ const isAPIRequest = (request) => {
 const isAuthRequest = (request) => {
   const url = new URL(request.url);
   return url.pathname.includes('/auth/') || // For Clerk
-         url.hostname.includes('clerk.dev'); // For Clerk's domain
+         url.pathname.includes('/__clerk') || // For Clerk handshake
+         url.pathname.includes('handshake') || // For Clerk handshake
+         url.hostname.includes('clerk.dev') || // For Clerk's domain
+         url.hostname.includes('clerk.com') || // For Clerk's domain
+         url.hostname.includes('clerk.accounts.dev'); // For Clerk's accounts domain
+};
+
+// Helper function to check if route is protected
+const isProtectedRoute = (url) => {
+  const pathname = new URL(url).pathname;
+  return PROTECTED_ROUTES.some(route => pathname.startsWith(route));
 };
 
 // Cache strategies
@@ -376,17 +396,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
-  // Don't cache auth requests
+  // Pass through all auth requests directly to network
   if (isAuthRequest(request)) {
-    event.respondWith(
-      navigator.onLine ?
-        fetch(request) :
-        new Response(JSON.stringify({ error: 'Authentication not available offline' }), {
-          status: 503,
-          headers: { 'Content-Type': 'application/json' }
-        })
-    );
-    return;
+    return fetch(request);
   }
 
   // API requests - network first
@@ -486,7 +498,45 @@ self.addEventListener('fetch', (event) => {
   if (isNavigationRequest(request)) {
     event.respondWith(
       (async () => {
-        // Try to get from both caches
+        // Check if it's a protected route
+        if (isProtectedRoute(request.url)) {
+          // Try to get auth status from request headers or cookies
+          const authHeader = request.headers.get('Authorization');
+          const hasAuth = authHeader && authHeader.startsWith('Bearer ');
+
+          if (!hasAuth && navigator.onLine) {
+            // Redirect to sign-in if not authenticated
+            return Response.redirect('/sign-in?redirect=' + encodeURIComponent(request.url), 302);
+          }
+
+          if (!hasAuth && !navigator.onLine) {
+            // If offline and not authenticated, show offline auth required page
+            return new Response(
+              `<!DOCTYPE html>
+              <html>
+                <head>
+                  <title>Authentication Required</title>
+                  <meta name="viewport" content="width=device-width, initial-scale=1">
+                  <style>${OFFLINE_STYLES}</style>
+                </head>
+                <body>
+                  <div class="offline-container">
+                    <div class="icon">🔒</div>
+                    <h1>Authentication Required</h1>
+                    <p>Please sign in to access this page. You must be online to authenticate.</p>
+                    <button class="retry-button" onclick="window.location.href='/sign-in'">Sign In</button>
+                  </div>
+                </body>
+              </html>`,
+              {
+                headers: { 'Content-Type': 'text/html' },
+                status: 401
+              }
+            );
+          }
+        }
+
+        // Continue with existing navigation request handling
         const staticCache = await caches.open(CACHE_NAMES.static);
         const dynamicCache = await caches.open(CACHE_NAMES.dynamic);
 
@@ -581,3 +631,21 @@ self.addEventListener('push', (event) => {
     );
   }
 });
+
+// Add auth check interval
+setInterval(async () => {
+  if (navigator.onLine) {
+    try {
+      const response = await fetch('/api/auth/check');
+      if (!response.ok) {
+        // Clear protected route caches if auth is invalid
+        const cache = await caches.open(CACHE_NAMES.dynamic);
+        for (const route of PROTECTED_ROUTES) {
+          await cache.delete(route);
+        }
+      }
+    } catch (error) {
+      console.warn('Auth check failed:', error);
+    }
+  }
+}, 5 * 60 * 1000); // Check every 5 minutes
