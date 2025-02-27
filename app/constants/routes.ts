@@ -1,4 +1,4 @@
- // Marketing/Public website routes
+// Marketing/Public website routes
 export const PUBLIC_ROUTES = {
   HOME: '/',
   DOCS: '/docs',
@@ -24,10 +24,13 @@ export const AUTH_ROUTES = {
   SIGN_UP: '/sign-up',
 } as const;
 
+type PublicRouteValues = (typeof PUBLIC_ROUTES)[keyof typeof PUBLIC_ROUTES];
+type AuthRouteValues = (typeof AUTH_ROUTES)[keyof typeof AUTH_ROUTES];
+
 // Helper function to check if a route is public
 export const isPublicRoute = (path: string) => {
-  return Object.values(PUBLIC_ROUTES).includes(path as any) ||
-    Object.values(AUTH_ROUTES).includes(path as any) ||
+  return Object.values(PUBLIC_ROUTES).includes(path as PublicRouteValues) ||
+    Object.values(AUTH_ROUTES).includes(path as AuthRouteValues) ||
     path.startsWith('/_next') ||
     path.startsWith('/api') ||
     path.includes('.');
