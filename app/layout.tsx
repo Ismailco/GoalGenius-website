@@ -14,7 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://goalgenius.app'),
+  metadataBase: new URL('https://goalgenius.soultware.com'),
   title: {
     default: 'GoalGenius - Transform Your Goals into Reality',
     template: '%s | GoalGenius'
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'GoalGenius - Transform Your Goals into Reality',
     description: 'Track your progress, celebrate milestones, and achieve your dreams with GoalGenius - your personal growth companion.',
-    url: 'https://goalgenius.app',
+    url: 'https://goalgenius.soultware.com',
     siteName: 'GoalGenius',
     locale: 'en_US',
     type: 'website',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     google: 'your-google-verification-code',
   },
   alternates: {
-    canonical: 'https://goalgenius.app',
+    canonical: 'https://goalgenius.soultware.com',
   },
 };
 
