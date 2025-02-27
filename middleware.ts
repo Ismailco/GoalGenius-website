@@ -1,37 +1,39 @@
-import { clerkMiddleware, getAuth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 import { isProtectedRoute } from './app/constants/routes';
 
-export default clerkMiddleware(async (_, req) => {
-	const { userId } = getAuth(req);
-	const url = new URL(req.url);
-	const isAppSubdomain = url.hostname.startsWith('app.');
+// Handle subdomain routing and authentication
+export default clerkMiddleware(async (auth, request) => {
+	const { userId } = await auth();
+	const url = new URL(request.url);
+	const isDev = process.env.NODE_ENV === 'development';
+	const isAppSubdomain = isDev
+		? url.hostname === 'app.localhost'
+		: url.hostname.startsWith('app.');
 
+	// If on app subdomain, require authentication
 	if (isAppSubdomain) {
-		// On app subdomain - require authentication for all routes
 		if (!userId) {
 			const signInUrl = new URL('/sign-in', url);
-			signInUrl.hostname = url.hostname.replace('app.', '');
+			signInUrl.hostname = isDev ? 'localhost' : url.hostname.replace('app.', '');
 			return NextResponse.redirect(signInUrl);
 		}
-		// Continue with protection
-		return NextResponse.next();
 	} else {
-		// On main domain - only protect specific routes
+		// On main domain - redirect protected routes to app subdomain
 		if (isProtectedRoute(url.pathname)) {
 			const appUrl = new URL(url);
-			appUrl.hostname = `app.${url.hostname}`;
+			appUrl.hostname = isDev ? 'app.localhost' : `app.${url.hostname}`;
 			return NextResponse.redirect(appUrl);
 		}
-		return NextResponse.next();
 	}
+
+	return NextResponse.next();
 });
 
 export const config = {
 	matcher: [
-		// Skip Next.js internals and all static files
-		'/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-		// Always run for API routes
-		'/(api|trpc)(.*)',
+		"/((?!.+\\.[\\w]+$|_next).*)",
+		"/",
+		"/(api|trpc)(.*)",
 	],
 };

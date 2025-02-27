@@ -2,6 +2,8 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
 	async rewrites() {
+		const isDev = process.env.NODE_ENV === 'development';
+
 		return {
 			beforeFiles: [
 				// Rewrite everything on app subdomain to /app/ path
@@ -10,7 +12,7 @@ const nextConfig: NextConfig = {
 					has: [
 						{
 							type: 'host',
-							value: 'app.goalgenius.soultware.com',
+							value: isDev ? 'app.localhost:3000' : 'app.goalgenius.soultware.com',
 						},
 					],
 					destination: '/app/:path*',
@@ -21,7 +23,12 @@ const nextConfig: NextConfig = {
 		};
 	},
 	images: {
-		domains: ['goalgenius.soultware.com', 'app.goalgenius.soultware.com'],
+		domains: [
+			'localhost',
+			'app.localhost',
+			'goalgenius.soultware.com',
+			'app.goalgenius.soultware.com'
+		],
 	},
 };
 
