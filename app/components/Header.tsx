@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import UserProfile from './UserProfile';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export default function Header() {
 	const pathname = usePathname();
@@ -56,7 +57,7 @@ export default function Header() {
 	];
 
 
-	if (pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/docs') {
+	if (pathname === '/' || pathname === '/docs') {
 		return (
 			<>
 				<header className="sm:border-b sm:border-white/10 bg-slate-900 lg:bg-transparent z-[997]">
@@ -64,6 +65,27 @@ export default function Header() {
 					<div className="flex justify-between items-center">
 						<div className="flex items-center">
 							<h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">GoalGenius</h1>
+						</div>
+						<div className="flex items-center space-x-4">
+							<SignedOut>
+								<div className="hidden sm:flex space-x-2">
+									<SignInButton />
+									<SignUpButton />
+								</div>
+								{/* Mobile-friendly version */}
+								<div className="sm:hidden">
+									<SignInButton />
+								</div>
+							</SignedOut>
+							<SignedIn>
+								<UserButton
+									appearance={{
+										elements: {
+											userButtonAvatarBox: "w-10 h-10 rounded-full"
+										}
+									}}
+								/>
+							</SignedIn>
 						</div>
 					</div>
 				</div>
@@ -86,7 +108,19 @@ export default function Header() {
 								}}
 								className="relative z-[10]"
 							>
-								<UserProfile isMobile={true} isMenuButton={true} />
+								<SignedOut>
+									<UserProfile isMobile={true} isMenuButton={true} />
+								</SignedOut>
+								<SignedIn>
+									<UserButton
+										afterSignOutUrl="/"
+										appearance={{
+											elements: {
+												userButtonAvatarBox: "w-10 h-10 rounded-full"
+											}
+										}}
+									/>
+								</SignedIn>
 							</div>
 
 							{/* Centered Logo */}
@@ -115,7 +149,19 @@ export default function Header() {
 
 						{/* Desktop User Profile */}
 						<div className="hidden sm:block">
-							<UserProfile isMobile={false} />
+							<SignedOut>
+								<UserProfile isMobile={false} />
+							</SignedOut>
+							<SignedIn>
+								<UserButton
+									afterSignOutUrl="/"
+									appearance={{
+										elements: {
+											userButtonAvatarBox: "w-10 h-10 rounded-full"
+										}
+									}}
+								/>
+							</SignedIn>
 						</div>
 					</div>
 				</div>
