@@ -57,7 +57,7 @@ export default function Header() {
 	];
 
 
-	if (pathname === '/' || pathname === '/docs') {
+	if (pathname === '/' || pathname === '/docs' || pathname === '/sign-in/*' || pathname === '/sign-up/*') {
 		return (
 			<>
 				<header className="sm:border-b sm:border-white/10 bg-slate-900 lg:bg-transparent z-[997]">
@@ -69,8 +69,12 @@ export default function Header() {
 						<div className="flex items-center space-x-4">
 							<SignedOut>
 								<div className="hidden sm:flex space-x-2">
-									<SignInButton />
-									<SignUpButton />
+									<SignInButton>
+										<button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">Sign In</button>
+									</SignInButton>
+									<SignUpButton>
+										<button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">Sign Up</button>
+									</SignUpButton>
 								</div>
 								{/* Mobile-friendly version */}
 								<div className="sm:hidden">

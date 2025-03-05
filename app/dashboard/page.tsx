@@ -12,9 +12,13 @@ import { useModal } from '@/app/providers/ModalProvider';
 import DashboardCard from '@/app/components/DashboardCard';
 import SectionHeader from '@/app/components/SectionHeader';
 import DashboardSection from '@/app/components/DashboardSection';
+import { useUser } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 export default function DashboardPage() {
+
   const { showModal } = useModal();
+  const { user, isLoaded, isSignedIn } = useUser();
   const [mounted, setMounted] = useState(false);
   const [stats, setStats] = useState({
     totalGoals: 0,
@@ -34,6 +38,21 @@ export default function DashboardPage() {
     });
   }, []);
 
+  if (!isLoaded) {
+    return (
+      <div className="relative">
+        <div className="bg-white/5 backdrop-blur-lg rounded-3xl p-6 mb-6 animate-pulse">
+          <div className="h-8 bg-white/10 rounded-xl w-3/4"></div>
+          <div className="h-4 bg-white/5 rounded-xl w-1/2 mt-2"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isSignedIn) {
+    redirect('/sign-in');
+  }
+
   if (!mounted) {
     return (
       <div className="relative">
@@ -51,7 +70,9 @@ export default function DashboardPage() {
       <DashboardSection className="mb-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
-            <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Your Journey Dashboard</h1>
+            <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+              {user ? `${user.username || 'Your'}'s Journey Dashboard` : 'Your Journey Dashboard'}
+            </h1>
             <p className="text-gray-300 mt-2">Track your progress, achieve your dreams</p>
           </div>
           <div className="flex gap-4">
