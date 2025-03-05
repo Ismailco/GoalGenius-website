@@ -6,12 +6,12 @@ import { getNotes, deleteNote, updateNote } from '@/app/lib/storage';
 import CreateNoteModal from '@/app/components/CreateNoteModal';
 import AlertModal from '@/app/components/AlertModal';
 import { format } from 'date-fns';
-import { auth } from '@clerk/nextjs/server';
+import { useUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation';
 
-export default async function NotesPage() {
-  const { userId } = await auth();
-  if (!userId) {
+export default function NotesPage() {
+  const { isSignedIn } = useUser();
+  if (!isSignedIn) {
     redirect('/sign-in');
   }
 
