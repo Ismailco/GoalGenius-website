@@ -6,12 +6,12 @@ import { getCheckIns, deleteCheckIn } from '@/app/lib/storage';
 import CreateCheckInModal from '@/app/components/CreateCheckInModal';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
 import AlertModal from '@/app/components/AlertModal';
-import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 
-export default async function CheckInsPage() {
-  const { userId } = await auth();
-  if (!userId) {
+export default function CheckInsPage() {
+  const { isSignedIn } = useUser();
+  if (!isSignedIn) {
     redirect('/sign-in');
   }
 

@@ -7,11 +7,11 @@ import CreateTodoModal from '@/app/components/CreateTodoModal';
 import AlertModal from '@/app/components/AlertModal';
 import { format } from 'date-fns';
 import { redirect } from 'next/navigation';
-import { auth } from '@clerk/nextjs/server';
+import { useUser } from '@clerk/nextjs';
 
-export default async function TodosPage() {
-  const { userId } = await auth();
-  if (!userId) {
+export default function TodosPage() {
+  const { isSignedIn } = useUser();
+  if (!isSignedIn) {
     redirect('/sign-in');
   }
 
