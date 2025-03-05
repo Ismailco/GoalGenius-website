@@ -13,12 +13,11 @@ import DashboardCard from '@/app/components/DashboardCard';
 import SectionHeader from '@/app/components/SectionHeader';
 import DashboardSection from '@/app/components/DashboardSection';
 import { useUser } from '@clerk/nextjs';
-import { redirect } from 'next/navigation';
 
 export default function DashboardPage() {
 
   const { showModal } = useModal();
-  const { user, isLoaded, isSignedIn } = useUser();
+  const { user, isLoaded } = useUser();
   const [mounted, setMounted] = useState(false);
   const [stats, setStats] = useState({
     totalGoals: 0,
@@ -47,10 +46,6 @@ export default function DashboardPage() {
         </div>
       </div>
     );
-  }
-
-  if (!isSignedIn) {
-    redirect('/sign-in');
   }
 
   if (!mounted) {

@@ -6,14 +6,8 @@ import { getNotes, deleteNote, updateNote } from '@/app/lib/storage';
 import CreateNoteModal from '@/app/components/CreateNoteModal';
 import AlertModal from '@/app/components/AlertModal';
 import { format } from 'date-fns';
-import { useUser } from '@clerk/nextjs'
-import { redirect } from 'next/navigation';
 
 export default function NotesPage() {
-  const { isSignedIn } = useUser();
-  if (!isSignedIn) {
-    redirect('/sign-in');
-  }
 
   const [mounted, setMounted] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);

@@ -57,7 +57,7 @@ export default function Header() {
 	];
 
 
-	if (pathname === '/' || pathname === '/docs' || pathname === '/sign-in/*' || pathname === '/sign-up/*') {
+	if (pathname === '/' || pathname === '/docs' || pathname === '/sign-in' || pathname === '/sign-up') {
 		return (
 			<>
 				<header className="sm:border-b sm:border-white/10 bg-slate-900 lg:bg-transparent z-[997]">

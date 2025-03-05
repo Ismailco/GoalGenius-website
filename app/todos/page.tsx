@@ -6,14 +6,8 @@ import { getTodos, deleteTodo, toggleTodoComplete } from '@/app/lib/storage';
 import CreateTodoModal from '@/app/components/CreateTodoModal';
 import AlertModal from '@/app/components/AlertModal';
 import { format } from 'date-fns';
-import { redirect } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
 
 export default function TodosPage() {
-  const { isSignedIn } = useUser();
-  if (!isSignedIn) {
-    redirect('/sign-in');
-  }
 
   const [mounted, setMounted] = useState(false);
   const [todos, setTodos] = useState<Todo[]>([]);
