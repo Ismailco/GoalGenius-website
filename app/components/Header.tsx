@@ -1,223 +1,58 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import UserProfile from './UserProfile';
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { useState } from 'react';
+import { X, Menu } from 'lucide-react';
 
 export default function Header() {
-	const pathname = usePathname();
-	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const menuRef = useRef<HTMLDivElement>(null);
+	const [isOpen, setIsOpen] = useState(false);
 
-	useEffect(() => {
-		let touchStart = 0;
-		let touchEnd = 0;
+	return (
+		<header className="fixed top-5 left-1/2 transform -translate-x-1/2 md:w-2/3 w-5/6 z-10 bg-gradient-to-b from-slate-900/80 to-transparent backdrop-blur-md border-b border-white/10 shadow-lg rounded-full">
+			<div className="mx-auto px-6 sm:px-8 py-4 flex justify-between items-center">
+				{/* Logo */}
+				<h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-400 text-transparent bg-clip-text tracking-wide">GoalGenius</h1>
 
-		const handleTouchStart = (e: TouchEvent) => {
-			touchStart = e.touches[0].clientX;
-		};
-
-		const handleTouchMove = (e: TouchEvent) => {
-			touchEnd = e.touches[0].clientX;
-		};
-
-		const handleTouchEnd = () => {
-			const distance = touchStart - touchEnd;
-			const isLeftSwipe = distance > 50;
-			const isRightSwipe = distance < -50;
-
-			if (isLeftSwipe) {
-				setIsMobileMenuOpen(false);
-			} else if (isRightSwipe && touchStart < 50) {
-				setIsMobileMenuOpen(true);
-			}
-		};
-
-		document.addEventListener('touchstart', handleTouchStart);
-		document.addEventListener('touchmove', handleTouchMove);
-		document.addEventListener('touchend', handleTouchEnd);
-
-		return () => {
-			document.removeEventListener('touchstart', handleTouchStart);
-			document.removeEventListener('touchmove', handleTouchMove);
-			document.removeEventListener('touchend', handleTouchEnd);
-		};
-	}, []);
-
-	// Don't show header on home page
-	// if (pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/docs') return null;
-
-	const navItems = [
-		{ name: 'Dashboard', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-		{ name: 'Check-ins', href: '/checkins', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
-		{ name: 'Todos', href: '/todos', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-		{ name: 'Notes', href: '/notes', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
-	];
-
-
-	if (pathname === '/' || pathname === '/docs' || pathname === '/sign-in' || pathname === '/sign-up') {
-		return (
-			<>
-				<header className="sm:border-b sm:border-white/10 bg-slate-900 lg:bg-transparent z-[997]">
-				<div className="max-w-7xl mx-auto px-4 pt-3 pb-0 sm:py-3 sm:px-4">
-					<div className="flex justify-between items-center">
-						<div className="flex items-center">
-							<h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">GoalGenius</h1>
-						</div>
-						<div className="flex items-center space-x-4">
-							<SignedOut>
-								<div className="hidden sm:flex space-x-2">
-									<SignInButton>
-										<button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">Sign In</button>
-									</SignInButton>
-									<SignUpButton>
-										<button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">Sign Up</button>
-									</SignUpButton>
-								</div>
-								{/* Mobile-friendly version */}
-								<div className="sm:hidden">
-									<SignInButton />
-								</div>
-							</SignedOut>
-							<SignedIn>
-								<UserButton
-									appearance={{
-										elements: {
-											userButtonAvatarBox: "w-10 h-10 rounded-full"
-										}
-									}}
-								/>
-							</SignedIn>
-						</div>
-					</div>
-				</div>
-			</header>
-		</>
-	)
-	} else {
-		return (
-			<>
-				<header className="sm:border-b sm:border-white/10 bg-slate-900 lg:bg-transparent z-[997]">
-					<div className="max-w-7xl mx-auto px-4 pt-3 pb-0 sm:py-3 sm:px-4">
-					<div className="flex justify-between items-center">
-						{/* Mobile Layout */}
-						<div className="flex items-center justify-between w-full sm:hidden">
-							{/* User Profile as Menu Button */}
-							<div
-								onClick={(e) => {
-									e.stopPropagation();
-									setIsMobileMenuOpen(!isMobileMenuOpen);
-								}}
-								className="relative z-[10]"
-							>
-								<SignedOut>
-									<UserProfile isMobile={true} isMenuButton={true} />
-								</SignedOut>
-								<SignedIn>
-									<UserButton
-										afterSignOutUrl="/"
-										appearance={{
-											elements: {
-												userButtonAvatarBox: "w-10 h-10 rounded-full"
-											}
-										}}
-									/>
-								</SignedIn>
-							</div>
-
-							{/* Centered Logo */}
-							<div className="flex items-center">
-								<svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-								</svg>
-							</div>
-
-							{/* Empty div for spacing */}
-							<div className="w-10"></div>
-						</div>
-
-						{/* Desktop Logo and Title */}
-						<div className="hidden sm:flex items-center space-x-4">
-							<div className="p-2 rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20">
-								<svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-								</svg>
-							</div>
-							<div>
-								<h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">GoalGenius</h1>
-								<p className="text-sm text-gray-400">Transform your aspirations into achievements</p>
-							</div>
-						</div>
-
-						{/* Desktop User Profile */}
-						<div className="hidden sm:block">
-							<SignedOut>
-								<UserProfile isMobile={false} />
-							</SignedOut>
-							<SignedIn>
-								<UserButton
-									afterSignOutUrl="/"
-									appearance={{
-										elements: {
-											userButtonAvatarBox: "w-10 h-10 rounded-full"
-										}
-									}}
-								/>
-							</SignedIn>
-						</div>
-					</div>
-				</div>
-			</header>
-
-			{/* Mobile Menu Overlay */}
-			{isMobileMenuOpen && (
-				<div
-					className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[998] sm:hidden"
-					onClick={(e) => {
-						e.stopPropagation();
-						setIsMobileMenuOpen(false);
-					}}
-				/>
-			)}
-
-			{/* Mobile Slide-out Menu */}
-			<div ref={menuRef} className={`fixed top-0 left-0 bottom-0 w-64 bg-slate-900/95 backdrop-blur-xl border-r border-white/10 transform transition-transform duration-300 ease-in-out z-[999] sm:hidden flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-				{/* Logo in Menu */}
-				<div className="p-6 border-b border-white/10">
-					<div className="flex items-center space-x-3">
-						<div className="p-2 rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20">
-							<svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-							</svg>
-						</div>
-						<div>
-							<h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">GoalGenius</h1>
-						</div>
-					</div>
-				</div>
-
-				{/* Navigation Links */}
-				<nav className="flex-1 p-4 space-y-2">
-					{navItems.map((item) => {
-						const isActive = pathname === item.href;
-						return (
-							<Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
-								<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-								</svg>
-								<span className="font-medium">{item.name}</span>
-							</Link>
-						);
-					})}
+				{/* Desktop Navigation */}
+				<nav className="hidden md:flex space-x-6">
+					<a href="#" className="text-white text-lg font-medium hover:text-blue-400 transition-all duration-300">
+						Home
+					</a>
+					<a href="#" className="text-white text-lg font-medium hover:text-purple-400 transition-all duration-300">
+						Features
+					</a>
+					<a href="#" className="text-white text-lg font-medium hover:text-pink-400 transition-all duration-300">
+						Pricing
+					</a>
+					<a href="#" className="text-white text-lg font-medium hover:text-green-400 transition-all duration-300">
+						Contact
+					</a>
 				</nav>
 
-				{/* User Profile at bottom */}
-				<div className="p-4 border-t border-white/10">
-					<UserProfile isMobile={true} />
+				{/* Mobile Menu Button */}
+				<button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white text-2xl focus:outline-none">
+					{isOpen ? <X size={28} /> : <Menu size={32} />}
+				</button>
+
+				{/* Mobile Menu Overlay */}
+				<div className={`fixed w-full top-16 rounded-xl py-10 mt-5 right-0 h-fit bg-slate-900/90 backdrop-blur-xl transform ${isOpen ? 'translate-x-0' : 'translate-x-[150%]'} transition-transform duration-300 ease-in-out shadow-xl`}>
+
+					{/* Mobile Menu Links */}
+					<nav className="flex flex-col items-center space-y-6 mt-8 md:hidden">
+						<a href="#" className="text-white text-lg font-medium hover:text-blue-400 transition-all duration-300" onClick={() => setIsOpen(false)}>
+							Home
+						</a>
+						<a href="#" className="text-white text-lg font-medium hover:text-purple-400 transition-all duration-300" onClick={() => setIsOpen(false)}>
+							Features
+						</a>
+						<a href="#" className="text-white text-lg font-medium hover:text-pink-400 transition-all duration-300" onClick={() => setIsOpen(false)}>
+							Pricing
+						</a>
+						<a href="#" className="text-white text-lg font-medium hover:text-green-400 transition-all duration-300" onClick={() => setIsOpen(false)}>
+							Contact
+						</a>
+					</nav>
 				</div>
 			</div>
-		</>
+		</header>
 	);
-}};
+}

@@ -1,10 +1,7 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Header from './components/Header';
-import Navbar from './components/Navbar';
 import { Metadata } from 'next';
-import Providers from './components/Providers';
-import { ClerkProvider } from '@clerk/nextjs';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -75,7 +72,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <>
       <html lang="en" className={inter.className}>
         <head>
           <meta charSet="utf-8" />
@@ -92,18 +89,17 @@ export default function RootLayout({
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         </head>
         <body>
-          <Providers>
             <div className="min-h-screen bg-slate-900">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl"></div>
               <div className="relative pb-20">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl"></div>
                 <Header />
+                <div className='py-20'>
                 {children}
+                </div>
               </div>
             </div>
-            <Navbar />
-          </Providers>
         </body>
       </html>
-    </ClerkProvider>
+    </>
   );
 }
