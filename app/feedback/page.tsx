@@ -6,62 +6,151 @@ import { useSearchParams } from 'next/navigation';
 import AnimatedSection from '../components/AnimatedSection';
 
 export default function FeedbackPage() {
-  const searchParams = useSearchParams();
-  const planParam = searchParams.get('plan');
-  const topicParam = searchParams.get('topic');
+	const searchParams = useSearchParams();
+	const planParam = searchParams.get('plan');
+	const topicParam = searchParams.get('topic');
 
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    feedbackType: topicParam || 'general',
-    plan: planParam || '',
-    feature: '',
-    rating: '5',
-    message: '',
-    submitted: false,
-    submitting: false,
-    error: false
-  });
+	const [formState, setFormState] = useState({
+		name: '',
+		email: '',
+		feedbackType: topicParam || 'general',
+		plan: planParam || '',
+		feature: '',
+		rating: '5',
+		message: '',
+		submitted: false,
+		submitting: false,
+		error: false,
+		errorMessage: '',
+	});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormState(prev => ({ ...prev, [name]: value }));
-  };
+	const validateForm = () => {
+		// Basic validation
+		if (!formState.name.trim()) {
+			setFormState((prev) => ({
+				...prev,
+				error: true,
+				errorMessage: 'Please enter your name',
+			}));
+			return false;
+		}
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormState(prev => ({ ...prev, submitting: true, error: false }));
+		if (!formState.email.trim() || !/^\S+@\S+\.\S+$/.test(formState.email)) {
+			setFormState((prev) => ({
+				...prev,
+				error: true,
+				errorMessage: 'Please enter a valid email address',
+			}));
+			return false;
+		}
 
-    // Simulate form submission
-    setTimeout(() => {
-      // In production, you would send this data to your API
-      console.log('Feedback submitted:', formState);
-      setFormState(prev => ({
-        ...prev,
-        submitted: true,
-        submitting: false
-      }));
-    }, 1500);
-  };
+		if (formState.feedbackType === 'feature' && !formState.feature) {
+			setFormState((prev) => ({
+				...prev,
+				error: true,
+				errorMessage: 'Please select a feature area',
+			}));
+			return false;
+		}
 
-  const feedbackTypes = [
-    { id: 'general', label: 'General Feedback' },
-    { id: 'feature', label: 'Feature Request' },
-    { id: 'bug', label: 'Bug Report' },
-    { id: 'ui', label: 'UI/UX Feedback' },
-    { id: 'pricing', label: 'Pricing Feedback' },
-  ];
+		if (formState.feedbackType === 'pricing' && !formState.plan) {
+			setFormState((prev) => ({
+				...prev,
+				error: true,
+				errorMessage: 'Please select a pricing plan',
+			}));
+			return false;
+		}
 
-  const featureOptions = [
-    { id: 'goals', label: 'Goal Tracking' },
-    { id: 'ai', label: 'AI Recommendations' },
-    { id: 'calendar', label: 'Calendar Integration' },
-    { id: 'dashboard', label: 'Dashboard & Analytics' },
-    { id: 'mobile', label: 'Mobile Experience' },
-    { id: 'other', label: 'Other Feature' },
-  ];
+		if (!formState.message.trim()) {
+			setFormState((prev) => ({
+				...prev,
+				error: true,
+				errorMessage: 'Please enter your feedback message',
+			}));
+			return false;
+		}
 
-  return (
+		return true;
+	};
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		setFormState((prev) => ({ ...prev, [name]: value, error: false, errorMessage: '' }));
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+
+		// Reset error state
+		setFormState((prev) => ({ ...prev, error: false, errorMessage: '' }));
+
+		if (validateForm()) {
+			try {
+				setFormState((prev) => ({ ...prev, submitting: true }));
+
+				const response = await fetch('https://goalgenius-feedback-form.soultware.workers.dev', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						name: formState.name,
+						email: formState.email,
+						feedbackType: formState.feedbackType,
+						plan: formState.plan,
+						feature: formState.feature,
+						rating: formState.rating,
+						message: formState.message,
+						source: window.location.href,
+					}),
+				});
+
+				const data = await response.json();
+
+				if (response.ok) {
+					setFormState((prev) => ({
+						...prev,
+						submitted: true,
+						submitting: false,
+					}));
+				} else {
+					setFormState((prev) => ({
+						...prev,
+						error: true,
+						submitting: false,
+						errorMessage: data.message || 'An error occurred while submitting your feedback',
+					}));
+				}
+			} catch (error) {
+				setFormState((prev) => ({
+					...prev,
+					error: true,
+					submitting: false,
+					errorMessage: 'Network error: Could not submit form. Please try again later.',
+				}));
+			}
+		}
+	};
+
+	const feedbackTypes = [
+		{ id: 'general', label: 'General Feedback' },
+		{ id: 'feature', label: 'Feature Request' },
+		{ id: 'bug', label: 'Bug Report' },
+		{ id: 'ui', label: 'UI/UX Feedback' },
+		{ id: 'pricing', label: 'Pricing Feedback' },
+	];
+
+	const featureOptions = [
+		{ id: 'goals', label: 'Goal Tracking' },
+		{ id: 'ai', label: 'AI Recommendations' },
+		{ id: 'calendar', label: 'Calendar Integration' },
+		{ id: 'dashboard', label: 'Dashboard & Analytics' },
+		{ id: 'mobile', label: 'Mobile Experience' },
+		{ id: 'other', label: 'Other Feature' },
+	];
+
+	return (
 		<main className="relative">
 			{/* Blue Banner */}
 			<div className="bg-blue-600 text-white px-4 py-3 text-center relative">
@@ -77,15 +166,15 @@ export default function FeedbackPage() {
 
 			<div className="container mx-auto px-4 py-16">
 				<AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl mx-auto text-center mb-12">
-					<div className='flex flex-col justify-center items-center'>
-            <Link href="/" className="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6">
-              <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              Back to Home
-            </Link>
-            <div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Beta Feedback</div>
-          </div>
+					<div className="flex flex-col justify-center items-center">
+						<Link href="/" className="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6">
+							<svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+							</svg>
+							Back to Home
+						</Link>
+						<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Beta Feedback</div>
+					</div>
 					<h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Help Shape GoalGenius</h1>
 					<p className="text-xl text-gray-300 mb-4">Your feedback is invaluable as we develop our product.</p>
 					<p className="text-gray-400">Share your thoughts, report issues, or suggest features to help us build the best goal tracking app possible.</p>
@@ -114,6 +203,17 @@ export default function FeedbackPage() {
 					</AnimatedSection>
 				) : (
 					<AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="max-w-2xl mx-auto bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10">
+						{formState.error && (
+							<div className="bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg mb-6">
+								<div className="flex items-center">
+									<svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+									</svg>
+									<span>{formState.errorMessage}</span>
+								</div>
+							</div>
+						)}
+
 						<form onSubmit={handleSubmit}>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 								<div>
@@ -191,7 +291,7 @@ export default function FeedbackPage() {
 										<div className="flex gap-2">
 											{[1, 2, 3, 4, 5].map((num) => (
 												<label key={num} className="flex flex-col items-center cursor-pointer">
-													<input type="radio" name="rating" value={num.toString()} checked={formState.rating === num.toString()} onChange={handleChange} className="sr-only" />
+													<input type="radio" name="rating" value={num} checked={formState.rating === num.toString()} onChange={handleChange} className="sr-only" />
 													<span className={`w-10 h-10 flex items-center justify-center rounded-full text-lg font-bold transition-colors ${formState.rating === num.toString() ? 'bg-blue-500 text-white' : 'bg-white/10 text-gray-300 hover:bg-white/20'}`}>{num}</span>
 												</label>
 											))}
@@ -227,7 +327,7 @@ export default function FeedbackPage() {
 					</AnimatedSection>
 				)}
 
-				{/* <AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }} className="max-w-2xl mx-auto mt-12 p-6 bg-white/5 backdrop-blur-lg rounded-3xl border border-white/10">
+				<AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }} className="max-w-2xl mx-auto mt-12 p-6 bg-white/5 backdrop-blur-lg rounded-3xl border border-white/10">
 					<div className="flex items-start">
 						<div className="bg-blue-500/20 p-3 rounded-full mr-4">
 							<svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -276,7 +376,7 @@ export default function FeedbackPage() {
 							</ul>
 						</div>
 					</div>
-				</AnimatedSection> */}
+				</AnimatedSection>
 			</div>
 
 			{/* Footer */}
@@ -294,3 +394,4 @@ export default function FeedbackPage() {
 		</main>
 	);
 }
+
