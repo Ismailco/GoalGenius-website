@@ -77,13 +77,15 @@ export default function FeedbackPage() {
 
 			<div className="container mx-auto px-4 py-16">
 				<AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl mx-auto text-center mb-12">
-					<Link href="/" className="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6">
-						<svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-						</svg>
-						Back to Home
-					</Link>
-					<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Beta Feedback</div>
+					<div className='flex flex-col justify-center items-center'>
+            <Link href="/" className="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6">
+              <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to Home
+            </Link>
+            <div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Beta Feedback</div>
+          </div>
 					<h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Help Shape GoalGenius</h1>
 					<p className="text-xl text-gray-300 mb-4">Your feedback is invaluable as we develop our product.</p>
 					<p className="text-gray-400">Share your thoughts, report issues, or suggest features to help us build the best goal tracking app possible.</p>
