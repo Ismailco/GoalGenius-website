@@ -328,7 +328,7 @@ export default function FeedbackPage() {
 					</AnimatedSection>
 				)}
 
-				<AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }} className="max-w-2xl mx-auto mt-12 p-6 bg-white/5 backdrop-blur-lg rounded-3xl border border-white/10">
+				{/* <AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }} className="max-w-2xl mx-auto mt-12 p-6 bg-white/5 backdrop-blur-lg rounded-3xl border border-white/10">
 					<div className="flex items-start">
 						<div className="bg-blue-500/20 p-3 rounded-full mr-4">
 							<svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -377,7 +377,7 @@ export default function FeedbackPage() {
 							</ul>
 						</div>
 					</div>
-				</AnimatedSection>
+				</AnimatedSection> */}
 			</div>
 
 			{/* Footer */}
