@@ -92,10 +92,8 @@ export default function RootLayout({
             <div className="min-h-screen bg-slate-900">
               <div className="relative pb-20">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl"></div>
-                <Header />
-                <div className='py-20'>
+                {/* <Header /> */}
                 {children}
-                </div>
               </div>
             </div>
         </body>

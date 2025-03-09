@@ -7,7 +7,7 @@ export default function Header() {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
-		<header className="fixed top-5 left-1/2 transform -translate-x-1/2 md:w-2/3 w-5/6 z-10 bg-gradient-to-b from-slate-900/80 to-transparent backdrop-blur-md border-b border-white/10 shadow-lg rounded-full">
+		<header className="fixed top-16 left-1/2 transform -translate-x-1/2 md:w-2/3 w-5/6 z-10 bg-gradient-to-b from-slate-900/80 to-transparent backdrop-blur-md border-b border-white/10 shadow-lg rounded-full">
 			<div className="mx-auto px-6 sm:px-8 py-4 flex justify-between items-center">
 				{/* Logo */}
 				<h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-400 text-transparent bg-clip-text tracking-wide">GoalGenius</h1>
