@@ -123,6 +123,7 @@ export default function FeedbackPage() {
 					}));
 				}
 			} catch (error) {
+        console.log(error);
 				setFormState((prev) => ({
 					...prev,
 					error: true,

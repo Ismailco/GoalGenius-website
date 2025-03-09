@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import AnimatedSection from './components/AnimatedSection';
 import Script from 'next/script';
-import Image from 'next/image';
 
 export const metadata: Metadata = {
 	title: 'GoalGenius [VALIDATION] - Validate Our AI Goal Tracking Concept',
@@ -182,7 +181,7 @@ export default function HomePage() {
 							<h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-6">Achieve Goals 2x Faster with Smart AI Tracking</h1>
 							<p className="text-xl text-gray-300 mb-4">Our platform helps you track goals, monitor progress, and stay focused. Advanced AI features for enhanced productivity are currently in development.</p>
 							<p className="text-lg text-blue-400 border border-blue-400/30 bg-blue-400/10 rounded-lg p-4 mb-8">
-								Try our cross-platform demo with basic features! We're working on AI integration, user authentication, and cloud syncing for our full release.
+								Try our cross-platform demo with basic features! We&apos;re working on AI integration, user authentication, and cloud syncing for our full release.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
