@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import AnimatedSection from '../components/AnimatedSection';
+import AnimatedSection from '@/components/AnimatedSection';
 
 export default function FeedbackPage() {
 	const searchParams = useSearchParams();

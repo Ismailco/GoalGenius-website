@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import AnimatedSection from './components/AnimatedSection';
+import AnimatedSection from '@/components/AnimatedSection';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 		url: 'https://goalgenius.online',
 		images: [
 			{
-				url: 'https://goalgenius.online/og-image.png',
+				url: '/og-image.png',
 				width: 1200,
 				height: 630,
 				alt: 'GoalGenius - AI-Powered Goal Tracking App',
