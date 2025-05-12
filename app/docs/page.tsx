@@ -138,10 +138,10 @@ export const metadata: Metadata = {
 		title: 'Documentation - GoalGenius',
 		description: 'Learn how to use GoalGenius effectively and achieve your goals faster. Comprehensive guides, best practices, and tutorials.',
 		type: 'website',
-		url: 'https://goalgenius.soultware.com/docs',
+		url: 'https://goalgenius.online/docs',
 		images: [
 			{
-				url: 'https://goalgenius.soultware.com/og-docs.jpg',
+				url: 'https://goalgenius.online/og-docs.jpg',
 				width: 1200,
 				height: 630,
 				alt: 'GoalGenius Documentation',
@@ -152,10 +152,10 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'Documentation - GoalGenius',
 		description: 'Learn how to use GoalGenius effectively and achieve your goals faster. Comprehensive guides, best practices, and tutorials.',
-		images: ['https://goalgenius.soultware.com/og-docs.jpg'],
+		images: ['https://goalgenius.online/og-docs.jpg'],
 	},
 	alternates: {
-		canonical: 'https://goalgenius.soultware.com/docs',
+		canonical: 'https://goalgenius.online/docs',
 	},
 };
 
@@ -174,12 +174,12 @@ export default function DocsPage() {
 			name: 'GoalGenius',
 			logo: {
 				'@type': 'ImageObject',
-				url: 'https://goalgenius.soultware.com/logo.png',
+				url: 'https://goalgenius.online/logo.png',
 			},
 		},
 		mainEntityOfPage: {
 			'@type': 'WebPage',
-			'@id': 'https://goalgenius.soultware.com/docs',
+			'@id': 'https://goalgenius.online/docs',
 		},
 		articleSection: sections.map((section) => section.title).join(', '),
 	};

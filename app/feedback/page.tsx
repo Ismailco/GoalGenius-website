@@ -158,8 +158,8 @@ export default function FeedbackPage() {
 				<div className="container mx-auto">
 					<p className="font-medium">
 						<span className="font-bold">BETA ACCESS:</span> Try our functional demo at{' '}
-						<a href="https://demo.goalgenius.soultware.com" className="underline font-bold hover:text-blue-200 transition-colors">
-							demo.goalgenius.soultware.com
+						<a href="https://demo.goalgenius.online" className="underline font-bold hover:text-blue-200 transition-colors">
+							demo.goalgenius.online
 						</a>
 					</p>
 				</div>
@@ -194,7 +194,7 @@ export default function FeedbackPage() {
 							<Link href="/" className="inline-flex items-center px-6 py-3 font-medium rounded-full text-white bg-white/10 hover:bg-white/20 transform hover:scale-105 transition-all duration-200">
 								Return Home
 							</Link>
-							<Link href="https://demo.goalgenius.soultware.com" className="inline-flex items-center px-6 py-3 font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">
+							<Link href="https://demo.goalgenius.online" className="inline-flex items-center px-6 py-3 font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">
 								Try the Demo
 								<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -345,8 +345,8 @@ export default function FeedbackPage() {
 									</svg>
 									<span>
 										Email us at{' '}
-										<a href="mailto:feedback@goalgenius.soultware.com" className="text-blue-400 hover:text-blue-300">
-											feedback@goalgenius.soultware.com
+										<a href="mailto:feedback@goalgenius.online" className="text-blue-400 hover:text-blue-300">
+											feedback@goalgenius.online
 										</a>
 									</span>
 								</li>
@@ -386,8 +386,8 @@ export default function FeedbackPage() {
 					<p className="text-gray-400 text-sm">GoalGenius • © {new Date().getFullYear()}</p>
 					<p className="text-blue-400 mt-2 text-xs">
 						Currently in beta. Try our demo at{' '}
-						<a href="https://demo.goalgenius.soultware.com" className="underline hover:text-blue-300">
-							demo.goalgenius.soultware.com
+						<a href="https://demo.goalgenius.online" className="underline hover:text-blue-300">
+							demo.goalgenius.online
 						</a>
 					</p>
 				</div>

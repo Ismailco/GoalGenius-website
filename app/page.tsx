@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 		title: 'GoalGenius [VALIDATION] - Validate Our AI Goal Tracking Concept',
 		description: 'Help us validate our AI-powered goal tracking concept before we build it. Your feedback will shape GoalGenius.',
 		type: 'website',
-		url: 'https://goalgenius.soultware.com',
+		url: 'https://goalgenius.online',
 		images: [
 			{
-				url: 'https://goalgenius.soultware.com/og-home.jpg',
+				url: 'https://goalgenius.online/og-home.jpg',
 				width: 1200,
 				height: 630,
 				alt: 'GoalGenius - AI-Powered Goal Tracking App Concept',
@@ -25,10 +25,10 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'GoalGenius [VALIDATION] - Validate Our AI Goal Tracking Concept',
 		description: 'Help us validate our AI-powered goal tracking concept before we build it. Your feedback will shape GoalGenius.',
-		images: ['https://goalgenius.soultware.com/og-home.jpg'],
+		images: ['https://goalgenius.online/og-home.jpg'],
 	},
 	alternates: {
-		canonical: 'https://goalgenius.soultware.com',
+		canonical: 'https://goalgenius.online',
 	},
 	keywords: 'concept validation, goal tracking, AI assistant, productivity, feedback, product validation',
 	robots: {
@@ -166,7 +166,7 @@ export default function HomePage() {
 				<div className="bg-blue-600 text-white px-4 py-3 text-center relative">
 					<div className="container mx-auto">
 						<p className="font-medium">
-							<span className="font-bold">BETA ACCESS:</span> Try our functional demo at <a href="https://demo.goalgenius.soultware.com" className="underline font-bold hover:text-blue-200 transition-colors">demo.goalgenius.soultware.com</a> and help us prioritize upcoming features!
+							<span className="font-bold">BETA ACCESS:</span> Try our functional demo at <a href="https://demo.goalgenius.online" className="underline font-bold hover:text-blue-200 transition-colors">demo.goalgenius.online</a> and help us prioritize upcoming features!
 						</p>
 					</div>
 				</div>
@@ -185,7 +185,7 @@ export default function HomePage() {
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-								<Link href="https://demo.goalgenius.soultware.com" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200" aria-label="Try Demo">
+								<Link href="https://demo.goalgenius.online" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200" aria-label="Try Demo">
 									Try Demo
 									<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -439,7 +439,7 @@ export default function HomePage() {
 									</ul>
 								</div>
 							</div>
-							<Link href="https://demo.goalgenius.soultware.com" className="inline-flex items-center px-6 py-3 text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 font-medium rounded-full transform hover:scale-105 transition-all duration-200">
+							<Link href="https://demo.goalgenius.online" className="inline-flex items-center px-6 py-3 text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 font-medium rounded-full transform hover:scale-105 transition-all duration-200">
 								Try the Demo
 								<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -489,7 +489,7 @@ export default function HomePage() {
 							<p className="text-xl text-gray-300 mb-3 max-w-2xl mx-auto">Try our functional demo with basic features while we work on the full version with AI integration and cloud sync.</p>
 							<p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">Early testers who provide valuable feedback will receive <span className="text-blue-400 font-semibold">50% off for 6 months</span> when we launch the premium version.</p>
 							<div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-								<Link href="https://demo.goalgenius.soultware.com" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">
+								<Link href="https://demo.goalgenius.online" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">
 									Try Demo Now
 									<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -519,7 +519,7 @@ export default function HomePage() {
 				<section className="bg-slate-900/80 border-t border-white/10 py-8">
 					<div className="container mx-auto px-4 text-center">
 						<p className="text-gray-400 text-sm">GoalGenius • © {new Date().getFullYear()}</p>
-						<p className="text-blue-400 mt-2 text-xs">Currently in beta. Try our demo at <a href="https://demo.goalgenius.soultware.com" className="underline hover:text-blue-300">demo.goalgenius.soultware.com</a></p>
+						<p className="text-blue-400 mt-2 text-xs">Currently in beta. Try our demo at <a href="https://demo.goalgenius.online" className="underline hover:text-blue-300">demo.goalgenius.online</a></p>
 					</div>
 				</section>
 			</main>
