@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     type: 'website',
     images: [{
-      url: '/og-image.jpg',
+      url: '/og-image.png',
       width: 1200,
       height: 630,
       alt: 'GoalGenius - Your Personal Growth Companion'
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'GoalGenius - Transform Your Goals into Reality',
     description: 'Track your progress, celebrate milestones, and achieve your dreams with GoalGenius - your personal growth companion.',
-    images: ['/twitter-image.jpg'],
+    images: ['/og-image.png'],
     creator: '@goalgenius',
   },
   robots: {
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
+  // verification: {
+  //   google: 'your-google-verification-code',
+  // },
   alternates: {
     canonical: 'https://goalgenius.online',
   },
