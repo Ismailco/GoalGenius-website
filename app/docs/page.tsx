@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import AnimatedSection from '../components/AnimatedSection';
+import AnimatedSection from '../../components/AnimatedSection';
 import Script from 'next/script';
 
 interface StepContent {
