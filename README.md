@@ -1,54 +1,57 @@
-# GoalGenius 🎯
+# GoalGenius Website 🌐
 
 <div align="center">
 
 [![Next.js](https://img.shields.io/badge/Next.js-13.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 
-Transform your aspirations into achievements with GoalGenius - your intelligent goal tracking companion.
+Official website for GoalGenius - The open-source goal tracking platform.
 
-[View Demo](https://goalgenius.online) · [Report Bug](https://github.com/ismailco/goalgenius/issues) · [Request Feature](https://github.com/ismailco/goalgenius/issues)
+[Visit Website](https://goalgenius.online) · [Try App](https://app.goalgenius.online) · [View App Repo](https://github.com/ismailco/goalgenius-app)
 
-![GoalGenius Dashboard](public/Screenshot.png)
+![GoalGenius Website](public/og-image.png)
 
 </div>
 
-## ✨ Features
+## 📋 About
 
-- 📊 **Interactive Dashboard** - Visual progress tracking and goal organization
-- 📝 **Smart Notes** - Capture and organize your thoughts with rich formatting
-- ✅ **Todo Management** - Prioritize and track your daily tasks
-- 📈 **Daily Check-ins** - Monitor your progress with mood and energy tracking
-- 🎯 **Milestone Timeline** - Break down goals into achievable milestones
+This repository contains the source code for the GoalGenius landing page and documentation website. For the main application code, please visit the [GoalGenius App Repository](https://github.com/ismailco/GoalGenius).
+
+## ✨ Website Features
+
+- 🎯 **Landing Page** - Modern, responsive landing page showcasing GoalGenius features
+- 📚 **Documentation** - Comprehensive guides and API documentation
+- 💝 **Donation Page** - Support options for the open-source project
 - 🌙 **Dark Mode** - Beautiful dark theme with glass-morphism effects
 - 📱 **Responsive Design** - Seamless experience across all devices
-- ⚡ **PWA Support** - Install as a native app on any device
+- 🔍 **SEO Optimized** - Built with Next.js for optimal search engine performance
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 18+
+- pnpm (Recommended) - Install with `npm install -g pnpm`
 - Git
 
 ### Installation
 
 1. Clone the repository
 ```bash
-git clone https://github.com/ismailco/goalgenius.git
-cd goalgenius
+git clone https://github.com/ismailco/goalgenius-website.git
+cd goalgenius-website
 ```
 
 2. Install dependencies
 ```bash
-npm install
+pnpm install
 ```
 
 3. Start the development server
 ```bash
-npm run dev
+pnpm dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
@@ -58,46 +61,21 @@ npm run dev
 - **Framework**: [Next.js 13](https://nextjs.org/) - React framework for production
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - **Animations**: [Framer Motion](https://www.framer.com/motion/) - Production-ready animations
-- **State Management**: Local Storage with TypeScript
 - **Icons**: Custom SVG icons and Heroicons
 - **Deployment**: Vercel
+- **Package Manager**: [pnpm](https://pnpm.io/) - Fast, disk space efficient package manager
 
 ## 📖 Project Structure
 
 ```
-goalgenius/
+goalgenius-website/
 ├── app/                    # Next.js 13 app directory
-│   ├── components/         # Reusable UI components
-│   ├── lib/               # Utility functions and storage
-│   ├── providers/         # React context providers
-│   ├── types/             # TypeScript type definitions
-│   └── ...                # Route groups and pages
+│   ├── donate/            # Donation page
+│   └── ...                # Other pages
+├── components/             # Reusable UI components
 ├── public/                # Static assets
 └── ...
 ```
-
-## 🎨 Key Features in Detail
-
-### Goal Dashboard
-- Visual progress tracking with interactive charts
-- Category-based organization
-- Priority management
-- Timeline view
-- Progress statistics
-
-### Daily Check-ins
-- Mood and energy tracking
-- Progress updates
-- Daily reflections
-- Achievement logging
-- Challenge documentation
-
-### Smart Notes
-- Rich text formatting
-- Category tagging
-- Search functionality
-- Pin important notes
-- Share capabilities
 
 ## 🤝 Contributing
 
@@ -111,7 +89,12 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details. The AGPL license ensures that any modifications to the code must be made available to the community, promoting open collaboration and transparency.
+
+## 🔗 Related Projects
+
+- [GoalGenius App](https://github.com/ismailco/goalgenius-app) - The main application repository
+- [GoalGenius Mobile](https://github.com/ismailco/goalgenius-mobile) - Mobile app repository (Coming Soon)
 
 ## 🙏 Acknowledgments
 
