@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import AnimatedSection from '../../components/AnimatedSection';
 import Script from 'next/script';
 import { useState } from 'react';
