@@ -158,26 +158,36 @@ const conceptFeedback = [
 // ];
 
 const partners = [
+	{ name: 'Next.js',
+		logo: '/next.svg',
+		url: '/'
+	},
+	{
+		name: 'OpenAI',
+		logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
+		url: 'https://openai.com/'
+	},
+	{ name: 'Better-Auth',
+		logo: '/better-auth.png',
+		url: '/'
+	},
+	{
+		name: 'TailwindCSS',
+		logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg',
+		url: 'https://tailwindcss.com/'
+	},
 	{ name: 'Cloudflare',
 		logo: '/cloudflare.svg',
 		url: '/'
 	},
-		{ name: 'Better-Auth',
-		logo: '/better-auth.png',
-		url: '/'
-	},
-	{ name: 'OpenAI',
-		logo: '/next.svg',
-		url: '/'
-	},
 ];
 
-// const featuredOn = [
-// 	{ name: 'ProductHunt',
-// 		logo: 'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=964834&theme=light&t=1747638616810',
-// 		url: 'https://www.producthunt.com/posts/goalgenius?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-goalgenius'
-// 	},
-// ];
+const featuredOn = [
+	{ name: 'ProductHunt',
+		logo: 'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=964834&theme=light&t=1747638616810',
+		url: 'https://www.producthunt.com/posts/goalgenius?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-goalgenius'
+	},
+];
 
 export default function HomePage() {
 	const structuredData = {
@@ -256,7 +266,7 @@ export default function HomePage() {
 								<div className="flex justify-center items-center space-x-8">
 									{partners.map((partner) => (
 										<a key={partner.name} href={partner.url} target='_blank' className=" mt-5 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-											<Image src={partner.logo} alt={partner.name} width={partner.name === "Better-Auth" ? 50 : 150} height={25} />
+											<Image src={partner.logo} alt={partner.name} width={partner.name === "Better-Auth" || partner.name === "TailwindCSS" ? 50 : 150} height={25} />
 										</a>
 									))}
 								</div>
@@ -265,7 +275,30 @@ export default function HomePage() {
 					</div>
 				</section>
 
-				{/* Add producthunt here - try featuredOn first -*/}
+				{/* ProductHunt Featured Section */}
+				<section className="relative pb-8" aria-label="featured on">
+					<div className="container mx-auto px-4">
+						<div className="flex justify-center items-center">
+							{featuredOn.map((item) => (
+								<a
+									key={item.name}
+									href={item.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="transform hover:scale-105 transition-all duration-200"
+								>
+									<Image
+										src={item.logo}
+										alt={`Featured on ${item.name}`}
+										width={250}
+										height={54}
+										className="w-auto h-auto"
+									/>
+								</a>
+							))}
+						</div>
+					</div>
+				</section>
 
 				{/* Stats Section */}
 				{/* <section className="relative py-16" aria-label="statistics">
