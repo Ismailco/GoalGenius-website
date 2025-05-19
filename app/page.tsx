@@ -172,12 +172,12 @@ const partners = [
 	},
 ];
 
-const featuredOn = [
-	{ name: 'ProductHunt',
-		logo: 'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=964834&theme=light&t=1747638616810',
-		url: 'https://www.producthunt.com/posts/goalgenius?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-goalgenius'
-	},
-];
+// const featuredOn = [
+// 	{ name: 'ProductHunt',
+// 		logo: 'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=964834&theme=light&t=1747638616810',
+// 		url: 'https://www.producthunt.com/posts/goalgenius?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-goalgenius'
+// 	},
+// ];
 
 export default function HomePage() {
 	const structuredData = {
