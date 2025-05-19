@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
 import Script from 'next/script';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
 	title: 'GoalGenius - AI-Powered Goal Tracking App',
@@ -156,10 +157,37 @@ const conceptFeedback = [
 // 	{ label: 'User Satisfaction', value: '4.8/5' },
 // ];
 
-// const partners = [
-// 	{ name: 'Google', logo: '/api/placeholder/120/40' },
-// 	{ name: 'OpenAI', logo: '/api/placeholder/120/40' },
-// ];
+const partners = [
+	{ name: 'Next.js',
+		logo: '/next.svg',
+		url: '/'
+	},
+	{
+		name: 'OpenAI',
+		logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
+		url: 'https://openai.com/'
+	},
+	{ name: 'Better-Auth',
+		logo: '/better-auth.png',
+		url: '/'
+	},
+	{
+		name: 'TailwindCSS',
+		logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg',
+		url: 'https://tailwindcss.com/'
+	},
+	{ name: 'Cloudflare',
+		logo: '/cloudflare.svg',
+		url: '/'
+	},
+];
+
+const featuredOn = [
+	{ name: 'ProductHunt',
+		logo: 'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=964834&theme=light&t=1747638616810',
+		url: 'https://www.producthunt.com/posts/goalgenius?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-goalgenius'
+	},
+];
 
 export default function HomePage() {
 	const structuredData = {
@@ -201,7 +229,10 @@ export default function HomePage() {
 				<div className="bg-blue-600 text-white px-4 py-3 text-center relative">
 					<div className="container mx-auto">
 						<p className="font-medium">
-							<span className="font-bold">OPEN SOURCE & FREE:</span> Try GoalGenius Beta V1.0 at <a href="https://app.goalgenius.online" className="underline font-bold hover:text-blue-200 transition-colors">app.goalgenius.online</a>
+							<span className="font-bold">OPEN SOURCE & FREE:</span> Try GoalGenius Beta V1.0 at{' '}
+							<a href="https://app.goalgenius.online" className="underline font-bold hover:text-blue-200 transition-colors">
+								app.goalgenius.online
+							</a>
 						</p>
 					</div>
 				</div>
@@ -210,14 +241,10 @@ export default function HomePage() {
 				<section className="relative" aria-label="hero">
 					<div className="container mx-auto px-4 pt-20 pb-32 text-center">
 						<AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl mx-auto">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-6">
-								Open Source Goal Tracking
-							</div>
+							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-6">Open Source Goal Tracking</div>
 							<h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-6">Your Goals, Your Data, Your Control</h1>
 							<p className="text-xl text-gray-300 mb-4">Track goals, manage todos, take notes, and maintain daily check-ins - all in one open-source platform that respects your privacy.</p>
-							<p className="text-lg text-blue-400 border border-blue-400/30 bg-blue-400/10 rounded-lg p-4 mb-8">
-								Free to use, forever. Advanced features like Analytics, Mobile Apps, and AI insights coming soon!
-							</p>
+							<p className="text-lg text-blue-400 border border-blue-400/30 bg-blue-400/10 rounded-lg p-4 mb-8">Free to use, forever. Advanced features like Analytics, Mobile Apps, and AI insights coming soon!</p>
 
 							<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
 								<Link href="https://app.goalgenius.online" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200" aria-label="Try Beta">
@@ -233,7 +260,43 @@ export default function HomePage() {
 									</svg>
 								</Link>
 							</div>
+							{/* Trusted By Logos */}
+							<div className="mt-12">
+								<p className="text-sm text-gray-400 mb-4">BUILT WITH TECHNOLOGY FROM</p>
+								<div className="flex justify-center items-center space-x-8">
+									{partners.map((partner) => (
+										<a key={partner.name} href={partner.url} target='_blank' className=" mt-5 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+											<Image src={partner.logo} alt={partner.name} width={partner.name === "Better-Auth" || partner.name === "TailwindCSS" ? 50 : 150} height={25} />
+										</a>
+									))}
+								</div>
+							</div>
 						</AnimatedSection>
+					</div>
+				</section>
+
+				{/* ProductHunt Featured Section */}
+				<section className="relative pb-8" aria-label="featured on">
+					<div className="container mx-auto px-4">
+						<div className="flex justify-center items-center">
+							{featuredOn.map((item) => (
+								<a
+									key={item.name}
+									href={item.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="transform hover:scale-105 transition-all duration-200"
+								>
+									<Image
+										src={item.logo}
+										alt={`Featured on ${item.name}`}
+										width={250}
+										height={54}
+										className="w-auto h-auto"
+									/>
+								</a>
+							))}
+						</div>
 					</div>
 				</section>
 
@@ -258,9 +321,7 @@ export default function HomePage() {
 				<section id="features" className="relative py-20 bg-slate-900/50" aria-label="features">
 					<div className="container mx-auto px-4">
 						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">
-								Features
-							</div>
+							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Features</div>
 							<h2 className="text-4xl font-bold text-white mb-4">Current & Upcoming Features</h2>
 							<p className="text-xl text-gray-300">Experience our powerful features now, with AI enhancements coming soon</p>
 						</AnimatedSection>
@@ -275,9 +336,7 @@ export default function HomePage() {
 									</div>
 									<h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
 									<p className="text-gray-300 mb-4">{feature.description}</p>
-									<span className={`inline-block ${feature.status === 'Coming Soon' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'} text-xs font-semibold px-2.5 py-0.5 rounded w-fit mt-auto`}>
-										{feature.status}
-									</span>
+									<span className={`inline-block ${feature.status === 'Coming Soon' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'} text-xs font-semibold px-2.5 py-0.5 rounded w-fit mt-auto`}>{feature.status}</span>
 								</AnimatedSection>
 							))}
 						</div>
@@ -288,9 +347,7 @@ export default function HomePage() {
 				<section className="relative py-20" aria-label="how it works">
 					<div className="container mx-auto px-4">
 						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">
-								Product Workflow
-							</div>
+							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Product Workflow</div>
 							<h2 className="text-4xl font-bold text-white mb-4">How GoalGenius Works</h2>
 							<p className="text-xl text-gray-300">Your all-in-one goal achievement platform</p>
 						</AnimatedSection>
@@ -338,9 +395,7 @@ export default function HomePage() {
 									<span className="text-6xl font-bold text-white/10 absolute top-4 right-4">{item.step}</span>
 									<h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
 									<p className="text-gray-300 mb-4">{item.description}</p>
-									<span className={`inline-block ${item.status === 'Coming Soon' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'} text-xs font-semibold px-2.5 py-0.5 rounded`}>
-										{item.status}
-									</span>
+									<span className={`inline-block ${item.status === 'Coming Soon' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'} text-xs font-semibold px-2.5 py-0.5 rounded`}>{item.status}</span>
 								</AnimatedSection>
 							))}
 						</div>
@@ -351,9 +406,7 @@ export default function HomePage() {
 				<section id="pricing" className="relative py-20 bg-slate-900/50" aria-label="pricing">
 					<div className="container mx-auto px-4">
 						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">
-								Free During Beta
-							</div>
+							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Free During Beta</div>
 							<h2 className="text-4xl font-bold text-white mb-4">Open Source & Community Driven</h2>
 							<p className="text-xl text-gray-300 mb-2">Free access to all features during beta period</p>
 							<p className="text-md text-blue-400">Support us through donations to help maintain and improve the platform</p>
@@ -378,14 +431,7 @@ export default function HomePage() {
 											</li>
 										))}
 									</ul>
-									<Link
-										href={plan.name === 'Open Source'
-											? 'https://github.com/Ismailco/GoalGenius'
-											: plan.name === 'Support Us'
-												? '/donate'
-												: 'https://app.goalgenius.online'}
-										className={`w-full inline-flex justify-center items-center px-6 py-3 font-medium rounded-full text-white ${plan.highlight ? 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600' : 'bg-white/10 hover:bg-white/20'} transform hover:scale-105 transition-all duration-200 mt-auto`}
-									>
+									<Link href={plan.name === 'Open Source' ? 'https://github.com/Ismailco/GoalGenius' : plan.name === 'Support Us' ? '/donate' : 'https://app.goalgenius.online'} className={`w-full inline-flex justify-center items-center px-6 py-3 font-medium rounded-full text-white ${plan.highlight ? 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600' : 'bg-white/10 hover:bg-white/20'} transform hover:scale-105 transition-all duration-200 mt-auto`}>
 										{plan.cta}
 									</Link>
 								</AnimatedSection>
@@ -398,9 +444,7 @@ export default function HomePage() {
 				<section className="relative py-20" aria-label="current status">
 					<div className="container mx-auto px-4">
 						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">
-								Development Status
-							</div>
+							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Development Status</div>
 							<h2 className="text-4xl font-bold text-white mb-4">Where We Are Now</h2>
 							<p className="text-xl text-gray-300">Our current development status and roadmap</p>
 						</AnimatedSection>
@@ -491,9 +535,7 @@ export default function HomePage() {
 				<section className="relative py-20 bg-slate-900/50" aria-label="feedback questions">
 					<div className="container mx-auto px-4">
 						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">
-								Help Us Improve
-							</div>
+							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Help Us Improve</div>
 							<h2 className="text-4xl font-bold text-white mb-4">Shape the Future of GoalGenius</h2>
 							<p className="text-xl text-gray-300">Your feedback drives our development roadmap</p>
 						</AnimatedSection>
@@ -520,12 +562,12 @@ export default function HomePage() {
 				<section className="relative py-20" aria-label="call to action">
 					<div className="container mx-auto px-4">
 						<AnimatedSection initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl p-12 border border-white/10 text-center">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-6">
-								Start Today
-							</div>
+							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-6">Start Today</div>
 							<h2 className="text-4xl font-bold text-white mb-6">Take Control of Your Goals</h2>
 							<p className="text-xl text-gray-300 mb-3 max-w-2xl mx-auto">Join our growing community of goal achievers. Free, open-source, and built with your privacy in mind.</p>
-							<p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">Help shape the future of GoalGenius by <span className="text-blue-400 font-semibold">contributing on GitHub</span> or providing feedback.</p>
+							<p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+								Help shape the future of GoalGenius by <span className="text-blue-400 font-semibold">contributing on GitHub</span> or providing feedback.
+							</p>
 							<div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
 								<Link href="https://app.goalgenius.online" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">
 									Start Using GoalGenius
@@ -548,7 +590,12 @@ export default function HomePage() {
 				<section className="bg-slate-900/80 border-t border-white/10 py-8">
 					<div className="container mx-auto px-4 text-center">
 						<p className="text-gray-400 text-sm">GoalGenius • © {new Date().getFullYear()}</p>
-						<p className="text-blue-400 mt-2 text-xs">Free & Open Source • <a href="https://app.goalgenius.online" className="underline hover:text-blue-300">app.goalgenius.online</a></p>
+						<p className="text-blue-400 mt-2 text-xs">
+							Free & Open Source •{' '}
+							<a href="https://app.goalgenius.online" className="underline hover:text-blue-300">
+								app.goalgenius.online
+							</a>
+						</p>
 					</div>
 				</section>
 			</main>
