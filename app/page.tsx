@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
 import Script from 'next/script';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
 	title: 'GoalGenius - AI-Powered Goal Tracking App',
@@ -157,9 +158,25 @@ const conceptFeedback = [
 // ];
 
 const partners = [
-	// { name: 'Google', logo: '/api/placeholder/120/40' },
-	// { name: 'OpenAI', logo: '/api/placeholder/120/40' },
-	{ name: 'ProductHunt', logo: 'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=964834&theme=light&t=1747638616810', url: 'https://www.producthunt.com/posts/goalgenius?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-goalgenius' },
+	{ name: 'Cloudflare',
+		logo: '/cloudflare.svg',
+		url: '/'
+	},
+		{ name: 'Better-Auth',
+		logo: '/better-auth.png',
+		url: '/'
+	},
+	{ name: 'OpenAI',
+		logo: '/next.svg',
+		url: '/'
+	},
+];
+
+const featuredOn = [
+	{ name: 'ProductHunt',
+		logo: 'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=964834&theme=light&t=1747638616810',
+		url: 'https://www.producthunt.com/posts/goalgenius?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-goalgenius'
+	},
 ];
 
 export default function HomePage() {
@@ -235,11 +252,11 @@ export default function HomePage() {
 							</div>
 							{/* Trusted By Logos */}
 							<div className="mt-12">
-								{/* <p className="text-sm text-gray-400 mb-4">BUILT WITH TECHNOLOGY FROM</p> */}
+								<p className="text-sm text-gray-400 mb-4">BUILT WITH TECHNOLOGY FROM</p>
 								<div className="flex justify-center items-center space-x-8">
 									{partners.map((partner) => (
-										<a key={partner.name} href={partner.url} target='_blank' className=" opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-											<img src={partner.logo} alt={partner.name} className="h-25 w-25" />
+										<a key={partner.name} href={partner.url} target='_blank' className=" mt-5 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+											<Image src={partner.logo} alt={partner.name} width={partner.name === "Better-Auth" ? 50 : 150} height={25} />
 										</a>
 									))}
 								</div>
@@ -247,6 +264,8 @@ export default function HomePage() {
 						</AnimatedSection>
 					</div>
 				</section>
+
+				{/* Add producthunt here - try featuredOn first -*/}
 
 				{/* Stats Section */}
 				{/* <section className="relative py-16" aria-label="statistics">
