@@ -160,25 +160,30 @@ const conceptFeedback = [
 const partners = [
 	{ name: 'Next.js',
 		logo: '/next.svg',
-		url: '/'
+		url: 'https://nextjs.org/'
+	},
+	{
+		name: 'Drizzle ORM',
+		logo: '/drizzle-orm.svg',
+		url: 'https://orm.drizzle.team/'
 	},
 	{
 		name: 'OpenAI',
-		logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
+		logo: '/open-ai.svg',
 		url: 'https://openai.com/'
 	},
 	{ name: 'Better-Auth',
 		logo: '/better-auth.png',
-		url: '/'
+		url: 'https://www.better-auth.com/'
 	},
 	{
 		name: 'TailwindCSS',
-		logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg',
+		logo: '/tailwind-css.svg',
 		url: 'https://tailwindcss.com/'
 	},
 	{ name: 'Cloudflare',
 		logo: '/cloudflare.svg',
-		url: '/'
+		url: 'https://www.cloudflare.com/'
 	},
 ];
 
