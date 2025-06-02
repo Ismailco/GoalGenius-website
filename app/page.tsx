@@ -322,6 +322,22 @@ export default function HomePage() {
 					</div>
 				</section> */}
 
+				{/* App Preview Section */}
+				<section className="relative py-16 bg-gradient-to-b from-slate-900 via-slate-800/50 to-slate-900" aria-label="app preview">
+					<div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-indigo-500/10 blur-3xl"></div>
+					<div className="container mx-auto px-4 relative">
+						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center max-w-3xl mx-auto mb-12">
+							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-6">App Preview</div>
+							<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Beautiful & Intuitive Interface</h2>
+							<p className="text-xl text-gray-300">Experience a clean, modern design that makes goal tracking a pleasure</p>
+						</AnimatedSection>
+
+						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }} className="max-w-4xl mx-auto rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-lg p-4">
+							<Image src="/goalgenius.webp" alt="GoalGenius App Interface" width={1920} height={1080} className="w-full h-auto rounded-2xl" priority />
+						</AnimatedSection>
+					</div>
+				</section>
+
 				{/* Features Section */}
 				<section id="features" className="relative py-20 bg-slate-900/50" aria-label="features">
 					<div className="container mx-auto px-4">
