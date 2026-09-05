@@ -1,626 +1,480 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
-import Script from 'next/script';
-import Image from 'next/image';
+import {
+	APP_URL,
+	DEFAULT_OG_IMAGE,
+	GITHUB_REPO_URL,
+	LICENSE_NAME,
+	LICENSE_URL,
+	SITE_DESCRIPTION,
+	SITE_NAME,
+	SITE_TAGLINE,
+	SITE_URL,
+} from '@/lib/site';
 
 export const metadata: Metadata = {
-	title: 'GoalGenius - AI-Powered Goal Tracking App',
-	description: 'Track and achieve your goals faster with GoalGenius. Now available in Beta V1.0 for Web and Mobile.',
+	title: { absolute: `${SITE_NAME} - ${SITE_TAGLINE}` },
+	description: SITE_DESCRIPTION,
 	openGraph: {
-		title: 'GoalGenius - AI-Powered Goal Tracking App',
-		description: 'Track and achieve your goals faster with GoalGenius. Now available in Beta V1.0 for Web and Mobile.',
+		title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+		description: SITE_DESCRIPTION,
 		type: 'website',
-		url: 'https://goalgenius.online',
-		images: [
-			{
-				url: '/og-image.png',
-				width: 1200,
-				height: 630,
-				alt: 'GoalGenius - AI-Powered Goal Tracking App',
-			},
-		],
-		siteName: 'GoalGenius - AI-Powered Goal Tracking App',
+		url: SITE_URL,
+		siteName: SITE_NAME,
+		images: [DEFAULT_OG_IMAGE],
 	},
 	twitter: {
 		card: 'summary_large_image',
-		title: 'GoalGenius - AI-Powered Goal Tracking App',
-		description: 'Track and achieve your goals faster with GoalGenius. Now available in Beta V1.0 for Web and Mobile.',
-		images: ['https://goalgenius.online/og-image.png'],
-		creator: '@ismailco',
-		site: '@goalgenius_app'
+		title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+		description: SITE_DESCRIPTION,
+		images: [DEFAULT_OG_IMAGE.url],
 	},
 	alternates: {
-		canonical: 'https://goalgenius.online',
+		canonical: SITE_URL,
 	},
-	keywords: 'goal tracking, AI assistant, productivity, goal setting, milestone tracking, todo management, daily check-ins, note taking, goal achievement, personal development, task management, progress tracking, goal planning, habit tracking, goal organization, productivity tools, goal setting software, achievement tracker',
-	robots: {
-		index: true,
-		follow: true,
-		googleBot: {
-			index: true,
-			follow: true,
-			'max-video-preview': -1,
-			'max-image-preview': 'large',
-			'max-snippet': -1,
-		},
-	},
-	category: 'Productivity',
-	applicationName: 'GoalGenius',
-	referrer: 'origin-when-cross-origin',
-	authors: [{ name: 'Ismail Courr', url: 'https://github.com/Ismailco' }],
+	keywords: [
+		'open-source goal tracker',
+		'goal tracking',
+		'milestone tracking',
+		'todo management',
+		'progress check-ins',
+		'self-hosting',
+		'productivity',
+	],
 };
 
-const features = [
+const availableFeatures = [
 	{
-		title: 'Goal & Milestone Tracking',
-		description: 'Break down your goals into achievable milestones, track progress, and celebrate your achievements.',
+		title: 'Goals & Milestones',
+		description:
+			'Create goals with categories and status, then break them into dated milestones you can track over time.',
 		icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
-		status: 'Available Now'
 	},
 	{
-		title: 'Daily Management Tools',
-		description: 'Stay organized with integrated todos, daily check-ins, and note-taking features to support your journey.',
-		icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
-		status: 'Available Now'
+		title: 'Todos & Tasks',
+		description:
+			'Capture day-to-day work with priorities, optional due dates, and completion tracking.',
+		icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4',
 	},
 	{
-		title: 'Advanced Progress Analytics',
-		description: 'Coming soon: Visualize your progress with intuitive charts and track your goal completion rates over time.',
-		icon: 'M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
-		status: 'Coming Soon'
+		title: 'Notes',
+		description:
+			'Write notes with Markdown support, pin important ones, and keep context next to your goals.',
+		icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
 	},
 	{
-		title: 'Calendar Integration',
-		description: 'Coming soon: Seamlessly sync your goals and tasks with your favorite calendar apps.',
-		icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
-		status: 'Coming Soon'
+		title: 'Progress Check-ins',
+		description:
+			'Record mood, energy, accomplishments, challenges, and reflections to stay accountable.',
+		icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
 	},
 	{
-		title: 'Mobile App',
-		description: 'Coming soon: Access your goals on the go with our native mobile app for iOS and Android.',
-		icon: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z',
-		status: 'Coming Soon'
+		title: 'Dashboard Overview',
+		description:
+			'See your goals, milestones, and category progress in one workspace overview.',
+		icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z',
 	},
 	{
-		title: 'AI-Powered Insights',
-		description: 'Coming soon: Smart recommendations and insights to help optimize your goal achievement strategy.',
-		icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z',
-		status: 'Coming Soon'
+		title: 'Data Export',
+		description:
+			'Export your workspace as JSON from Settings, or clear tracked data when you choose.',
+		icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4',
 	},
 ];
 
-const pricingPlans = [
+const reasons = [
 	{
-		name: 'Beta Access',
-		price: 'Free',
-		description: 'Full access to all features during beta',
-		features: [
-			'All current features',
-			'Early access to new features',
-			'Shape product development',
-			'Community support'
-		],
-		cta: 'Try Beta V1.0',
-		highlight: true,
+		title: 'Open source',
+		description: `The application source is available under ${LICENSE_NAME}. Inspect it, contribute, or self-host.`,
 	},
 	{
-		name: 'Open Source',
-		price: 'GitHub',
-		description: 'Self-host your own instance',
-		features: [
-			'Access to source code',
-			'GPLv3 License',
-			'Full customization freedom',
-			'Community contributions'
-		],
-		cta: 'View on GitHub',
-		highlight: false,
+		title: 'Your data, your control',
+		description:
+			'Goals, todos, notes, and check-ins stay in your account. Hosted users can export JSON; self-hosters keep the full stack.',
 	},
 	{
-		name: 'Support Us',
-		price: 'Donate',
-		description: 'Help us keep the project alive',
-		features: [
-			'Buy me a coffee',
-			'Support development',
-			'Join our sponsors list',
-			'Help shape the future'
-		],
-		cta: 'Make a Donation',
-		highlight: false,
+		title: 'Practical productivity tools',
+		description:
+			'No hype features required. Track goals, milestones, tasks, notes, and check-ins in one place.',
 	},
 ];
 
-const conceptFeedback = [
+const roadmapItems = [
 	{
-		name: 'User Experience',
-		icon: '💡',
-		question: 'How can we improve your goal tracking experience?',
+		title: 'Analytics',
+		description: 'Richer progress reporting and trends beyond the current dashboard overview.',
 	},
 	{
-		name: 'Feature Priority',
-		icon: '🎯',
-		question: 'Which upcoming feature would you like to see first: Mobile App, Analytics, or Calendar Integration?',
+		title: 'Calendar integrations',
+		description: 'Sync milestones and deadlines with external calendars.',
 	},
 	{
-		name: 'Beta Feedback',
-		icon: '🚀',
-		question: 'What features or improvements would make you recommend GoalGenius to others?',
+		title: 'Native mobile apps',
+		description: 'Dedicated iOS and Android apps. The web app already works on mobile browsers.',
+	},
+	{
+		title: 'AI-assisted features',
+		description: 'Optional assistance for planning and insights. Not available in the current app.',
 	},
 ];
 
-// const stats = [
-// 	{ label: 'Active Beta Users', value: '500+' },
-// 	{ label: 'Goals Created', value: '2,000+' },
-// 	{ label: 'Daily Check-ins', value: '85%' },
-// 	{ label: 'User Satisfaction', value: '4.8/5' },
-// ];
-
-const partners = [
-	{ name: 'Next.js',
-		logo: '/next.svg',
-		url: 'https://nextjs.org/'
-	},
-	{
-		name: 'Drizzle ORM',
-		logo: '/drizzle-orm.svg',
-		url: 'https://orm.drizzle.team/'
-	},
-	{
-		name: 'OpenAI',
-		logo: '/open-ai.svg',
-		url: 'https://openai.com/'
-	},
-	{ name: 'Better-Auth',
-		logo: '/better-auth.png',
-		url: 'https://www.better-auth.com/'
-	},
-	{
-		name: 'TailwindCSS',
-		logo: '/tailwind-css.svg',
-		url: 'https://tailwindcss.com/'
-	},
-	{ name: 'Cloudflare',
-		logo: '/cloudflare.svg',
-		url: 'https://www.cloudflare.com/'
-	},
+const techStack: Array<{
+	name: string;
+	url: string;
+	logo?: string;
+	width?: number;
+	height?: number;
+}> = [
+	{ name: 'Next.js', logo: '/next.svg', url: 'https://nextjs.org/', width: 96, height: 20 },
+	{ name: 'React', url: 'https://react.dev/' },
+	{ name: 'Drizzle ORM', logo: '/drizzle-orm.svg', url: 'https://orm.drizzle.team/', width: 120, height: 24 },
+	{ name: 'Better Auth', logo: '/better-auth.png', url: 'https://www.better-auth.com/', width: 40, height: 40 },
+	{ name: 'Tailwind CSS', logo: '/tailwind-css.svg', url: 'https://tailwindcss.com/', width: 40, height: 40 },
+	{ name: 'Cloudflare', logo: '/cloudflare.svg', url: 'https://www.cloudflare.com/', width: 120, height: 24 },
 ];
 
-const featuredOn = [
-	{ name: 'ProductHunt',
-		logo: 'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=964834&theme=light&t=1747638616810',
-		url: 'https://www.producthunt.com/posts/goalgenius?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-goalgenius'
+const structuredData = {
+	'@context': 'https://schema.org',
+	'@type': 'WebApplication',
+	name: SITE_NAME,
+	description: SITE_DESCRIPTION,
+	applicationCategory: 'ProductivityApplication',
+	operatingSystem: 'Web',
+	browserRequirements: 'Requires a modern web browser',
+	url: APP_URL,
+	offers: {
+		'@type': 'Offer',
+		price: '0',
+		priceCurrency: 'USD',
+		availability: 'https://schema.org/InStock',
+		description: `Hosted beta is currently free. Open source under ${LICENSE_NAME}.`,
 	},
-];
+	featureList: [
+		'Goal tracking',
+		'Milestone tracking',
+		'Todo and task management',
+		'Markdown notes',
+		'Progress check-ins',
+		'Workspace JSON export',
+		'Self-hosting under AGPLv3',
+	],
+	softwareVersion: '0.1.0',
+	license: LICENSE_URL,
+};
 
 export default function HomePage() {
-	const structuredData = {
-		'@context': 'https://schema.org',
-		'@type': 'WebApplication',
-		name: 'GoalGenius',
-		description: 'Track and achieve your goals faster with GoalGenius. Now available in Beta V1.0 for Web and Mobile.',
-		applicationCategory: 'ProductivityApplication',
-		operatingSystem: 'All',
-		offers: {
-			'@type': 'Offer',
-			price: '0',
-			priceCurrency: 'USD',
-			availability: 'https://schema.org/InStock',
-			description: 'Free during Beta. Open-source under GPLv3 License'
-		},
-		featureList: [
-			'Goal & Milestone Tracking',
-			'Daily Management Tools with Todos and Check-ins',
-			'Note Taking for Goals',
-			'Coming Soon: Advanced Progress Analytics',
-			'Coming Soon: Calendar Integration',
-			'Coming Soon: Mobile Apps',
-			'Coming Soon: AI-Powered Insights'
-		],
-		softwareVersion: 'Beta V1.0',
-		url: 'https://app.goalgenius.online',
-		license: 'https://www.gnu.org/licenses/gpl-3.0.en.html'
-	};
-
 	return (
 		<>
-			<Script id="structured-data" type="application/ld+json">
-				{JSON.stringify(structuredData)}
-			</Script>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+			/>
 
-			<main className="min-h-screen bg-slate-900">
-				{/* Product Banner */}
-				<div className="bg-blue-600 text-white px-4 py-3 text-center relative">
-					<div className="container mx-auto">
-						<p className="font-medium">
-							<span className="font-bold">OPEN SOURCE & FREE:</span> Try GoalGenius Beta V1.0 at{' '}
-							<a href="https://app.goalgenius.online" className="underline font-bold hover:text-blue-200 transition-colors">
-								app.goalgenius.online
-							</a>
-						</p>
-					</div>
+			<main className="flex-1">
+				<div className="bg-blue-600 px-4 py-3 text-center text-white">
+					<p className="text-sm font-medium sm:text-base">
+						<span className="font-bold">Hosted beta is free.</span> Try GoalGenius at{' '}
+						<a
+							href={APP_URL}
+							className="font-bold underline underline-offset-2 hover:text-blue-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+						>
+							app.goalgenius.online
+						</a>
+					</p>
 				</div>
 
-				{/* Hero Section */}
-				<section className="relative" aria-label="hero">
-					<div className="container mx-auto px-4 pt-20 pb-32 text-center">
-						<AnimatedSection initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl mx-auto">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-6">Open Source Goal Tracking</div>
-							<h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-6">Your Goals, Your Data, Your Control</h1>
-							<p className="text-xl text-gray-300 mb-4">Track goals, manage todos, take notes, and maintain daily check-ins - all in one open-source platform that respects your privacy.</p>
-							<p className="text-lg text-blue-400 border border-blue-400/30 bg-blue-400/10 rounded-lg p-4 mb-8">Free to use, forever. Advanced features like Analytics, Mobile Apps, and AI insights coming soon!</p>
+				<section className="relative" aria-labelledby="hero-heading">
+					<div className="container mx-auto px-4 pb-20 pt-16 text-center md:pt-24">
+						<AnimatedSection
+							initial={{ opacity: 0, y: 16 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5 }}
+							className="mx-auto max-w-3xl"
+						>
+							<p className="mb-6 inline-block rounded-full border border-blue-500/30 bg-blue-500/20 px-4 py-1 text-sm font-medium text-blue-300">
+								Open-Source Goal Tracking
+							</p>
+							<h1
+								id="hero-heading"
+								className="mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl md:text-6xl"
+							>
+								Your Goals, Your Data, Your Control
+							</h1>
+							<p className="mb-4 text-lg text-gray-300 sm:text-xl">
+								Plan your goals, track milestones, manage todos, keep notes, and record progress
+								check-ins in one open-source workspace.
+							</p>
+							<p className="mb-10 text-sm text-gray-400 sm:text-base">
+								Hosted beta is currently free. Self-host anytime under {LICENSE_NAME}.
+							</p>
 
-							<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-								<Link href="https://app.goalgenius.online" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200" aria-label="Try Beta">
-									Start Tracking Goals
-									<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+							<div className="mb-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+								<a
+									href={APP_URL}
+									className="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-8 py-3 text-lg font-medium text-white transition hover:from-indigo-600 hover:to-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+								>
+									Try GoalGenius
+									<svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
 									</svg>
-								</Link>
-								<Link href="https://github.com/Ismailco/GoalGenius" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-white/10 hover:bg-white/20 transform hover:scale-105 transition-all duration-200">
-									View on GitHub
-									<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-									</svg>
-								</Link>
-							</div>
-							{/* Trusted By Logos */}
-							<div className="mt-12">
-								<p className="text-sm text-gray-400 mb-4">BUILT WITH TECHNOLOGY FROM</p>
-								<div className="flex justify-center items-center space-x-8">
-									{partners.map((partner) => (
-										<a key={partner.name} href={partner.url} target='_blank' className=" mt-5 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-											<Image src={partner.logo} alt={partner.name} width={partner.name === "Better-Auth" || partner.name === "TailwindCSS" ? 50 : 150} height={25} />
-										</a>
-									))}
-								</div>
-							</div>
-						</AnimatedSection>
-					</div>
-				</section>
-
-				{/* ProductHunt Featured Section */}
-				<section className="relative pb-8" aria-label="featured on">
-					<div className="container mx-auto px-4">
-						<div className="flex justify-center items-center">
-							{featuredOn.map((item) => (
+								</a>
 								<a
-									key={item.name}
-									href={item.url}
+									href={GITHUB_REPO_URL}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="transform hover:scale-105 transition-all duration-200"
+									className="inline-flex items-center rounded-full bg-white/10 px-8 py-3 text-lg font-medium text-white transition hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
 								>
-									<Image
-										src={item.logo}
-										alt={`Featured on ${item.name}`}
-										width={250}
-										height={54}
-										className="w-auto h-auto"
-									/>
+									View Source
+									<svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+									</svg>
 								</a>
-							))}
-						</div>
-					</div>
-				</section>
+							</div>
 
-				{/* Stats Section */}
-				{/* <section className="relative py-16" aria-label="statistics">
-					<div className="container mx-auto px-4">
-						<div className="text-center mb-8">
-							<span className="text-blue-400 font-medium">BETA PERFORMANCE METRICS</span>
-						</div>
-						<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-							{stats.map((stat, index) => (
-								<AnimatedSection key={stat.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: index * 0.1 }} className="bg-white/5 backdrop-blur-lg rounded-3xl p-6 text-center border border-white/10">
-									<p className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{stat.value}</p>
-									<p className="text-gray-400 mt-2">{stat.label}</p>
-								</AnimatedSection>
-							))}
-						</div>
-					</div>
-				</section> */}
-
-				{/* App Preview Section */}
-				<section className="relative py-16 bg-gradient-to-b from-slate-900 via-slate-800/50 to-slate-900" aria-label="app preview">
-					<div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-indigo-500/10 blur-3xl"></div>
-					<div className="container mx-auto px-4 relative">
-						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center max-w-3xl mx-auto mb-12">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-6">App Preview</div>
-							<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Beautiful & Intuitive Interface</h2>
-							<p className="text-xl text-gray-300">Experience a clean, modern design that makes goal tracking a pleasure</p>
-						</AnimatedSection>
-
-						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }} className="max-w-4xl mx-auto rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-lg p-4">
-							<Image src="/goalgenius.webp" alt="GoalGenius App Interface" width={1920} height={1080} className="w-full h-auto rounded-2xl" priority />
 						</AnimatedSection>
 					</div>
 				</section>
 
-				{/* Features Section */}
-				<section id="features" className="relative py-20 bg-slate-900/50" aria-label="features">
+				<section className="relative py-16" aria-labelledby="preview-heading">
 					<div className="container mx-auto px-4">
-						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Features</div>
-							<h2 className="text-4xl font-bold text-white mb-4">Current & Upcoming Features</h2>
-							<p className="text-xl text-gray-300">Experience our powerful features now, with AI enhancements coming soon</p>
+						<AnimatedSection
+							initial={{ opacity: 0, y: 16 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.5 }}
+							className="mx-auto mb-10 max-w-3xl text-center"
+						>
+							<h2 id="preview-heading" className="mb-4 text-3xl font-bold text-white md:text-4xl">
+								See the workspace
+							</h2>
+							<p className="text-lg text-gray-300">
+								A clean interface for goals, milestones, todos, notes, and check-ins.
+							</p>
 						</AnimatedSection>
 
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-							{features.map((feature, index) => (
-								<AnimatedSection key={feature.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: index * 0.2 }} className="flex flex-col bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 transform hover:scale-[1.02] transition-all duration-200">
-									<div className="p-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl inline-block mb-4 w-fit">
-										<svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+						<AnimatedSection
+							initial={{ opacity: 0, y: 16 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.5, delay: 0.1 }}
+							className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-3 backdrop-blur-lg md:p-4"
+						>
+							<Image
+								src="/goalgenius.webp"
+								alt="GoalGenius application dashboard showing goals and progress"
+								width={1024}
+								height={768}
+								className="h-auto w-full rounded-2xl"
+								sizes="(max-width: 1024px) 100vw, 1024px"
+							/>
+						</AnimatedSection>
+					</div>
+				</section>
+
+				<section id="features" className="relative scroll-mt-24 bg-slate-900/50 py-20" aria-labelledby="features-heading">
+					<div className="container mx-auto px-4">
+						<div className="mb-12 text-center">
+							<p className="mb-3 text-sm font-medium uppercase tracking-wide text-blue-400">Available now</p>
+							<h2 id="features-heading" className="mb-4 text-3xl font-bold text-white md:text-4xl">
+								What GoalGenius does today
+							</h2>
+							<p className="mx-auto max-w-2xl text-lg text-gray-300">
+								Features that ship in the current web application—not a roadmap wishlist.
+							</p>
+						</div>
+
+						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+							{availableFeatures.map((feature, index) => (
+								<AnimatedSection
+									key={feature.title}
+									initial={{ opacity: 0, y: 16 }}
+									whileInView={{ opacity: 1, y: 0 }}
+									viewport={{ once: true }}
+									transition={{ duration: 0.45, delay: index * 0.05 }}
+									className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-lg"
+								>
+									<div className="mb-4 inline-flex rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 p-3">
+										<svg className="h-7 w-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feature.icon} />
 										</svg>
 									</div>
-									<h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-									<p className="text-gray-300 mb-4">{feature.description}</p>
-									<span className={`inline-block ${feature.status === 'Coming Soon' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'} text-xs font-semibold px-2.5 py-0.5 rounded w-fit mt-auto`}>{feature.status}</span>
+									<h3 className="mb-3 text-xl font-bold text-white">{feature.title}</h3>
+									<p className="text-gray-300">{feature.description}</p>
 								</AnimatedSection>
 							))}
 						</div>
 					</div>
 				</section>
 
-				{/* How It Works Section */}
-				<section className="relative py-20" aria-label="how it works">
+				<section className="relative py-20" aria-labelledby="why-heading">
 					<div className="container mx-auto px-4">
-						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Product Workflow</div>
-							<h2 className="text-4xl font-bold text-white mb-4">How GoalGenius Works</h2>
-							<p className="text-xl text-gray-300">Your all-in-one goal achievement platform</p>
-						</AnimatedSection>
-
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-							{[
-								{
-									step: '01',
-									title: 'Set Goals & Milestones',
-									description: 'Create goals and break them into achievable milestones. Set clear targets and deadlines for success.',
-									status: 'Available Now',
-								},
-								{
-									step: '02',
-									title: 'Daily Check-ins',
-									description: 'Track your daily progress, maintain streaks, and stay accountable with regular check-ins.',
-									status: 'Available Now',
-								},
-								{
-									step: '03',
-									title: 'Track Progress',
-									description: 'Monitor your advancement through intuitive dashboards with visual progress indicators.',
-									status: 'Available Now',
-								},
-								{
-									step: '04',
-									title: 'Take Notes',
-									description: 'Capture ideas, reflections, and insights related to your goals with the built-in notes feature.',
-									status: 'Available Now',
-								},
-								{
-									step: '05',
-									title: 'Manage Todos',
-									description: 'Create and organize daily tasks to keep you focused and moving toward your goals.',
-									status: 'Available Now',
-								},
-								{
-									step: '06',
-									title: 'Get Insights',
-									description: 'Receive personalized suggestions to help you achieve goals in less time with greater focus.',
-									status: 'Coming Soon',
-								},
-							].map((item, index) => (
-								<AnimatedSection key={item.step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: index * 0.2 }} className="relative bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10">
-									<span className="text-6xl font-bold text-white/10 absolute top-4 right-4">{item.step}</span>
-									<h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
-									<p className="text-gray-300 mb-4">{item.description}</p>
-									<span className={`inline-block ${item.status === 'Coming Soon' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'} text-xs font-semibold px-2.5 py-0.5 rounded`}>{item.status}</span>
-								</AnimatedSection>
-							))}
-						</div>
-					</div>
-				</section>
-
-				{/* Pricing Section */}
-				<section id="pricing" className="relative py-20 bg-slate-900/50" aria-label="pricing">
-					<div className="container mx-auto px-4">
-						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Free During Beta</div>
-							<h2 className="text-4xl font-bold text-white mb-4">Open Source & Community Driven</h2>
-							<p className="text-xl text-gray-300 mb-2">Free access to all features during beta period</p>
-							<p className="text-md text-blue-400">Support us through donations to help maintain and improve the platform</p>
-						</AnimatedSection>
-
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-							{pricingPlans.map((plan, index) => (
-								<AnimatedSection key={plan.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: index * 0.2 }} className={`flex flex-col bg-white/5 backdrop-blur-lg rounded-3xl p-8 border ${plan.highlight ? 'border-purple-400' : 'border-white/10'} ${plan.highlight ? 'relative' : ''}`}>
-									{plan.highlight && <span className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm py-1 px-4 rounded-full">Available Now</span>}
-									<h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-									<div className="mb-2">
-										<span className="text-4xl font-bold text-white">{plan.price}</span>
-									</div>
-									<p className="text-gray-300 mb-6">{plan.description}</p>
-									<ul className="space-y-3 mb-8">
-										{plan.features.map((feature, i) => (
-											<li key={i} className="flex items-center text-gray-300">
-												<svg className="w-5 h-5 mr-2 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-												</svg>
-												{feature}
-											</li>
-										))}
-									</ul>
-									<Link href={plan.name === 'Open Source' ? 'https://github.com/Ismailco/GoalGenius' : plan.name === 'Support Us' ? '/donate' : 'https://app.goalgenius.online'} className={`w-full inline-flex justify-center items-center px-6 py-3 font-medium rounded-full text-white ${plan.highlight ? 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600' : 'bg-white/10 hover:bg-white/20'} transform hover:scale-105 transition-all duration-200 mt-auto`}>
-										{plan.cta}
-									</Link>
-								</AnimatedSection>
-							))}
-						</div>
-					</div>
-				</section>
-
-				{/* Current Status Section */}
-				<section className="relative py-20" aria-label="current status">
-					<div className="container mx-auto px-4">
-						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Development Status</div>
-							<h2 className="text-4xl font-bold text-white mb-4">Where We Are Now</h2>
-							<p className="text-xl text-gray-300">Our current development status and roadmap</p>
-						</AnimatedSection>
-
-						<div className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 mb-12">
-							<h3 className="text-2xl font-bold text-white mb-6">Current Beta V1.0 Features</h3>
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-								<div>
-									<h4 className="font-bold text-white mb-3 flex items-center">
-										<svg className="w-5 h-5 mr-2 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-										</svg>
-										Available Features
-									</h4>
-									<ul className="space-y-2 text-gray-300">
-										<li className="flex items-start">
-											<svg className="w-5 h-5 mr-2 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-											</svg>
-											Web and mobile app access
-										</li>
-										<li className="flex items-start">
-											<svg className="w-5 h-5 mr-2 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-											</svg>
-											Goal tracking and organization
-										</li>
-										<li className="flex items-start">
-											<svg className="w-5 h-5 mr-2 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-											</svg>
-											Progress visualization dashboard
-										</li>
-										<li className="flex items-start">
-											<svg className="w-5 h-5 mr-2 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-											</svg>
-											Cross-platform synchronization
-										</li>
-									</ul>
-								</div>
-								<div>
-									<h4 className="font-bold text-white mb-3 flex items-center">
-										<svg className="w-5 h-5 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-										</svg>
-										Coming in Next Update
-									</h4>
-									<ul className="space-y-2 text-gray-300">
-										<li className="flex items-start">
-											<svg className="w-5 h-5 mr-2 text-blue-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-											</svg>
-											AI-powered goal recommendations
-										</li>
-										<li className="flex items-start">
-											<svg className="w-5 h-5 mr-2 text-blue-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-											</svg>
-											Advanced analytics
-										</li>
-										<li className="flex items-start">
-											<svg className="w-5 h-5 mr-2 text-blue-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-											</svg>
-											Smart task prioritization
-										</li>
-										<li className="flex items-start">
-											<svg className="w-5 h-5 mr-2 text-blue-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-											</svg>
-											Calendar integration
-										</li>
-									</ul>
-								</div>
-							</div>
-							<Link href="https://app.goalgenius.online" className="inline-flex items-center px-6 py-3 text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 font-medium rounded-full transform hover:scale-105 transition-all duration-200">
-								Try Beta V1.0
-								<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-								</svg>
-							</Link>
-						</div>
-					</div>
-				</section>
-
-				{/* Feedback Questions Section */}
-				<section className="relative py-20 bg-slate-900/50" aria-label="feedback questions">
-					<div className="container mx-auto px-4">
-						<AnimatedSection initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-4">Help Us Improve</div>
-							<h2 className="text-4xl font-bold text-white mb-4">Shape the Future of GoalGenius</h2>
-							<p className="text-xl text-gray-300">Your feedback drives our development roadmap</p>
-						</AnimatedSection>
-
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-							{conceptFeedback.map((item, index) => (
-								<AnimatedSection key={item.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: index * 0.2 }} className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10">
-									<div className="text-4xl mb-4">{item.icon}</div>
-									<h3 className="text-2xl font-bold text-white mb-4">{item.name}</h3>
-									<p className="text-gray-300 mb-6">{item.question}</p>
-									<Link href={`/feedback?topic=${encodeURIComponent(item.name)}`} className="inline-flex items-center text-blue-400 hover:text-blue-300">
-										Share your thoughts
-										<svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-										</svg>
-									</Link>
-								</AnimatedSection>
-							))}
-						</div>
-					</div>
-				</section>
-
-				{/* CTA Section */}
-				<section className="relative py-20" aria-label="call to action">
-					<div className="container mx-auto px-4">
-						<AnimatedSection initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl p-12 border border-white/10 text-center">
-							<div className="inline-block bg-blue-500/20 border border-blue-500/30 text-blue-400 font-medium px-4 py-1 rounded-full mb-6">Start Today</div>
-							<h2 className="text-4xl font-bold text-white mb-6">Take Control of Your Goals</h2>
-							<p className="text-xl text-gray-300 mb-3 max-w-2xl mx-auto">Join our growing community of goal achievers. Free, open-source, and built with your privacy in mind.</p>
-							<p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-								Help shape the future of GoalGenius by <span className="text-blue-400 font-semibold">contributing on GitHub</span> or providing feedback.
+						<div className="mb-12 text-center">
+							<p className="mb-3 text-sm font-medium uppercase tracking-wide text-blue-400">Why GoalGenius</p>
+							<h2 id="why-heading" className="mb-4 text-3xl font-bold text-white md:text-4xl">
+								Open source, private by design
+							</h2>
+							<p className="mx-auto max-w-2xl text-lg text-gray-300">
+								Built for people who want goal tracking without giving up visibility into how the product works.
 							</p>
-							<div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-								<Link href="https://app.goalgenius.online" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200">
-									Start Using GoalGenius
-									<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-									</svg>
-								</Link>
-								<Link href="https://github.com/Ismailco/GoalGenius" className="inline-flex items-center px-8 py-3 text-lg font-medium rounded-full text-white bg-white/10 hover:bg-white/20 transform hover:scale-105 transition-all duration-200">
-									Star on GitHub
-									<svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-									</svg>
-								</Link>
-							</div>
-						</AnimatedSection>
+						</div>
+
+						<div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3">
+							{reasons.map((reason) => (
+								<div key={reason.title} className="rounded-3xl border border-white/10 bg-white/5 p-8">
+									<h3 className="mb-3 text-xl font-bold text-white">{reason.title}</h3>
+									<p className="text-gray-300">{reason.description}</p>
+								</div>
+							))}
+						</div>
 					</div>
 				</section>
 
-				{/* Footer */}
-				<section className="bg-slate-900/80 border-t border-white/10 py-8">
+				<section id="roadmap" className="relative scroll-mt-24 bg-slate-900/50 py-20" aria-labelledby="roadmap-heading">
+					<div className="container mx-auto px-4">
+						<div className="mb-12 text-center">
+							<p className="mb-3 text-sm font-medium uppercase tracking-wide text-blue-400">Planned</p>
+							<h2 id="roadmap-heading" className="mb-4 text-3xl font-bold text-white md:text-4xl">
+								Short roadmap
+							</h2>
+							<p className="mx-auto max-w-2xl text-lg text-gray-300">
+								Areas staged in the app or discussed as future work. None of these are available yet.
+							</p>
+						</div>
+
+						<div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 md:grid-cols-2">
+							{roadmapItems.map((item) => (
+								<div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-6">
+									<div className="mb-2 flex items-center gap-3">
+										<h3 className="text-lg font-semibold text-white">{item.title}</h3>
+										<span className="rounded bg-blue-500/20 px-2 py-0.5 text-xs font-semibold text-blue-300">
+											Planned
+										</span>
+									</div>
+									<p className="text-sm text-gray-300">{item.description}</p>
+								</div>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section id="open-source" className="relative scroll-mt-24 py-20" aria-labelledby="open-source-heading">
+					<div className="container mx-auto px-4">
+						<div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-gradient-to-r from-blue-500/10 to-purple-500/10 p-8 md:p-12">
+							<p className="mb-3 text-sm font-medium uppercase tracking-wide text-blue-400">
+								Free during beta & open source
+							</p>
+							<h2 id="open-source-heading" className="mb-4 text-3xl font-bold text-white md:text-4xl">
+								Use the hosted beta, or run your own
+							</h2>
+							<p className="mb-6 max-w-2xl text-lg text-gray-300">
+								Open source under {LICENSE_NAME}. The hosted GoalGenius service at{' '}
+								<a href={APP_URL} className="text-blue-400 underline-offset-2 hover:underline">
+									app.goalgenius.online
+								</a>{' '}
+								is currently free during beta. The{' '}
+								<a href={GITHUB_REPO_URL} className="text-blue-400 underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
+								source repository
+							</a>{' '}
+							is available for self-hosting. Donations are optional project support, not payment for access.
+							</p>
+							<ul className="space-y-2 text-gray-300">
+								<li className="flex items-start gap-2">
+									<span className="mt-1 text-green-400" aria-hidden="true">
+										✓
+									</span>
+									Hosted beta access to current features
+								</li>
+								<li className="flex items-start gap-2">
+									<span className="mt-1 text-green-400" aria-hidden="true">
+										✓
+									</span>
+									Full source on GitHub under{' '}
+									<a href={LICENSE_URL} className="text-blue-400 underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
+										{LICENSE_NAME}
+									</a>
+								</li>
+								<li className="flex items-start gap-2">
+									<span className="mt-1 text-green-400" aria-hidden="true">
+										✓
+									</span>
+									Self-host on your own infrastructure
+								</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+				<section className="relative bg-slate-900/50 py-16" aria-labelledby="built-with-heading">
 					<div className="container mx-auto px-4 text-center">
-						<p className="text-gray-400 text-sm">GoalGenius • © {new Date().getFullYear()}</p>
-						<p className="text-blue-400 mt-2 text-xs">
-							Free & Open Source •{' '}
-							<a href="https://app.goalgenius.online" className="underline hover:text-blue-300">
-								app.goalgenius.online
-							</a>
+						<h2 id="built-with-heading" className="mb-8 text-sm font-medium uppercase tracking-wide text-gray-400">
+							Built with
+						</h2>
+						<ul className="flex flex-wrap items-center justify-center gap-8">
+							{techStack.map((tech) => (
+								<li key={tech.name}>
+									<a
+										href={tech.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="inline-flex items-center gap-2 text-gray-300 opacity-80 transition hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+									>
+										{tech.logo && tech.width && tech.height ? (
+											<>
+												<Image src={tech.logo} alt="" width={tech.width} height={tech.height} className="h-6 w-auto" />
+												<span className="sr-only">{tech.name}</span>
+											</>
+										) : (
+											<span className="text-sm font-semibold">{tech.name}</span>
+										)}
+									</a>
+								</li>
+							))}
+						</ul>
+						<p className="mt-6 text-xs text-gray-500">
+							Technology names and logos belong to their respective owners. Listing them does not imply
+							endorsement or partnership.
 						</p>
+					</div>
+				</section>
+
+				<section className="relative py-20" aria-labelledby="final-cta-heading">
+					<div className="container mx-auto px-4">
+						<div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-white/5 p-10 text-center backdrop-blur-lg md:p-12">
+							<h2 id="final-cta-heading" className="mb-4 text-3xl font-bold text-white md:text-4xl">
+								Start tracking with GoalGenius
+							</h2>
+							<p className="mb-8 text-lg text-gray-300">
+								Use the hosted beta, read the docs, or clone the repository and self-host.
+							</p>
+							<div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+								<a
+									href={APP_URL}
+									className="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-8 py-3 text-lg font-medium text-white transition hover:from-indigo-600 hover:to-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+								>
+									Try GoalGenius
+								</a>
+								<a
+									href={GITHUB_REPO_URL}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="inline-flex items-center rounded-full bg-white/10 px-8 py-3 text-lg font-medium text-white transition hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+								>
+									View Source
+								</a>
+							</div>
+							<p className="mt-6 text-sm text-gray-400">
+								Have ideas or found a bug?{' '}
+								<Link href="/feedback" className="text-blue-400 hover:text-blue-300">
+									Send feedback
+								</Link>
+								.
+							</p>
+						</div>
 					</div>
 				</section>
 			</main>
 		</>
 	);
 }
-
