@@ -9,7 +9,7 @@ export default function NotFound() {
 					Page not found
 				</h1>
 				<p className="mb-8 text-gray-300">
-					That URL does not exist on the GoalGenius website. Try the homepage or documentation instead.
+					That URL does not exist on the Rungset website. Try the homepage or documentation instead.
 				</p>
 				<div className="flex flex-col justify-center gap-3 sm:flex-row">
 					<Link

@@ -5,11 +5,11 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '@/lib/site';
 export const metadata: Metadata = {
 	title: 'Documentation',
 	description:
-		'Learn how to use GoalGenius today: goals, milestones, todos, notes, check-ins, settings export, and self-hosting under AGPLv3.',
+		'Learn how to use Rungset today: goals, milestones, tasks, notes, check-ins, settings export, and self-hosting under AGPLv3.',
 	openGraph: {
 		title: `Documentation | ${SITE_NAME}`,
 		description:
-			'Guides for the current GoalGenius application features, session API notes, and self-hosting.',
+			'Guides for the current Rungset application features, session API notes, and self-hosting.',
 		type: 'website',
 		url: `${SITE_URL}/docs`,
 		images: [DEFAULT_OG_IMAGE],
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: `Documentation | ${SITE_NAME}`,
 		description:
-			'Guides for the current GoalGenius application features, session API notes, and self-hosting.',
+			'Guides for the current Rungset application features, session API notes, and self-hosting.',
 		images: [DEFAULT_OG_IMAGE.url],
 	},
 	alternates: {

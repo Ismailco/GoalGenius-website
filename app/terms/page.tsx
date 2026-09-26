@@ -39,11 +39,11 @@ export default function TermsPage() {
 						<p>
 							These terms apply to the marketing website at{' '}
 							<a href={SITE_URL} className="text-blue-400 hover:underline">
-								goalgenius.online
+								rungset.com
 							</a>{' '}
-							and the hosted GoalGenius application at{' '}
+							and the hosted Rungset application at{' '}
 							<a href={APP_URL} className="text-blue-400 hover:underline">
-								app.goalgenius.online
+								app.rungset.com
 							</a>
 							. By using either, you agree to these terms. This is not legal advice, and no separate
 							company entity is claimed beyond the open-source project maintained by its contributors.
@@ -53,14 +53,14 @@ export default function TermsPage() {
 					<section>
 						<h2 className="mb-3 text-2xl font-semibold text-white">Open-source code vs hosted service</h2>
 						<p>
-							The GoalGenius application source code is available under the{' '}
+							The Rungset application source code is available under the{' '}
 							<a href={LICENSE_URL} className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
 								GNU Affero General Public License v3.0 ({LICENSE_NAME})
 							</a>
 							. Using the source under {LICENSE_NAME} is governed by that license.
 						</p>
 						<p className="mt-4">
-							The hosted service at app.goalgenius.online is a convenience beta deployment. Access to the
+							The hosted service at app.rungset.com is a convenience beta deployment. Access to the
 							hosted service does not transfer ownership of the software, and it does not replace the{' '}
 							{LICENSE_NAME} terms for the source code.
 						</p>
@@ -97,7 +97,7 @@ export default function TermsPage() {
 
 					<section>
 						<h2 className="mb-3 text-2xl font-semibold text-white">Acceptable use</h2>
-						<p>You may not use GoalGenius to:</p>
+						<p>You may not use Rungset to:</p>
 						<ul className="mt-3 list-disc space-y-2 pl-5">
 							<li>Violate the law or others’ rights</li>
 							<li>Distribute malware or attempt security attacks</li>
@@ -128,7 +128,7 @@ export default function TermsPage() {
 						<h2 className="mb-3 text-2xl font-semibold text-white">Third-party services</h2>
 						<p>
 							Authentication providers, hosting providers, donation platforms, and linked websites are
-							governed by their own terms. GoalGenius is not responsible for third-party services.
+							governed by their own terms. Rungset is not responsible for third-party services.
 						</p>
 					</section>
 

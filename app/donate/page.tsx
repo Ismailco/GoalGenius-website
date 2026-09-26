@@ -55,7 +55,7 @@ export default function DonatePage() {
 							Optional support
 						</p>
 						<h1 id="donate-heading" className="mb-6 text-4xl font-bold text-white md:text-5xl">
-							Support GoalGenius development
+							Support Rungset development
 						</h1>
 						<p className="mb-4 text-xl text-gray-300">
 							Donations are optional. They are not payment for product access.
@@ -63,7 +63,7 @@ export default function DonatePage() {
 						<p className="text-gray-400">
 							Open source under {LICENSE_NAME}. The hosted beta at{' '}
 							<a href={APP_URL} className="text-blue-400 hover:underline">
-								app.goalgenius.online
+								app.rungset.com
 							</a>{' '}
 							is currently free during beta. Self-hosting remains available from the source repository.
 						</p>
@@ -117,7 +117,7 @@ export default function DonatePage() {
 								View Source on GitHub
 							</a>
 							<a
-								href={`https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out GoalGenius — an open-source goal tracker: https://goalgenius.online')}`}
+								href={`https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out Rungset — an open-source goal tracker: https://rungset.com')}`}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="inline-flex items-center justify-center rounded-full bg-white/10 px-6 py-3 font-medium text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"

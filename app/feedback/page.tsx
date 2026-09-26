@@ -25,7 +25,7 @@ export default function FeedbackPage() {
 						href={APP_URL}
 						className="font-bold underline underline-offset-2 hover:text-blue-100"
 					>
-						app.goalgenius.online
+						app.rungset.com
 					</a>
 				</p>
 			</div>
@@ -35,7 +35,7 @@ export default function FeedbackPage() {
 					<p className="mb-4 inline-block rounded-full border border-blue-500/30 bg-blue-500/20 px-4 py-1 text-sm font-medium text-blue-300">
 						Feedback
 					</p>
-					<h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">Help improve GoalGenius</h1>
+					<h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">Help improve Rungset</h1>
 					<p className="text-lg text-gray-300">
 						Share bugs, usability notes, or ideas for planned features. Your message is read by the
 						project maintainer.

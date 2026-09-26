@@ -158,7 +158,7 @@ export default function FeedbackForm() {
 					</svg>
 				</div>
 				<h2 className="mb-4 text-3xl font-bold text-white">Thank you</h2>
-				<p className="mb-6 text-gray-300">Your feedback was submitted and will help improve GoalGenius.</p>
+				<p className="mb-6 text-gray-300">Your feedback was submitted and will help improve Rungset.</p>
 				<div className="flex flex-col justify-center gap-4 sm:flex-row">
 					<Link
 						href="/"

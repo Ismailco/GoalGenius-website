@@ -38,11 +38,11 @@ export default function PrivacyPage() {
 						<p>
 							This policy describes how the public marketing site at{' '}
 							<a href={SITE_URL} className="text-blue-400 hover:underline">
-								goalgenius.online
+								rungset.com
 							</a>{' '}
 							and the hosted application at{' '}
 							<a href={APP_URL} className="text-blue-400 hover:underline">
-								app.goalgenius.online
+								app.rungset.com
 							</a>{' '}
 							handle information. {SITE_NAME} is an open-source project. This is not legal advice.
 						</p>
@@ -51,12 +51,12 @@ export default function PrivacyPage() {
 					<section>
 						<h2 className="mb-3 text-2xl font-semibold text-white">What this covers</h2>
 						<ul className="list-disc space-y-2 pl-5">
-							<li>The marketing and documentation website on goalgenius.online</li>
-							<li>The hosted GoalGenius web application on app.goalgenius.online</li>
+			<li>The marketing and documentation website on rungset.com</li>
+			<li>The hosted Rungset web application on app.rungset.com</li>
 							<li>The optional feedback form on this website</li>
 						</ul>
 						<p className="mt-4">
-							If you self-host GoalGenius, you operate your own instance. Your privacy practices then
+							If you self-host Rungset, you operate your own instance. Your privacy practices then
 							depend on how you deploy and configure it. The project source is available on{' '}
 							<a href={GITHUB_REPO_URL} className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
 								GitHub
@@ -147,7 +147,7 @@ export default function PrivacyPage() {
 					<section>
 						<h2 className="mb-3 text-2xl font-semibold text-white">Children</h2>
 						<p>
-							GoalGenius is not directed at children, and we do not knowingly collect personal information
+							Rungset is not directed at children, and we do not knowingly collect personal information
 							from children for the hosted service.
 						</p>
 					</section>

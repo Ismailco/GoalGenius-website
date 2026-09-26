@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import AnimatedSection from '@/components/AnimatedSection';
 import {
 	APP_URL,
 	CONTACT_EMAIL,
@@ -29,12 +28,12 @@ const tabs: TabContent[] = [
 		id: 'overview',
 		title: 'Overview',
 		description:
-			'GoalGenius is an open-source goal and productivity tracker built with Next.js and Cloudflare.',
+			'Rungset is an open-source goal and productivity tracker built with Next.js and Cloudflare.',
 		content: [
 			{
-				title: 'What is GoalGenius?',
+				title: 'What is Rungset?',
 				description:
-					'GoalGenius helps you plan goals, track milestones, manage todos, keep Markdown notes, and record progress check-ins. The hosted beta runs at app.goalgenius.online. You can also self-host from the source repository.',
+					'Rungset helps you plan goals, track milestones, manage tasks, keep Markdown notes, and record progress check-ins. The hosted beta runs at app.rungset.com. You can also self-host from the source repository.',
 				type: 'text',
 			},
 			{
@@ -84,7 +83,7 @@ const tabs: TabContent[] = [
 	{
 		id: 'getting-started',
 		title: 'Getting Started',
-		description: 'How to use the current GoalGenius web application.',
+		description: 'How to use the current Rungset web application.',
 		content: [
 			{
 				title: 'Create an account',
@@ -211,11 +210,11 @@ const tabs: TabContent[] = [
 	{
 		id: 'self-hosting',
 		title: 'Self-hosting',
-		description: 'Run GoalGenius yourself from the application repository.',
+			description: 'Run Rungset yourself from the application repository.',
 		content: [
 			{
 				title: 'Development setup',
-				description: 'From the GoalGenius application repository:',
+					description: 'From the Rungset application repository:',
 				type: 'code',
 				code: `# Clone the application repository
 git clone https://github.com/Ismailco/GoalGenius.git
@@ -266,24 +265,24 @@ export default function DocsContent() {
 	const structuredData = {
 		'@context': 'https://schema.org',
 		'@type': 'TechArticle',
-		headline: 'GoalGenius Documentation',
+			headline: 'Rungset Documentation',
 		description:
-			'Documentation for GoalGenius covering current features, usage, session API notes, and self-hosting.',
+			'Documentation for Rungset covering current features, usage, session API notes, and self-hosting.',
 		author: {
 			'@type': 'Person',
 			name: 'Ismail Courr',
 		},
 		publisher: {
 			'@type': 'Organization',
-			name: 'GoalGenius',
+			name: 'Rungset',
 			logo: {
 				'@type': 'ImageObject',
-				url: 'https://goalgenius.online/logo.png',
+				url: 'https://rungset.com/brand/rungset-app-icon.png',
 			},
 		},
 		mainEntityOfPage: {
 			'@type': 'WebPage',
-			'@id': 'https://goalgenius.online/docs',
+			'@id': 'https://rungset.com/docs',
 		},
 	};
 
@@ -301,7 +300,7 @@ export default function DocsContent() {
 							Documentation
 						</h1>
 						<p className="text-xl text-gray-300">
-							Guides aligned with the current GoalGenius application—not future features.
+							Guides aligned with the current Rungset application—not future features.
 						</p>
 					</div>
 				</div>
@@ -332,13 +331,7 @@ export default function DocsContent() {
 			{activeTabContent && (
 				<div className="relative py-16">
 					<div className="container mx-auto px-4">
-						<AnimatedSection
-							key={activeTabContent.id}
-							initial={{ opacity: 0, y: 16 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.45 }}
-							className="mx-auto max-w-4xl"
-						>
+						<div key={activeTabContent.id} className="mx-auto max-w-4xl">
 							<h2 className="mb-4 text-3xl font-bold text-white">{activeTabContent.title}</h2>
 							<p className="mb-12 text-xl text-gray-300">{activeTabContent.description}</p>
 
@@ -378,7 +371,7 @@ export default function DocsContent() {
 									</section>
 								))}
 							</div>
-						</AnimatedSection>
+						</div>
 					</div>
 				</div>
 			)}

@@ -65,25 +65,26 @@ export const metadata: Metadata = {
 	},
 	icons: {
 		icon: [
-			{ url: '/favicon.svg', type: 'image/svg+xml' },
+			{ url: '/brand/rungset-app-icon.png', type: 'image/png' },
 			{ url: '/favicon.ico' },
 		],
+		apple: [{ url: '/brand/rungset-app-icon.png', type: 'image/png' }],
 	},
 };
 
 export const viewport: Viewport = {
-	themeColor: '#0f172a',
+	themeColor: '#f7faff',
 	width: 'device-width',
 	initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className={inter.className}>
-			<body className="min-h-screen bg-slate-900 text-gray-100 antialiased">
+		<html lang="en" className={inter.className} data-scroll-behavior="smooth">
+			<body className="min-h-screen bg-[#f7faff] text-[#102866] antialiased">
 				<div className="relative flex min-h-screen flex-col">
 					<div
-						className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/10 to-indigo-500/15 blur-3xl"
+						className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(55,165,255,0.16),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(116,81,255,0.12),transparent_32%)]"
 						aria-hidden="true"
 					/>
 					<Header />

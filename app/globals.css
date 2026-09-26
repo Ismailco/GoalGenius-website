@@ -2,20 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-	:focus-visible {
-		outline: 2px solid #60a5fa;
-		outline-offset: 2px;
-	}
+:root {
+  color: #102866;
+  background: #f7faff;
+}
 
-	@media (prefers-reduced-motion: reduce) {
-		*,
-		*::before,
-		*::after {
-			animation-duration: 0.01ms !important;
-			animation-iteration-count: 1 !important;
-			transition-duration: 0.01ms !important;
-			scroll-behavior: auto !important;
-		}
-	}
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(88, 185, 255, 0.12), transparent 28rem),
+    radial-gradient(circle at 92% 20%, rgba(125, 89, 255, 0.1), transparent 28rem),
+    #f7faff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(47, 125, 246, 0.2);
+  color: #102866;
+}
+
+@layer components {
+  .site-container {
+    width: min(100% - 2rem, 1180px);
+    margin-inline: auto;
+  }
+
+  .site-card {
+    border: 1px solid rgba(16, 40, 102, 0.1);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 18px 50px rgba(24, 58, 145, 0.08);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(47, 125, 246, 0.18);
+    border-radius: 999px;
+    background: rgba(47, 125, 246, 0.08);
+    padding: 0.45rem 0.75rem;
+    color: #1556d8;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .footer-heading {
+    margin-bottom: 0.85rem;
+    color: #102866;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  main:not(.rungset-home) [class~="text-white"] {
+    color: #102866 !important;
+  }
+
+  main:not(.rungset-home) [class~="text-gray-300"] {
+    color: #475569 !important;
+  }
+
+  main:not(.rungset-home) [class~="text-gray-400"] {
+    color: #64748b !important;
+  }
+
+  main:not(.rungset-home) [class~="text-blue-400"] {
+    color: #1556d8 !important;
+  }
+
+  main:not(.rungset-home) [class~="bg-slate-900"],
+  main:not(.rungset-home) [class~="bg-slate-950\/80"],
+  main:not(.rungset-home) [class~="bg-white\/5"] {
+    background-color: #ffffff !important;
+  }
+
+  main:not(.rungset-home) [class~="border-white\/10"] {
+    border-color: #dbe5f4 !important;
+  }
+
+  main:not(.rungset-home) [class~="bg-gradient-to-r"][class~="text-white"] {
+    color: #ffffff !important;
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid #2f7df6;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
