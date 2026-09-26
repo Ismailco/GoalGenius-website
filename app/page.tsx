@@ -55,7 +55,7 @@ export const metadata: Metadata = {
 const workflow = [
   {
     title: 'Define the goal',
-    description: 'Write down the outcome and the progress you want to make visible.',
+    description: 'Write down the outcome and the progress you want to track.',
     icon: Target,
   },
   {
@@ -71,10 +71,10 @@ const workflow = [
 ];
 
 const features = [
-  { title: 'Goals and milestones', description: 'Keep the outcome visible and map the checkpoints that move it forward.', icon: Target },
+  { title: 'Goals and milestones', description: 'Connect the outcome to the checkpoints that move it forward.', icon: Target },
   { title: 'Tasks with context', description: 'Turn milestones into practical work with priorities, due dates, and completion history.', icon: ListTodo },
   { title: 'Progress check-ins', description: 'Capture accomplishments, challenges, energy, and the next focus while the detail is fresh.', icon: CircleCheckBig },
-  { title: 'Notes beside the work', description: 'Keep Markdown notes and important context close to the goals they support.', icon: NotebookPen },
+  { title: 'Notes with context', description: 'Keep Markdown notes and important context close to the goals they support.', icon: NotebookPen },
   { title: 'Offline-ready workspace', description: 'Review and capture work with the existing offline cache and sync flow.', icon: Milestone },
   { title: 'Portable data', description: 'Export workspace data as JSON, inspect the source, or self-host under AGPLv3.', icon: ShieldCheck },
 ];
@@ -179,9 +179,9 @@ export default function HomePage() {
       <section id="features" className="scroll-mt-20 border-y border-slate-200 bg-[#f0f5ff] py-20 lg:py-24" aria-labelledby="features-heading">
         <div className="site-container">
           <div className="max-w-2xl">
-            <p className="eyebrow">The current product</p>
-            <h2 id="features-heading" className="mt-5 text-3xl font-black tracking-[-0.04em] text-[#102866] sm:text-4xl">The pieces stay close to the work.</h2>
-            <p className="mt-4 text-lg leading-8 text-slate-600">Rungset stays focused on the goal to milestone to task to check-in loop. Each part has a clear job in the planning process.</p>
+            <p className="eyebrow">Inside Rungset</p>
+            <h2 id="features-heading" className="mt-5 text-3xl font-black tracking-[-0.04em] text-[#102866] sm:text-4xl">The plan and the work stay connected.</h2>
+            <p className="mt-4 text-lg leading-8 text-slate-600">Goals set direction, milestones mark checkpoints, tasks make the next action concrete, and check-ins bring the review back to the plan.</p>
           </div>
 
           <div className="mt-12 divide-y divide-slate-300 border-y border-slate-300">
@@ -205,7 +205,7 @@ export default function HomePage() {
             <div>
               <p className="text-sm font-extrabold uppercase tracking-[0.14em] text-[#74dfff]">Open source by default</p>
               <h2 id="open-source-heading" className="mt-4 max-w-xl text-3xl font-black tracking-[-0.04em] sm:text-4xl">Use the hosted app or run the code yourself.</h2>
-              <p className="mt-5 max-w-xl text-lg leading-8 text-blue-100">Open Rungset in the hosted beta, export your workspace, inspect the implementation, or self-host under {LICENSE_NAME}. The product stays understandable because its structure is visible.</p>
+              <p className="mt-5 max-w-xl text-lg leading-8 text-blue-100">Open Rungset in the hosted beta, export your workspace, inspect the implementation, or self-host under {LICENSE_NAME}. The product stays understandable because its structure is easy to inspect.</p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a href={APP_URL} className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-bold text-[#102866] transition hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Open the beta <ArrowRight className="h-4 w-4" aria-hidden="true" /></a>
                 <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/30 px-6 py-3 font-bold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">View source</a>
@@ -216,7 +216,7 @@ export default function HomePage() {
               <ul className="mt-5 space-y-4 text-sm leading-6 text-blue-50">
                 <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />Goals, milestones, tasks, notes, and check-ins.</li>
                 <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />Workspace data export as JSON.</li>
-                <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />Analytics, calendar sync, native apps, and AI remain future work.</li>
+                <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />Analytics, calendar sync, native apps, and AI are not part of this beta.</li>
               </ul>
             </div>
           </div>

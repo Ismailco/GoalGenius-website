@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: `Documentation | ${SITE_NAME}`,
 		description:
-			'Guides for the current Rungset application features, session API notes, and self-hosting.',
+			'Guides for using the current Rungset application, developer notes, and self-hosting.',
 		type: 'website',
 		url: `${SITE_URL}/docs`,
 		images: [DEFAULT_OG_IMAGE],
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: `Documentation | ${SITE_NAME}`,
 		description:
-			'Guides for the current Rungset application features, session API notes, and self-hosting.',
+			'Guides for using the current Rungset application, developer notes, and self-hosting.',
 		images: [DEFAULT_OG_IMAGE.url],
 	},
 	alternates: {

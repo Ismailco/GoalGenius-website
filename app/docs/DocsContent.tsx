@@ -26,9 +26,9 @@ interface TabContent {
 const tabs: TabContent[] = [
 	{
 		id: 'overview',
-		title: 'Overview',
+		title: 'Using Rungset',
 		description:
-			'Rungset is an open-source goal and productivity tracker built with Next.js and Cloudflare.',
+			'Rungset is an open-source goal and productivity tracker built around goals, milestones, tasks, notes, and check-ins.',
 		content: [
 			{
 				title: 'What is Rungset?',
@@ -43,7 +43,7 @@ const tabs: TabContent[] = [
 				items: [
 					'Goals with category, status, progress, and optional due date',
 					'Milestones linked to goals',
-					'Todos with priority, optional due date, category, and completion state',
+					'Todos with priority, optional due date, category, recurrence, reminder settings, and completion history',
 					'Notes with Markdown content, optional category, and pin support',
 					'Check-ins with mood, energy, accomplishments, challenges, goals list, and notes',
 					'Dashboard overview with goal and category progress',
@@ -62,20 +62,7 @@ const tabs: TabContent[] = [
 					'Native iOS / Android apps',
 					'AI recommendations or AI insights',
 					'Note attachments, note sharing, or collaboration',
-					'Push notifications / reminder system',
-				],
-			},
-			{
-				title: 'Technology stack',
-				description: 'Current application stack from the local application repository:',
-				type: 'list',
-				items: [
-					'Frontend: Next.js 16.2.12 (App Router), React 19.2.4, Tailwind CSS 4.2.2',
-					'Database: Cloudflare D1 with Drizzle ORM 0.45.2',
-					'Authentication: Better Auth 1.6.25 (email/password + optional Google/GitHub OAuth)',
-					'Deployment: Cloudflare Workers via OpenNext 1.20.2',
-					'Type safety: TypeScript 5.9.3',
-					'Content safety helpers: DOMPurify / XSS utilities in the app',
+					'External reminder delivery or a scheduled notification service',
 				],
 			},
 		],
@@ -123,7 +110,9 @@ const tabs: TabContent[] = [
 				items: [
 					'Create todos with a title, optional description, priority (low/medium/high), optional due date, and optional category',
 					'Mark todos complete when finished',
-					'Note: the current app does not provide reminder notifications or project-based collaboration',
+					'Use daily, weekly, or monthly recurrence when a task repeats',
+					'Set a reminder for a task with a due date; external reminder delivery is not part of the beta',
+					'Project-based collaboration is not available',
 				],
 			},
 			{
@@ -164,9 +153,9 @@ const tabs: TabContent[] = [
 	},
 	{
 		id: 'api',
-		title: 'API Notes',
+		title: 'Developer notes',
 		description:
-			'The application exposes session-authenticated JSON routes for its own UI. These are not a documented public third-party API.',
+			'Notes for contributors about the routes and stack behind the hosted application. These are not a stable third-party API reference.',
 		content: [
 			{
 				title: 'Important limitations',
@@ -185,7 +174,7 @@ const tabs: TabContent[] = [
 			},
 			{
 				title: 'Current data routes',
-				description: 'Each resource route supports GET, POST, PUT, and DELETE on a single path (not nested /:id paths):',
+				description: 'The app uses authenticated collection routes for its own UI. Item routes also exist under /api/<resource>/<id>; methods and payloads may change with the beta:',
 				type: 'list',
 				items: [
 					'GET/POST/PUT/DELETE /api/goals: list, create, update (body includes id), delete (?id=)',
@@ -193,6 +182,19 @@ const tabs: TabContent[] = [
 					'GET/POST/PUT/DELETE /api/todos: same pattern; priority required on create',
 					'GET/POST/PUT/DELETE /api/notes: same pattern; title and content required on create',
 					'GET/POST/PUT/DELETE /api/checkins: same pattern; mood/energy/date fields required on create',
+				],
+			},
+			{
+				title: 'Application stack',
+				description: 'Current implementation details from the application repository:',
+				type: 'list',
+				items: [
+					'Frontend: Next.js 16.2.12 (App Router), React 19.2.4, Tailwind CSS 4.2.2',
+					'Database: Cloudflare D1 with Drizzle ORM 0.45.2',
+					'Authentication: Better Auth 1.6.25 (email/password + optional Google/GitHub OAuth)',
+					'Deployment: Cloudflare Workers via OpenNext 1.20.2',
+					'Type safety: TypeScript 5.9.3',
+					'Content safety helpers: DOMPurify / XSS utilities in the app',
 				],
 			},
 			{
@@ -282,7 +284,7 @@ export default function DocsContent() {
 		'@type': 'TechArticle',
 		headline: 'Rungset Documentation',
 		description:
-			'Documentation for Rungset covering current features, usage, session API notes, and self-hosting.',
+			'Documentation for Rungset covering current features, usage, developer notes, and self-hosting.',
 		author: {
 			'@type': 'Person',
 			name: 'Ismail Courr',
