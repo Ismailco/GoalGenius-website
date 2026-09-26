@@ -1,6 +1,6 @@
 # Rungset Website
 
-Official marketing and documentation site for [Rungset](https://rungset.com) — an open-source goal and productivity tracker.
+Official marketing and documentation site for [Rungset](https://rungset.com): an open-source goal and productivity tracker.
 
 [Visit Website](https://rungset.com) · [Try App](https://app.rungset.com) · [App Repository](https://github.com/Ismailco/GoalGenius)
 
@@ -27,4 +27,4 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## License
 
-GNU Affero General Public License v3.0 — see [LICENSE](LICENSE).
+GNU Affero General Public License v3.0: see [LICENSE](LICENSE).

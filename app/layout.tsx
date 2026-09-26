@@ -83,10 +83,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="en" className={inter.className} data-scroll-behavior="smooth">
 			<body className="min-h-screen bg-[#f7faff] text-[#102866] antialiased">
 				<div className="relative flex min-h-screen flex-col">
-					<div
-						className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(55,165,255,0.16),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(116,81,255,0.12),transparent_32%)]"
-						aria-hidden="true"
-					/>
 					<Header />
 					<div className="relative flex flex-1 flex-col">{children}</div>
 					<Footer />

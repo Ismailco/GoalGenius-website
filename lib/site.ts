@@ -10,11 +10,11 @@ export const CONTACT_EMAIL = 'contact@ismailcourr.dev';
 export const SITE_NAME = 'Rungset';
 export const SITE_TAGLINE = 'Build momentum, one rung at a time';
 export const SITE_DESCRIPTION =
-	'Turn goals into milestones, tasks, check-ins, and steady progress in one open-source workspace. Hosted beta access is currently free.';
+	'Plan long-term goals with milestones, tasks, notes, and weekly check-ins in one open-source workspace.';
 
 export const DEFAULT_OG_IMAGE = {
 	url: '/brand/rungset-banner.png',
 	width: 1731,
 	height: 909,
-	alt: 'Rungset — Build momentum, one rung at a time',
+	alt: 'Rungset: Build momentum, one rung at a time',
 } as const;

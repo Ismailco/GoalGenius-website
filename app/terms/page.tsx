@@ -21,6 +21,12 @@ export const metadata: Metadata = {
 		url: `${SITE_URL}/terms`,
 		images: [DEFAULT_OG_IMAGE],
 	},
+	twitter: {
+		card: 'summary_large_image',
+		title: `Terms of Use | ${SITE_NAME}`,
+		description: `Terms for using the ${SITE_NAME} marketing site and hosted beta service.`,
+		images: [DEFAULT_OG_IMAGE.url],
+	},
 };
 
 const lastUpdated = 'September 4, 2026';
@@ -28,21 +34,21 @@ const lastUpdated = 'September 4, 2026';
 export default function TermsPage() {
 	return (
 		<main className="flex-1">
-			<article className="container mx-auto max-w-3xl px-4 py-16">
-				<p className="mb-3 text-sm font-medium uppercase tracking-wide text-blue-400">Legal</p>
-				<h1 className="mb-4 text-4xl font-bold text-white">Terms of Use</h1>
-				<p className="mb-10 text-sm text-gray-400">Last updated: {lastUpdated}</p>
+			<article className="site-container max-w-3xl py-16 lg:py-20">
+				<p className="page-kicker">Legal</p>
+				<h1 className="mt-5 text-4xl font-black tracking-[-0.04em] text-[#102866] sm:text-5xl">Terms of Use</h1>
+				<p className="mt-3 text-sm text-slate-500">Last updated: {lastUpdated}</p>
 
-				<div className="space-y-8 text-gray-300">
+				<div className="legal-copy mt-12">
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Agreement</h2>
+						<h2>Agreement</h2>
 						<p>
 							These terms apply to the marketing website at{' '}
-							<a href={SITE_URL} className="text-blue-400 hover:underline">
+							<a href={SITE_URL} className="text-[#1556d8] hover:underline">
 								rungset.com
 							</a>{' '}
 							and the hosted Rungset application at{' '}
-							<a href={APP_URL} className="text-blue-400 hover:underline">
+							<a href={APP_URL} className="text-[#1556d8] hover:underline">
 								app.rungset.com
 							</a>
 							. By using either, you agree to these terms. This is not legal advice, and no separate
@@ -51,10 +57,10 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Open-source code vs hosted service</h2>
+						<h2>Open-source code vs hosted service</h2>
 						<p>
 							The Rungset application source code is available under the{' '}
-							<a href={LICENSE_URL} className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
+								<a href={LICENSE_URL} className="text-[#1556d8] hover:underline" target="_blank" rel="noopener noreferrer">
 								GNU Affero General Public License v3.0 ({LICENSE_NAME})
 							</a>
 							. Using the source under {LICENSE_NAME} is governed by that license.
@@ -67,7 +73,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Beta status and availability</h2>
+						<h2>Beta status and availability</h2>
 						<p>
 							The hosted service is provided as a beta. Features may change, break, or be unavailable
 							without notice. There is no uptime guarantee and no promise that hosted pricing will remain
@@ -76,7 +82,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Service provided as-is</h2>
+						<h2>Service provided as-is</h2>
 						<p>
 							The website and hosted application are provided “as is” and “as available,” without
 							warranties of any kind, express or implied, to the fullest extent permitted by law. This
@@ -86,7 +92,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Your responsibilities</h2>
+						<h2>Your responsibilities</h2>
 						<ul className="list-disc space-y-2 pl-5">
 							<li>Keep your credentials secure and use accurate account information</li>
 							<li>Back up important data if you rely on it; export tools may help, but backups are your responsibility</li>
@@ -96,7 +102,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Acceptable use</h2>
+						<h2>Acceptable use</h2>
 						<p>You may not use Rungset to:</p>
 						<ul className="mt-3 list-disc space-y-2 pl-5">
 							<li>Violate the law or others’ rights</li>
@@ -107,7 +113,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">User content</h2>
+						<h2>User content</h2>
 						<p>
 							You retain rights to content you create in the app. You are responsible for that content.
 							By using the hosted service, you grant the operators a limited permission to host, store,
@@ -116,7 +122,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Intellectual property</h2>
+						<h2>Intellectual property</h2>
 						<p>
 							Project branding, website copy, and application source are subject to applicable copyright
 							and the {LICENSE_NAME} license for the software. Third-party marks (for example Next.js or
@@ -125,7 +131,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Third-party services</h2>
+						<h2>Third-party services</h2>
 						<p>
 							Authentication providers, hosting providers, donation platforms, and linked websites are
 							governed by their own terms. Rungset is not responsible for third-party services.
@@ -133,7 +139,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Termination</h2>
+						<h2>Termination</h2>
 						<p>
 							Access to the hosted beta may be suspended or ended for abuse, security reasons, or project
 							operational needs. You may stop using the service at any time. Self-hosting remains available
@@ -142,7 +148,7 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Limitation of liability</h2>
+						<h2>Limitation of liability</h2>
 						<p>
 							To the fullest extent permitted by law, the project maintainers and contributors are not
 							liable for indirect, incidental, special, consequential, or punitive damages, or for lost
@@ -151,10 +157,10 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Privacy</h2>
+						<h2>Privacy</h2>
 						<p>
 							See the{' '}
-							<Link href="/privacy" className="text-blue-400 hover:underline">
+									<Link href="/privacy" className="text-[#1556d8] hover:underline">
 								Privacy Policy
 							</Link>{' '}
 							for information about data handling.
@@ -162,14 +168,14 @@ export default function TermsPage() {
 					</section>
 
 					<section>
-						<h2 className="mb-3 text-2xl font-semibold text-white">Contact</h2>
+						<h2>Contact</h2>
 						<p>
 							Questions about these terms:{' '}
-							<a href={`mailto:${CONTACT_EMAIL}`} className="text-blue-400 hover:underline">
+								<a href={`mailto:${CONTACT_EMAIL}`} className="text-[#1556d8] hover:underline">
 								{CONTACT_EMAIL}
 							</a>{' '}
 							or{' '}
-							<a href={GITHUB_REPO_URL} className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
+								<a href={GITHUB_REPO_URL} className="text-[#1556d8] hover:underline" target="_blank" rel="noopener noreferrer">
 								GitHub
 							</a>
 							.

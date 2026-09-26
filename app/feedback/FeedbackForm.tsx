@@ -151,24 +151,24 @@ export default function FeedbackForm() {
 
 	if (formState.submitted) {
 		return (
-			<div className="mx-auto max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-lg">
-				<div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20">
-					<svg className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+			<div className="site-card mx-auto max-w-2xl p-8 text-center">
+				<div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+					<svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
 					</svg>
 				</div>
-				<h2 className="mb-4 text-3xl font-bold text-white">Thank you</h2>
-				<p className="mb-6 text-gray-300">Your feedback was submitted and will help improve Rungset.</p>
-				<div className="flex flex-col justify-center gap-4 sm:flex-row">
+				<h2 className="text-3xl font-black tracking-[-0.04em] text-[#102866]">Thank you</h2>
+				<p className="mt-4 text-slate-600">Your feedback was submitted and will help improve Rungset.</p>
+				<div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
 					<Link
 						href="/"
-						className="inline-flex items-center justify-center rounded-full bg-white/10 px-6 py-3 font-medium text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+						className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-[#102866] transition hover:border-blue-200 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f7df6]"
 					>
 						Return Home
 					</Link>
 					<a
 						href={APP_URL}
-						className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-3 font-medium text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+						className="inline-flex items-center justify-center rounded-full bg-[#102866] px-6 py-3 font-bold text-white transition hover:bg-[#183c91] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f7df6]"
 					>
 						Open App
 					</a>
@@ -178,9 +178,9 @@ export default function FeedbackForm() {
 	}
 
 	return (
-		<div className="mx-auto max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-lg">
+		<div className="site-card mx-auto max-w-2xl p-6 sm:p-8">
 			{formState.error && (
-				<div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/20 px-4 py-3 text-red-300" role="alert" aria-live="polite">
+				<div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700" role="alert" aria-live="polite">
 					{formState.errorMessage}
 				</div>
 			)}
@@ -188,7 +188,7 @@ export default function FeedbackForm() {
 			<form onSubmit={handleSubmit} noValidate>
 				<div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
 					<div>
-						<label htmlFor="name" className="mb-2 block font-medium text-white">
+						<label htmlFor="name" className="mb-2 block text-sm font-bold text-[#102866]">
 							Your name
 						</label>
 						<input
@@ -198,14 +198,14 @@ export default function FeedbackForm() {
 							value={formState.name}
 							onChange={handleChange}
 							autoComplete="name"
-							className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+							className="field-control"
 							aria-invalid={formState.error && !formState.name.trim()}
 							placeholder="Jane Doe"
 							required
 						/>
 					</div>
 					<div>
-						<label htmlFor="email" className="mb-2 block font-medium text-white">
+						<label htmlFor="email" className="mb-2 block text-sm font-bold text-[#102866]">
 							Email address
 						</label>
 						<input
@@ -215,7 +215,7 @@ export default function FeedbackForm() {
 							value={formState.email}
 							onChange={handleChange}
 							autoComplete="email"
-							className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+							className="field-control"
 							aria-invalid={formState.error && (!formState.email.trim() || !/^\S+@\S+\.\S+$/.test(formState.email))}
 							placeholder="you@example.com"
 							required
@@ -224,7 +224,7 @@ export default function FeedbackForm() {
 				</div>
 
 				<div className="mb-6">
-					<label htmlFor="feedbackType" className="mb-2 block font-medium text-white">
+					<label htmlFor="feedbackType" className="mb-2 block text-sm font-bold text-[#102866]">
 						Feedback type
 					</label>
 					<select
@@ -232,11 +232,11 @@ export default function FeedbackForm() {
 						name="feedbackType"
 						value={formState.feedbackType}
 						onChange={handleChange}
-						className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="field-control"
 						required
 					>
 						{feedbackTypes.map((type) => (
-							<option key={type.id} value={type.id} className="bg-slate-800">
+							<option key={type.id} value={type.id}>
 								{type.label}
 							</option>
 						))}
@@ -245,7 +245,7 @@ export default function FeedbackForm() {
 
 				{formState.feedbackType === 'feature' && (
 					<div className="mb-6">
-						<label htmlFor="feature" className="mb-2 block font-medium text-white">
+						<label htmlFor="feature" className="mb-2 block text-sm font-bold text-[#102866]">
 							Feature area
 						</label>
 						<select
@@ -253,15 +253,15 @@ export default function FeedbackForm() {
 							name="feature"
 							value={formState.feature}
 							onChange={handleChange}
-							className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+							className="field-control"
 							aria-invalid={formState.error && formState.feedbackType === 'feature' && !formState.feature}
 							required
 						>
-							<option value="" className="bg-slate-800">
+							<option value="">
 								Select a feature area
 							</option>
 							{featureOptions.map((option) => (
-								<option key={option.id} value={option.id} className="bg-slate-800">
+								<option key={option.id} value={option.id}>
 									{option.label}
 								</option>
 							))}
@@ -271,9 +271,9 @@ export default function FeedbackForm() {
 
 				<div className="mb-6">
 					<fieldset>
-						<legend className="mb-2 block font-medium text-white">Your experience so far</legend>
-						<div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4">
-							<span className="text-gray-400">Poor</span>
+						<legend className="mb-2 block text-sm font-bold text-[#102866]">Your experience so far</legend>
+						<div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<span className="text-sm text-slate-500">Poor</span>
 							<div className="flex gap-2">
 								{[1, 2, 3, 4, 5].map((num) => (
 									<label key={num} className="flex cursor-pointer flex-col items-center">
@@ -283,28 +283,28 @@ export default function FeedbackForm() {
 											value={num}
 											checked={formState.rating === num.toString()}
 											onChange={handleChange}
-											className="sr-only"
+											className="peer sr-only"
 											aria-label={`Rate ${num} out of 5`}
 										/>
 										<span
-											className={`flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold transition-colors ${
+											className={`flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#2f7df6] ${
 												formState.rating === num.toString()
-													? 'bg-blue-500 text-white'
-													: 'bg-white/10 text-gray-300 hover:bg-white/20'
-											}`}
+													? 'bg-[#2f7df6] text-white'
+													: 'bg-white text-slate-600 hover:bg-blue-50'
+												}`}
 										>
 											{num}
 										</span>
 									</label>
 								))}
 							</div>
-							<span className="text-gray-400">Excellent</span>
+							<span className="text-sm text-slate-500">Excellent</span>
 						</div>
 					</fieldset>
 				</div>
 
 				<div className="mb-6">
-					<label htmlFor="message" className="mb-2 block font-medium text-white">
+					<label htmlFor="message" className="mb-2 block text-sm font-bold text-[#102866]">
 						Your feedback
 					</label>
 					<textarea
@@ -313,17 +313,17 @@ export default function FeedbackForm() {
 						value={formState.message}
 						onChange={handleChange}
 						rows={6}
-						className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="field-control"
 						aria-invalid={formState.error && !formState.message.trim()}
 						placeholder="Share details, reproduction steps, or ideas…"
 						required
 					/>
 				</div>
 
-				<p className="mb-8 text-sm text-gray-400">
+				<p className="mb-8 text-sm leading-6 text-slate-500">
 					By submitting, you agree that your name, email, and message may be processed to follow up on
 					feedback. See the{' '}
-					<Link href="/privacy" className="text-blue-400 hover:text-blue-300">
+					<Link href="/privacy" className="font-semibold text-[#1556d8] underline underline-offset-2 hover:text-[#102866]">
 						Privacy Policy
 					</Link>
 					. Do not include passwords or secrets.
@@ -334,7 +334,7 @@ export default function FeedbackForm() {
 						type="submit"
 						disabled={formState.submitting}
 						aria-busy={formState.submitting}
-						className="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-8 py-3 text-lg font-medium text-white transition hover:from-indigo-600 hover:to-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 disabled:transform-none disabled:opacity-70"
+						className="inline-flex items-center rounded-full bg-[#102866] px-8 py-3 text-base font-bold text-white transition hover:bg-[#183c91] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f7df6] disabled:transform-none disabled:opacity-70"
 					>
 						{formState.submitting ? 'Submitting…' : 'Submit Feedback'}
 					</button>

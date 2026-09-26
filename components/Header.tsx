@@ -38,8 +38,8 @@ export default function Header() {
   }, [isOpen]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
-      <div className="site-container flex h-[4.5rem] items-center justify-between gap-6">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white">
+      <div className="site-container flex h-16 items-center justify-between gap-6">
         <Link
           href="/"
           className="shrink-0 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2f7df6]"
@@ -81,6 +81,7 @@ export default function Header() {
           className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 text-[#102866] transition hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f7df6] md:hidden"
           aria-expanded={isOpen}
           aria-controls={menuId}
+          aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
           onClick={() => setIsOpen((open) => !open)}
         >
           <span className="sr-only">{isOpen ? 'Close menu' : 'Open menu'}</span>

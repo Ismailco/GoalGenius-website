@@ -48,7 +48,7 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
           <div>
             <Image src="/brand/rungset-logo-full.png" alt="Rungset" width={190} height={45} className="h-9 w-auto" />
-            <p className="mt-4 max-w-sm text-sm leading-6 text-slate-500">{SITE_TAGLINE}. An open-source workspace for turning meaningful goals into visible next steps.</p>
+            <p className="mt-4 max-w-sm text-sm leading-6 text-slate-500">{SITE_TAGLINE}. A focused workspace for turning long-term goals into visible next steps.</p>
             <p className="mt-4 text-sm text-slate-400">Open source under {LICENSE_NAME}. Hosted beta access is currently free.</p>
           </div>
 
