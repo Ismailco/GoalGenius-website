@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { APP_URL } from '@/lib/site';
 
-const FEEDBACK_ENDPOINT = 'https://goalgenius-feedback-form.soultware.workers.dev';
+const FEEDBACK_ENDPOINT = 'https://feedback.rungset.com';
 
 const feedbackTypes = [
 	{ id: 'general', label: 'General Feedback' },
