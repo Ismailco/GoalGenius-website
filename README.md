@@ -1,14 +1,22 @@
 # Rungset Website
 
-Official marketing and documentation site for [Rungset](https://rungset.com): an open-source goal and productivity tracker.
+**The official website and public documentation for [Rungset](https://rungset.com), an open-source goal-planning app.**
 
-[Visit Website](https://rungset.com) · [Try App](https://app.rungset.com) · [App Repository](https://github.com/Ismailco/Rungset)
+[Visit Rungset](https://rungset.com) · [Open the app](https://app.rungset.com) · [Application repository](https://github.com/Ismailco/Rungset) · [AGPL-3.0](LICENSE)
 
-## About
+This repository contains the public-facing Rungset experience: product context, documentation, legal pages, and the routes that introduce people to the app. The [Rungset application repository](https://github.com/Ismailco/Rungset) remains the source of truth for product behavior and supported capabilities.
 
-This repository contains the public website only (`rungset.com`). The [Rungset application repository](https://github.com/Ismailco/Rungset) is the source of truth for product features.
+## What belongs here
+
+- Clear, factual product positioning and documentation.
+- Public routes, legal pages, metadata, social previews, sitemap, and robots configuration.
+- A responsive, accessible introduction to the Rungset goal-planning workflow.
+
+Product claims must match the application. Rungset currently supports goals, milestones, tasks, check-ins, notes, recurrence, reminders, and export. Calendar sync, analytics, team features, native apps, AI features, and external reminder delivery are not shipped capabilities.
 
 ## Local development
+
+**Prerequisites:** a current Node.js LTS release and pnpm 10.
 
 ```bash
 pnpm install
@@ -17,14 +25,26 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Stack
+## Build and checks
 
-- Next.js (App Router)
-- React
-- TypeScript
-- Tailwind CSS
-- Framer Motion (limited, reduced-motion aware)
+```bash
+pnpm lint
+pnpm build
+```
+
+The site uses a static Next.js export. `pnpm build` writes the deployable site to `out/`; image optimization is intentionally disabled because the static export does not include Next.js's runtime image service.
+
+## Technology
+
+- Next.js App Router and React
+- TypeScript and Tailwind CSS
+- Framer Motion, used sparingly with reduced-motion support
+- Static export for Cloudflare Pages delivery
+
+## Contributing
+
+Keep public copy concise, accessible, and evidence-based. Before changing product claims, verify them against the [application repository](https://github.com/Ismailco/Rungset). Run lint and a production build for any site change.
 
 ## License
 
-GNU Affero General Public License v3.0: see [LICENSE](LICENSE).
+Rungset Website is licensed under the [GNU Affero General Public License v3.0](LICENSE).
