@@ -2,11 +2,11 @@
 
 Official marketing and documentation site for [Rungset](https://rungset.com): an open-source goal and productivity tracker.
 
-[Visit Website](https://rungset.com) · [Try App](https://app.rungset.com) · [App Repository](https://github.com/Ismailco/GoalGenius)
+[Visit Website](https://rungset.com) · [Try App](https://app.rungset.com) · [App Repository](https://github.com/Ismailco/Rungset)
 
 ## About
 
-This repository contains the public website only (`rungset.com`). The Rungset application lives in a separate repository and is the source of truth for product features.
+This repository contains the public website only (`rungset.com`). The [Rungset application repository](https://github.com/Ismailco/Rungset) is the source of truth for product features.
 
 ## Local development
 
