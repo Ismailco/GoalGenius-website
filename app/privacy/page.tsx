@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 	},
 };
 
-const lastUpdated = 'September 4, 2026';
+const lastUpdated = 'September 29, 2026';
 
 export default function PrivacyPage() {
 	return (
@@ -100,6 +100,24 @@ export default function PrivacyPage() {
 							From Settings, hosted users can export workspace data as JSON and can delete tracked
 							workspace items. Account deletion options depend on the current application settings and
 							authentication provider flows.
+						</p>
+					</section>
+
+					<section>
+						<h2>Account and data deletion requests</h2>
+						<p>
+							To request deletion of your hosted Rungset account and associated data, email{' '}
+							<a href={`mailto:${CONTACT_EMAIL}`} className="text-[#1556d8] hover:underline">
+								{CONTACT_EMAIL}
+							</a>{' '}
+							from the account email address and include “Rungset account deletion” in the subject. We will
+							use the request to verify account ownership and confirm the scope of the deletion.
+						</p>
+						<p className="mt-4">
+							The request can cover the account profile, authentication records, sessions, and workspace
+							content associated with the account. We may retain limited information when necessary for legal
+							obligations, security, abuse prevention, or operational records, and will explain any such
+							retention and its expected period in our response.
 						</p>
 					</section>
 
