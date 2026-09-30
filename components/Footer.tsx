@@ -6,6 +6,7 @@ import {
   GITHUB_REPO_URL,
   LICENSE_NAME,
   LICENSE_URL,
+  PLAY_STORE_URL,
   SITE_NAME,
   SITE_TAGLINE,
 } from '@/lib/site';
@@ -19,6 +20,7 @@ const productLinks = [
 
 const projectLinks = [
   { href: GITHUB_REPO_URL, label: 'GitHub', external: true },
+  { href: PLAY_STORE_URL, label: 'Android app', external: true },
   { href: LICENSE_URL, label: `${LICENSE_NAME} license`, external: true },
   { href: `${GITHUB_REPO_URL}#contributing`, label: 'Contribute', external: true },
   { href: '/donate', label: 'Support the project' },

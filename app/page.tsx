@@ -18,6 +18,7 @@ import {
   GITHUB_REPO_URL,
   LICENSE_NAME,
   LICENSE_URL,
+  PLAY_STORE_URL,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_TAGLINE,
@@ -85,9 +86,10 @@ const structuredData = {
   name: SITE_NAME,
   description: SITE_DESCRIPTION,
   applicationCategory: 'ProductivityApplication',
-  operatingSystem: 'Web',
+  operatingSystem: 'Web, Android',
   browserRequirements: 'Requires a modern web browser',
   url: APP_URL,
+  sameAs: [GITHUB_REPO_URL, PLAY_STORE_URL],
   image: `${SITE_URL}${DEFAULT_OG_IMAGE.url}`,
   offers: {
     '@type': 'Offer',
@@ -105,7 +107,6 @@ const structuredData = {
     'Workspace JSON export',
     'Self-hosting under AGPLv3',
   ],
-  softwareVersion: '0.1.0',
   license: LICENSE_URL,
 };
 
@@ -216,8 +217,10 @@ export default function HomePage() {
               <ul className="mt-5 space-y-4 text-sm leading-6 text-blue-50">
                 <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />Goals, milestones, tasks, notes, and check-ins.</li>
                 <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />Workspace data export as JSON.</li>
-                <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />Analytics, calendar sync, native apps, and AI are not part of this beta.</li>
+                <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />The Android app is available through Google Play and uses the same hosted workspace.</li>
+                <li className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#74dfff]" aria-hidden="true" />Analytics, calendar sync, an iOS app, and AI are not part of this beta.</li>
               </ul>
+              <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center text-sm font-bold text-[#74dfff] underline underline-offset-4 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Get the Android app</a>
             </div>
           </div>
         </div>

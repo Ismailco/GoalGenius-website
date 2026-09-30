@@ -1,8 +1,10 @@
 export const SITE_URL = 'https://rungset.com';
 export const APP_URL = 'https://app.rungset.com';
 export const APP_SIGN_IN_URL = `${APP_URL}/auth/signin`;
-export const GITHUB_REPO_URL = 'https://github.com/Ismailco/GoalGenius';
+export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.rungset.app';
+export const GITHUB_REPO_URL = 'https://github.com/Ismailco/Rungset';
 export const GITHUB_ISSUES_URL = `${GITHUB_REPO_URL}/issues`;
+export const GITHUB_API_DOCS_URL = `${GITHUB_REPO_URL}/blob/main/API.md`;
 export const LICENSE_URL = 'https://www.gnu.org/licenses/agpl-3.0.html';
 export const LICENSE_NAME = 'AGPLv3';
 export const CONTACT_EMAIL = 'contact@ismailcourr.dev';

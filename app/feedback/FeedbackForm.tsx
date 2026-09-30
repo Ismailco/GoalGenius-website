@@ -24,7 +24,7 @@ const featureOptions = [
 	{ id: 'dashboard', label: 'Dashboard' },
 	{ id: 'analytics', label: 'Analytics (planned)' },
 	{ id: 'calendar', label: 'Calendar integrations (planned)' },
-	{ id: 'mobile', label: 'Native mobile apps (planned)' },
+	{ id: 'mobile', label: 'Android app / mobile experience' },
 	{ id: 'ai', label: 'AI features (planned)' },
 	{ id: 'other', label: 'Other' },
 ] as const;

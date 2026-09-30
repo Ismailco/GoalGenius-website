@@ -2,7 +2,7 @@
 
 **The official website and public documentation for [Rungset](https://rungset.com), an open-source goal-planning app.**
 
-[Visit Rungset](https://rungset.com) · [Open the app](https://app.rungset.com) · [Application repository](https://github.com/Ismailco/Rungset) · [AGPL-3.0](LICENSE)
+[Visit Rungset](https://rungset.com) · [Open the app](https://app.rungset.com) · [Android app](https://play.google.com/store/apps/details?id=com.rungset.app) · [Application repository](https://github.com/Ismailco/Rungset) · [AGPL-3.0](LICENSE)
 
 This repository contains the public-facing Rungset experience: product context, documentation, legal pages, and the routes that introduce people to the app. The [Rungset application repository](https://github.com/Ismailco/Rungset) remains the source of truth for product behavior and supported capabilities.
 
@@ -12,7 +12,7 @@ This repository contains the public-facing Rungset experience: product context, 
 - Public routes, legal pages, metadata, social previews, sitemap, and robots configuration.
 - A responsive, accessible introduction to the Rungset goal-planning workflow.
 
-Product claims must match the application. Rungset currently supports goals, milestones, tasks, check-ins, notes, recurrence, reminders, and export. Calendar sync, analytics, team features, native apps, AI features, and external reminder delivery are not shipped capabilities.
+Product claims must match the application. Rungset currently supports goals, milestones, tasks, check-ins, notes, recurrence, reminders, export, and an Android app that opens the hosted web experience. Calendar sync, analytics, team features, an iOS app, AI features, and external reminder delivery are not shipped capabilities.
 
 ## Local development
 

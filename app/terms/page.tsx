@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 	},
 };
 
-const lastUpdated = 'September 4, 2026';
+const lastUpdated = 'September 30, 2026';
 
 export default function TermsPage() {
 	return (
@@ -51,8 +51,9 @@ export default function TermsPage() {
 							<a href={APP_URL} className="text-[#1556d8] hover:underline">
 								app.rungset.com
 							</a>
-							. By using either, you agree to these terms. This is not legal advice, and no separate
-							company entity is claimed beyond the open-source project maintained by its contributors.
+							, and the Android app that opens that hosted application. By using any of these, you agree to
+							these terms. This is not legal advice. Rungset is a personal open-source project maintained by
+							its contributors; no separate company entity is claimed by these terms.
 						</p>
 					</section>
 
@@ -97,7 +98,7 @@ export default function TermsPage() {
 							<li>Keep your credentials secure and use accurate account information</li>
 							<li>Back up important data if you rely on it; export tools may help, but backups are your responsibility</li>
 							<li>Comply with applicable laws while using the service</li>
-							<li>Do not attempt to disrupt, abuse, or unauthorizedly access the service or other users’ data</li>
+							<li>Do not attempt to disrupt, abuse, or access the service or other users’ data without authorization</li>
 						</ul>
 					</section>
 

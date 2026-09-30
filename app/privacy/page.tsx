@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 	},
 };
 
-const lastUpdated = 'September 29, 2026';
+const lastUpdated = 'September 30, 2026';
 
 export default function PrivacyPage() {
 	return (
@@ -57,10 +57,15 @@ export default function PrivacyPage() {
 					<section>
 						<h2>What this covers</h2>
 						<ul className="list-disc space-y-2 pl-5">
-			<li>The marketing and documentation website on rungset.com</li>
-			<li>The hosted Rungset web application on app.rungset.com</li>
+							<li>The marketing and documentation website on rungset.com</li>
+							<li>The hosted Rungset web application on app.rungset.com</li>
+							<li>The Android Rungset app, which opens the hosted application on app.rungset.com</li>
 							<li>The optional feedback form on this website</li>
 						</ul>
+						<p className="mt-4">
+							The Android app is a wrapper around the hosted web application and does not use a separate
+							account or backend.
+						</p>
 						<p className="mt-4">
 							If you self-host Rungset, you operate your own instance. Your privacy practices then
 							depend on how you deploy and configure it. The project source is available on{' '}
@@ -97,9 +102,22 @@ export default function PrivacyPage() {
 							<li>Progress check-ins (including mood, energy, accomplishments, challenges, and notes)</li>
 						</ul>
 						<p className="mt-4">
-							From Settings, hosted users can export workspace data as JSON and can delete tracked
-							workspace items. Account deletion options depend on the current application settings and
-							authentication provider flows.
+							Workspace content may include mood, energy, health-related goals, or other personal reflections
+							that you choose to enter.
+						</p>
+						<p className="mt-4">
+							From Settings, hosted users can export workspace data as JSON, clear local caches, and delete
+							tracked workspace items. Account deletion requests are handled as described below.
+						</p>
+					</section>
+
+					<section>
+						<h2>Offline browser storage</h2>
+						<p>
+							To support offline use, the application may keep workspace records and pending changes in local
+							browser storage, along with cached application pages and assets in service-worker caches. These
+							remain on the device or browser until cleared. You can clear local caches from Settings or through
+							your browser controls.
 						</p>
 					</section>
 

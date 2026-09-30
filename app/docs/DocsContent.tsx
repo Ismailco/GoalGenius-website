@@ -4,6 +4,7 @@ import { useState, type KeyboardEvent } from 'react';
 import {
 	APP_URL,
 	CONTACT_EMAIL,
+	GITHUB_API_DOCS_URL,
 	GITHUB_ISSUES_URL,
 	GITHUB_REPO_URL,
 	LICENSE_NAME,
@@ -49,17 +50,18 @@ const tabs: TabContent[] = [
 					'Dashboard overview with goal and category progress',
 					'Settings: workspace JSON export and workspace data reset',
 					'Authentication via email/password, Google, or GitHub (Better Auth)',
+					'Android app for the hosted Rungset workspace (Trusted Web Activity)',
 					'Self-hosting under AGPLv3',
 				],
 			},
 			{
 				title: 'Not available yet',
-				description: 'These appear as placeholders or roadmap ideas and should not be treated as shipping features:',
+				description: 'These are not shipping features in the current beta:',
 				type: 'list',
 				items: [
-					'Analytics dashboard (page exists as “Coming Soon”)',
+					'Analytics dashboard',
 					'External calendar integrations (Google/Outlook/Apple sync)',
-					'Native iOS / Android apps',
+					'iOS app',
 					'AI recommendations or AI insights',
 					'Note attachments, note sharing, or collaboration',
 					'External reminder delivery or a scheduled notification service',
@@ -155,56 +157,21 @@ const tabs: TabContent[] = [
 		id: 'api',
 		title: 'Developer notes',
 		description:
-			'Notes for contributors about the routes and stack behind the hosted application. These are not a stable third-party API reference.',
+			'High-level notes for contributors. The hosted application routes are internal implementation details, not a stable third-party API.',
 		content: [
 			{
 				title: 'Important limitations',
 				description:
-					'Do not treat these routes as a stable external API. Authentication is session-based via Better Auth cookies after sign-in. There is no separate public API key model, JWT bearer product API, or role-based access control beyond the signed-in user owning their data.',
+					'Do not treat the hosted application routes as a stable external API. Authentication is session-based, and workspace data is scoped to the signed-in user. The application repository contains the contributor-facing implementation details.',
 				type: 'text',
 			},
 			{
-				title: 'Authentication',
+				title: 'Contributor reference',
 				type: 'list',
 				items: [
-					'Better Auth handles /api/auth/*',
-					'Email/password, Google OAuth, and GitHub OAuth are supported when configured',
-					'Data routes require an authenticated session; unauthenticated requests return 401',
-				],
-			},
-			{
-				title: 'Current data routes',
-				description: 'The app uses authenticated collection routes for its own UI. Item routes also exist under /api/<resource>/<id>; methods and payloads may change with the beta:',
-				type: 'list',
-				items: [
-					'GET/POST/PUT/DELETE /api/goals: list, create, update (body includes id), delete (?id=)',
-					'GET/POST/PUT/DELETE /api/milestones: same pattern; milestones require goalId on create',
-					'GET/POST/PUT/DELETE /api/todos: same pattern; priority required on create',
-					'GET/POST/PUT/DELETE /api/notes: same pattern; title and content required on create',
-					'GET/POST/PUT/DELETE /api/checkins: same pattern; mood/energy/date fields required on create',
-				],
-			},
-			{
-				title: 'Application stack',
-				description: 'Current implementation details from the application repository:',
-				type: 'list',
-				items: [
-					'Frontend: Next.js 16.2.12 (App Router), React 19.2.4, Tailwind CSS 4.2.2',
-					'Database: Cloudflare D1 with Drizzle ORM 0.45.2',
-					'Authentication: Better Auth 1.6.25 (email/password + optional Google/GitHub OAuth)',
-					'Deployment: Cloudflare Workers via OpenNext 1.20.2',
-					'Type safety: TypeScript 5.9.3',
-					'Content safety helpers: DOMPurify / XSS utilities in the app',
-				],
-			},
-			{
-				title: 'What is not exposed',
-				type: 'list',
-				items: [
-					'No /api/analytics/* endpoints',
-					'No attachment upload endpoints',
-					'No nested REST paths like /api/goals/:id/milestones',
-					'No public report-export API beyond the in-app Settings JSON export',
+					`Application source: ${GITHUB_REPO_URL}`,
+					`Contributor API notes: ${GITHUB_API_DOCS_URL}`,
+					'Authentication and workspace routes require a signed-in session.',
 				],
 			},
 		],
@@ -219,8 +186,8 @@ const tabs: TabContent[] = [
 				description: 'From the Rungset application repository:',
 				type: 'code',
 				code: `# Clone the application repository
-git clone https://github.com/Ismailco/GoalGenius.git
-cd GoalGenius
+git clone https://github.com/Ismailco/Rungset.git
+cd Rungset
 
 # Install dependencies
 pnpm install
